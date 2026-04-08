@@ -13,8 +13,8 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Export Potential",
-  description: "Base para plataforma de produto de inteligencia",
+  title: "Potencial de exportações - Observatório FIESC",
+  description: "Ferramenta de análise do potencial de exportação dos produtos catarinenses.",
 };
 
 export default function RootLayout({
