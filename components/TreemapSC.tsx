@@ -2,6 +2,7 @@
 
 import ReactECharts from "echarts-for-react";
 import { useEffect, useState } from "react";
+import { text } from "stream/consumers";
 
 type Row = {
   sh6: string;
@@ -65,6 +66,15 @@ export default function TreemapSC() {
   }, []);
 
   const option = {
+    title:{
+      text: "Potencial de exportação de Santa Catarina, por produto (SH6)",
+      left: "true",
+      textStyle: {
+        color: "#f4f4f5",
+        fontSize: 16,
+        fontWeight: "bold",
+      }
+    },
     tooltip: {
       formatter: (info: { name: string; value: number }) =>
         `<strong>${info.name}</strong><br/>${formatValue(info.value)}`,
@@ -72,6 +82,7 @@ export default function TreemapSC() {
     series: [
       {
         type: "treemap",
+        left: "left",
         top: 60,
         width: "100%",
         height: "100%",
