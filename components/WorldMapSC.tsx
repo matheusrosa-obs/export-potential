@@ -7,8 +7,8 @@ import countryCoords from "@/lib/country-coords.json";
 import { getCountryName } from "@/lib/country-names-pt";
 
 // ─── Ajuste estas constantes para calibrar as bolhas ──────────────────────────
-const BUBBLE_MIN_PX = 4;     // tamanho mínimo da bolha em pixels
-const BUBBLE_MAX_PX = 120;    // tamanho máximo da bolha em pixels
+const BUBBLE_MIN_PX = 2;     // tamanho mínimo da bolha em pixels
+const BUBBLE_MAX_PX = 130;    // tamanho máximo da bolha em pixels
 const BUBBLE_SCALE_POWER = 0.6; // potência da escala (< 1 = comprime contraste, = 1 = linear)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -16,11 +16,11 @@ const CATEGORIES = ["Muito Alto", "Alto", "Médio-Alto", "Médio", "Baixo"] as c
 type Category = (typeof CATEGORIES)[number];
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  "Muito Alto":  "#dc2626",
-  "Alto":        "#f97316",
-  "Médio-Alto":  "#0fb425",
-  "Médio":       "#eab308",
-  "Baixo":       "#3b82f6",
+  "Muito Alto":  "#636EFA",
+  "Alto":        "#EF553B",
+  "Médio-Alto":  "#00CC96",
+  "Médio":       "#AB63FA",
+  "Baixo":       "#FFA15A",
 };
 
 type Row = {
@@ -85,6 +85,7 @@ export default function WorldMapSC() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(mapRegistered);
+  const [chartResetKey, setChartResetKey] = useState(0);
   // null = todas visíveis; Set = apenas as categorias do Set estão ativas
   const [activeCategories, setActiveCategories] = useState<Set<string> | null>(null);
 
@@ -113,6 +114,11 @@ export default function WorldMapSC() {
       ),
     [activeCategories]
   );
+
+  const handleResetMapView = useCallback(() => {
+    // Recria a instância do gráfico para voltar ao pan/zoom inicial.
+    setChartResetKey((prev) => prev + 1);
+  }, []);
 
   // Register world map GeoJSON once
   useEffect(() => {
@@ -156,6 +162,7 @@ export default function WorldMapSC() {
     title: {
       text: "Potencial de exportação de Santa Catarina, por país importador",
       left: "left",
+      top: 18,
       textStyle: { color: "#f4f4f5", fontSize: 16, fontWeight: "bold" },
     },
     legend: {
@@ -185,7 +192,7 @@ export default function WorldMapSC() {
       boundingCoords: [[-180, 83], [180, -58]],
       zoom: 1,
       scaleLimit: { min: 1 },
-      itemStyle: { areaColor: "#27272a", borderColor: "#3f3f46", borderWidth: 0.5 },
+      itemStyle: { areaColor: "#494950", borderColor: "#3f3f46", borderWidth: 0.5 },
       emphasis: { itemStyle: { areaColor: "#3f3f46" }, label: { show: false } },
       label: { show: false },
     },
@@ -209,11 +216,38 @@ export default function WorldMapSC() {
   }
 
   return (
-    <ReactECharts
-      option={option}
-      style={{ width: "100%", height: "800px" }}
-      theme="dark"
-      onEvents={{ legendselectchanged: handleLegendClick }}
-    />
+    <div className="relative w-full h-[800px]">
+      // Botão para resetar pan/zoom do mapa.
+      <button
+        type="button"
+        onClick={handleResetMapView}
+        aria-label="Resetar visão do mapa"
+        title="Resetar visão do mapa"
+        className="absolute right-4 top-[50px] z-10 rounded-md border border-zinc-500/70 p-2 text-zinc-200 shadow-sm transition-colors hover:border-zinc-300 hover:text-white"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M3 11.5 12 4l9 7.5" />
+          <path d="M5 10.5V20h14v-9.5" />
+        </svg>
+      </button>
+
+      <ReactECharts
+        key={chartResetKey}
+        option={option}
+        style={{ width: "100%", height: "100%" }}
+        theme="dark"
+        onEvents={{ legendselectchanged: handleLegendClick }}
+      />
+    </div>
   );
 }
