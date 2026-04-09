@@ -17,10 +17,10 @@ type Category = (typeof CATEGORIES)[number];
 
 const CATEGORY_COLORS: Record<Category, string> = {
   "Muito Alto":  "#ff7171",
-  "Alto":        "#ffd700",
+  "Alto":        "#ffae00",
   "Médio-Alto":  "#ffdf6f",
-  "Médio":       "#85d7d4",
-  "Baixo":       "#54f394",
+  "Médio":       "#54f394",
+  "Baixo":       "#85d7d4",
 };
 
 type Row = {

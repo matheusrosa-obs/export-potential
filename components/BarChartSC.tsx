@@ -39,12 +39,16 @@ function aggregateBySector(rows: Row[]): SectorTotal[] {
 type Props = {
   selectedSectors: string[];
   onSectorClick: (sector: string) => void;
+  onResetFilters: () => void;
 };
 
-export default function BarChartSC({ selectedSectors, onSectorClick }: Props) {
+export default function BarChartSC({ selectedSectors, onSectorClick, onResetFilters }: Props) {
   const [data, setData] = useState<SectorTotal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const chartTitleTop = 18;
+  const chartTitleLineHeight = 20;
 
   useEffect(() => {
     fetch(
@@ -65,10 +69,12 @@ export default function BarChartSC({ selectedSectors, onSectorClick }: Props) {
     title: {
       text: "Potencial agregado por setor (SC Competitiva)",
       left: "left",
+      top: chartTitleTop,
       textStyle: {
         color: "#f4f4f5",
         fontSize: 14,
         fontWeight: "bold",
+        lineHeight: chartTitleLineHeight,
       },
     },
     tooltip: {
@@ -138,13 +144,39 @@ export default function BarChartSC({ selectedSectors, onSectorClick }: Props) {
   }
 
   return (
-    <ReactECharts
-      option={option}
-      style={{ width: "100%", height: "520px" }}
-      theme="dark"
-      onEvents={{
-        click: (params: { name: string }) => onSectorClick(params.name),
-      }}
-    />
+    <div className="relative w-full h-[520px]">
+      <button
+        type="button"
+        onClick={onResetFilters}
+        aria-label="Limpar filtros do gráfico"
+        title="Limpar filtros do gráfico"
+        className="absolute right-4 z-10 -translate-y-1/2 rounded-md border border-zinc-500/70 p-2 text-zinc-200 shadow-sm transition-colors hover:border-zinc-300 hover:text-white"
+        style={{ top: chartTitleTop + chartTitleLineHeight / 2 }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M3 11.5 12 4l9 7.5" />
+          <path d="M5 10.5V20h14v-9.5" />
+        </svg>
+      </button>
+
+      <ReactECharts
+        option={option}
+        style={{ width: "100%", height: "100%" }}
+        theme="dark"
+        onEvents={{
+          click: (params: { name: string }) => onSectorClick(params.name),
+        }}
+      />
+    </div>
   );
 }

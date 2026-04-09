@@ -33,6 +33,10 @@ export default function Home() {
     );
   }
 
+  function handleResetSectorFilters() {
+    setSelectedSectors([]);
+  }
+
   function scrollToNext() {
     document.getElementById("section-2")?.scrollIntoView({ behavior: "smooth" });
   }
@@ -97,12 +101,16 @@ export default function Home() {
         <p className="font-secondary text-zinc-300">
           Produtos e países com maior potencial para as exportações.
         </p>
-        <div className="w-full mt-2 gap-10 grid grid-cols-5">
-          <div className="col-span-3">
+        <div className="w-full mt-2 gap-10 grid grid-cols-6">
+          <div className="col-span-4">
             <TreemapSC selectedSectors={selectedSectors} />
           </div>
           <div className="col-span-2">
-            <BarChartSC selectedSectors={selectedSectors} onSectorClick={handleSectorClick} />
+            <BarChartSC
+              selectedSectors={selectedSectors}
+              onSectorClick={handleSectorClick}
+              onResetFilters={handleResetSectorFilters}
+            />
           </div>
         </div>
         <div className="w-full mt-4 p-4">
