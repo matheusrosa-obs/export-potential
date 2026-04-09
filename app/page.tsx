@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import logo from "./logo.png";
 import TreemapSC from "@/components/TreemapSC";
 import BarChartSC from "@/components/BarChartSC";
@@ -11,6 +11,12 @@ export default function Home() {
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
+  const sectionButtons = [
+    { label: "Visão geral", targetId: "section-2" },
+    { label: "Produtos", targetId: "section-3" },
+    { label: "Mercados", targetId: "section-4" },
+    { label: "Sobre", targetId: "section-5" },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,6 +41,10 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function scrollToSection(targetId: string) {
+    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <>
       // ############################################################################
@@ -47,9 +57,23 @@ export default function Home() {
         <h1 className="text-4xl font-semibold tracking-tight text-zinc-100">
           Potencial de exportações
         </h1>
-        <p className="font-secondary text-zinc-300 p-4">
+        <p className="font-secondary text-zinc-300 px-4 pt-3">
           Ferramenta de análise do potencial de exportação dos produtos catarinenses.
         </p>
+
+        // Botões de navegação para as seções principais.
+        <div className="-mt-4 flex flex-wrap justify-center gap-3">
+          {sectionButtons.map(({ label, targetId }, index) => (
+            <button
+              key={targetId}
+              onClick={() => scrollToSection(targetId)}
+              style={{ "--nav-delay": `${index * 1.2}s` } as CSSProperties}
+              className="hero-nav-btn rounded-full px-5 py-2 text-sm font-medium text-zinc-200"
+            >
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
 
         // Botão de rolagem para a próxima seção.
         <button
