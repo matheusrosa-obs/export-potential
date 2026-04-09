@@ -200,7 +200,10 @@ export default function ProductBarChart({ sh6 }: Props) {
   }
 
   return (
-    <div className="w-full mt-2">
+    <div className="w-full">
+      <h3 className="text-sm font-semibold text-zinc-100 mb-4">
+        Potencial de exportação e potencial não realizado por importador
+      </h3>
       {/* Sort buttons */}
       <div className="flex items-center gap-1.5 mb-4">
         <span className="text-xs text-zinc-500 mr-1">Ordenar por</span>
@@ -219,8 +222,15 @@ export default function ProductBarChart({ sh6 }: Props) {
         ))}
       </div>
 
+      <ReactECharts
+        option={option}
+        style={{ width: "100%", height: "750px" }}
+        theme="dark"
+        notMerge
+      />
+
       {/* Legend */}
-      <div className="flex items-center gap-5 mb-3">
+      <div className="flex items-center place-content-center gap-5 mb-3">
         <div className="flex items-center gap-1.5 text-xs text-zinc-400">
           <span className="inline-block w-3 h-3 rounded-full border-2 border-[#54f394] bg-white" />
           Exportações atuais
@@ -233,14 +243,7 @@ export default function ProductBarChart({ sh6 }: Props) {
           <span className="inline-block w-1 h-3.5 rounded bg-[#54f394]" />
           Potencial total
         </div>
-      </div>
-
-      <ReactECharts
-        option={option}
-        style={{ width: "100%", height: "800px" }}
-        theme="dark"
-        notMerge
-      />
+      </div>      
     </div>
   );
 }

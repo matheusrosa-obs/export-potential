@@ -10,6 +10,7 @@ import ProductSearch from "@/components/ProductSearch";
 import ProductBarChart from "@/components/ProductBarChart";
 import CountrySearch from "@/components/CountrySearch";
 import CountryBarChart from "@/components/CountryBarChart";
+import GlobalMarketTable from "@/components/GlobalMarketTable";
 
 export default function Home() {
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
@@ -118,7 +119,7 @@ export default function Home() {
       // ############################################################################
       // Visão geral, apresentação básica dos dados agregados.
       // ############################################################################
-      <section id="section-2" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
+      <section id="section-2" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-15 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Visão geral
         </h2>
@@ -155,21 +156,24 @@ export default function Home() {
       // ############################################################################
       // Produtos, filtro por SH6 e detalhamento do potencial não realizado.
       // ############################################################################
-      <section id="section-3" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
+      <section id="section-3" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-15 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Produtos
         </h2>
-        <p className="font-secondary text-zinc-300 py-6">
+        <p className="font-secondary text-zinc-300 py-3">
           Detalhamento do potencial de exportação dos produtos catarinenses, de acordo com os principais importadores.
         </p>
 
-        <div className="w-full grid grid-cols-2 gap-6 mt-2">
-          <div className="col-span-1 flex flex-col gap-4">
-            <ProductSearch onSelect={setSelectedSH6} defaultSH6="020714" />
+        <div className="w-[calc(50%-12px)] mb-6">
+          <ProductSearch onSelect={setSelectedSH6} defaultSH6="020714" />
+        </div>
+
+        <div className="w-full grid grid-cols-2 gap-8">
+          <div className="col-span-1">
             <ProductBarChart sh6={selectedSH6} />
           </div>
           <div className="col-span-1">
-            {/* conteúdo futuro */}
+            <GlobalMarketTable sh6={selectedSH6} />
           </div>
         </div>
 
@@ -186,11 +190,11 @@ export default function Home() {
       // ############################################################################
       // Mercados, filtro por país e detalhamento do potencial por produto.
       // ############################################################################
-      <section id="section-4" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
+      <section id="section-4" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-15 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Mercados
         </h2>
-        <p className="font-secondary text-zinc-300 py-6">
+        <p className="font-secondary text-zinc-300 py-3">
           Detalhamento dos importadores de maior potencial para Santa Catarina, de acordo com os produtos demandados.
         </p>
 
@@ -217,7 +221,7 @@ export default function Home() {
       // ############################################################################
       // Sobre, com informações metodológicas, referências e usabilidade.
       // ############################################################################
-      <section id="section-5" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
+      <section id="section-5" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-15 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Sobre
         </h2>
