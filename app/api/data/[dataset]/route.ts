@@ -57,6 +57,13 @@ export async function GET(
         ? "desc"
         : "asc";
 
+    // Parse filter[col]=val query params
+    const filters: Record<string, string> = {};
+    for (const [key, value] of searchParams.entries()) {
+      const match = key.match(/^filter\[(.+)\]$/);
+      if (match) filters[match[1]] = value;
+    }
+
     const data = await queryDataset({
       datasetId: dataset,
       columns: parseColumns(searchParams.get("columns")),
@@ -65,6 +72,7 @@ export async function GET(
       includeTotal,
       sortBy,
       sortDirection,
+      filters: Object.keys(filters).length > 0 ? filters : undefined,
     });
 
     return NextResponse.json(data);

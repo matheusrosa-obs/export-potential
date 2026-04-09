@@ -6,9 +6,12 @@ import logo from "./logo.png";
 import TreemapSC from "@/components/TreemapSC";
 import BarChartSC from "@/components/BarChartSC";
 import WorldMapSC from "@/components/WorldMapSC";
+import ProductSearch from "@/components/ProductSearch";
+import ProductBarChart from "@/components/ProductBarChart";
 
 export default function Home() {
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
+  const [selectedSH6, setSelectedSH6] = useState<string | null>("020714");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const sectionButtons = [
@@ -153,9 +156,19 @@ export default function Home() {
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Produtos
         </h2>
-        <p className="font-secondary text-zinc-300">
+        <p className="font-secondary text-zinc-300 py-6">
           Detalhamento do potencial de exportação dos produtos catarinenses, de acordo com os principais importadores.
         </p>
+
+        <div className="w-full grid grid-cols-2 gap-6 mt-2">
+          <div className="col-span-1 flex flex-col gap-4">
+            <ProductSearch onSelect={setSelectedSH6} defaultSH6="020714" />
+            <ProductBarChart sh6={selectedSH6} />
+          </div>
+          <div className="col-span-1">
+            {/* conteúdo futuro */}
+          </div>
+        </div>
 
         <button
           onClick={scrollToTop}

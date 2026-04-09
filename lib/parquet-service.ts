@@ -44,6 +44,7 @@ export type QueryDatasetOptions = {
   includeTotal: boolean;
   sortBy?: string;
   sortDirection?: "asc" | "desc";
+  filters?: Record<string, string>;
 };
 
 export type QueryDatasetResult = {
@@ -229,18 +230,34 @@ export async function queryDataset(
 
   const asyncBuffer = await readAsyncBuffer(dataset.filePath);
 
-  // Column names for the projection (in schema order)
-  const projectionNames =
+  // Columns needed for filters that aren't already in the requested projection
+  const filterCols = options.filters ? Object.keys(options.filters) : [];
+  const available = new Set(schema.map((c) => c.name));
+  for (const col of filterCols) {
+    if (!available.has(col))
+      throw new InvalidQueryError(`Coluna de filtro invalida: '${col}'.`);
+  }
+
+  // Extra filter columns that must be read but should not appear in the output
+  const extraFilterCols =
     selectedColumns.length > 0
-      ? selectedColumns
-      : schema.map((c) => c.name);
+      ? filterCols.filter((c) => !selectedColumns.includes(c))
+      : [];
+
+  const readColumns =
+    selectedColumns.length > 0
+      ? Array.from(new Set([...selectedColumns, ...extraFilterCols]))
+      : undefined; // undefined = read all
+
+  // Column names for the projection (in schema order)
+  const projectionNames = readColumns ?? schema.map((c) => c.name);
 
   // Read all rows — hyparquet returns arrays, not objects
   let rawRows: unknown[][] = [];
   await parquetRead({
     file: asyncBuffer,
     compressors,
-    columns: selectedColumns.length > 0 ? selectedColumns : undefined,
+    columns: readColumns,
     onComplete(rows) {
       rawRows = rows as unknown[][];
     },
@@ -250,6 +267,23 @@ export async function queryDataset(
   let allRows: Record<string, unknown>[] = rawRows.map((row) =>
     Object.fromEntries(projectionNames.map((name, i) => [name, row[i]]))
   );
+
+  // Filter in memory when requested
+  if (options.filters && Object.keys(options.filters).length > 0) {
+    for (const [col, val] of Object.entries(options.filters)) {
+      allRows = allRows.filter((row) => String(row[col]) === val);
+    }
+  }
+
+  // Remove extra filter columns that weren't originally requested
+  if (extraFilterCols.length > 0) {
+    const keep = new Set(selectedColumns);
+    allRows = allRows.map((row) => {
+      const out: Record<string, unknown> = {};
+      for (const k of keep) out[k] = row[k];
+      return out;
+    });
+  }
 
   // Sort in memory when requested
   if (options.sortBy) {
@@ -269,7 +303,8 @@ export async function queryDataset(
   const sliced = allRows.slice(options.offset, options.offset + options.limit);
   const rows = sliced.map((r) => normalizeForJson(r) as Record<string, unknown>);
 
-  const outputColumns = projectionNames;
+  const outputColumns =
+    selectedColumns.length > 0 ? selectedColumns : projectionNames;
 
   return {
     dataset: {
