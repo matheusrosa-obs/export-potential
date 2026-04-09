@@ -12,7 +12,7 @@ const SECTOR_COLOR_MAP: Record<string, string> = {
   "Extrativo": "#46606C",
   "Indústria Gráfica": "#EC008C",
   "Madeira e Móveis": "#8A6138",
-  "Máquinas e Equipamentos": "#E4863B",
+  "Máquinas e Equipamentos": "#e44f3b",
   "Metalmecânica e Metalurgia": "#266563",
   "Óleo, Gás e Eletricidade": "#FBA81A",
   "Produtos Químicos e Plásticos": "#0B416C",

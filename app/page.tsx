@@ -12,10 +12,26 @@ export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const sectionButtons = [
-    { label: "Visão geral", targetId: "section-2" },
-    { label: "Produtos", targetId: "section-3" },
-    { label: "Mercados", targetId: "section-4" },
-    { label: "Sobre", targetId: "section-5" },
+    {
+      label: "Visão geral",
+      subtitle: "Panorama com produtos e países de maior potencial.",
+      targetId: "section-2",
+    },
+    {
+      label: "Produtos",
+      subtitle: "Detalhamento por SH6 e principais importadores.",
+      targetId: "section-3",
+    },
+    {
+      label: "Mercados",
+      subtitle: "Países com maior demanda para o portfólio catarinense.",
+      targetId: "section-4",
+    },
+    {
+      label: "Sobre",
+      subtitle: "Metodologia, referências e orientações de uso.",
+      targetId: "section-5",
+    },
   ];
 
   useEffect(() => {
@@ -66,15 +82,17 @@ export default function Home() {
         </p>
 
         // Botões de navegação para as seções principais.
-        <div className="-mt-4 flex flex-wrap justify-center gap-3">
-          {sectionButtons.map(({ label, targetId }, index) => (
+        <div className="-mt-3 mx-auto grid w-full max-w-5xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {sectionButtons.map(({ label, subtitle, targetId }, index) => (
             <button
               key={targetId}
               onClick={() => scrollToSection(targetId)}
               style={{ "--nav-delay": `${index * 1.2}s` } as CSSProperties}
-              className="hero-nav-btn rounded-full px-5 py-2 text-sm font-medium text-zinc-200"
+              className="hero-nav-btn w-full rounded-2xl px-5 py-4 text-left"
             >
-              <span>{label}</span>
+              <span className="hero-nav-title">{label}</span>
+
+              <span className="hero-nav-subtitle">{subtitle}</span>
             </button>
           ))}
         </div>
@@ -131,7 +149,7 @@ export default function Home() {
       // ############################################################################
       // Produtos, filtro por SH6 e detalhamento do potencial não realizado.
       // ############################################################################
-      <section id="section-3" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 text-left">
+      <section id="section-3" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Produtos
         </h2>
@@ -152,7 +170,7 @@ export default function Home() {
       // ############################################################################
       // Mercados, filtro por país e detalhamento do potencial por produto.
       // ############################################################################
-      <section id="section-4" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 text-left">
+      <section id="section-4" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Mercados
         </h2>
@@ -170,10 +188,10 @@ export default function Home() {
           </svg>
         </button>
       </section>
-        // ############################################################################
+      // ############################################################################
       // Sobre, com informações metodológicas, referências e usabilidade.
       // ############################################################################
-      <section id="section-5" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 text-left">
+      <section id="section-5" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-20 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Sobre
         </h2>

@@ -52,6 +52,12 @@ body {
 
 .hero-nav-btn {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  min-height: 108px;
   isolation: isolate;
   overflow: hidden;
   border: 1px solid rgba(113, 113, 122, 0.9);
@@ -80,19 +86,38 @@ body {
   content: "";
   position: absolute;
   inset: 1px;
-  border-radius: 9999px;
+  border-radius: inherit;
   background: rgba(30, 30, 41, 0.94);
   z-index: 1;
 }
 
-.hero-nav-btn > span {
+.hero-nav-btn > * {
   position: relative;
   z-index: 2;
 }
 
-.hero-nav-btn:hover {
-  transform: translateY(-2px);
+.hero-nav-title {
+  font-size: 1rem;
+  font-weight: 600;
   color: #f4f4f5;
+  line-height: 1.2;
+}
+
+.hero-nav-subtitle {
+  font-family: var(--font-open-sans), sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  color: #d4d4dc;
+  max-width: 26ch;
+}
+
+.hero-nav-btn:hover {
+  transform: translateY(-3px);
+  color: #f4f4f5;
+}
+
+.hero-nav-btn:hover .hero-nav-subtitle {
+  color: #e4e4e7;
 }
 
 .hero-nav-btn:focus-visible {
