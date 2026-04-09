@@ -94,7 +94,7 @@ export default function BarChartSC({ selectedSectors, onSectorClick }: Props) {
       data: data.map((d) => d.sector).reverse(),
       axisLabel: {
         color: "#d4d4dc",
-        fontSize: 12,
+        fontSize: 13,
         width: 160,
         overflow: "truncate",
       },

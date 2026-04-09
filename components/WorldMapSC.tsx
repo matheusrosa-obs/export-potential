@@ -8,7 +8,7 @@ import { getCountryName } from "@/lib/country-names-pt";
 
 // ─── Ajuste estas constantes para calibrar as bolhas ──────────────────────────
 const BUBBLE_MIN_PX = 2;     // tamanho mínimo da bolha em pixels
-const BUBBLE_MAX_PX = 130;    // tamanho máximo da bolha em pixels
+const BUBBLE_MAX_PX = 150;    // tamanho máximo da bolha em pixels
 const BUBBLE_SCALE_POWER = 0.6; // potência da escala (< 1 = comprime contraste, = 1 = linear)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -16,11 +16,11 @@ const CATEGORIES = ["Muito Alto", "Alto", "Médio-Alto", "Médio", "Baixo"] as c
 type Category = (typeof CATEGORIES)[number];
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  "Muito Alto":  "#636EFA",
-  "Alto":        "#EF553B",
-  "Médio-Alto":  "#00CC96",
-  "Médio":       "#AB63FA",
-  "Baixo":       "#FFA15A",
+  "Muito Alto":  "#ff7171",
+  "Alto":        "#ffd700",
+  "Médio-Alto":  "#ffdf6f",
+  "Médio":       "#85d7d4",
+  "Baixo":       "#54f394",
 };
 
 type Row = {

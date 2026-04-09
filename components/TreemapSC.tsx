@@ -108,6 +108,7 @@ export default function TreemapSC({ selectedSectors }: Props) {
         width: "100%",
         itemStyle: {
           borderColor: "#18181b",
+          borderRadius: 4,
           borderWidth: 1,
           gapWidth: 1,
         },

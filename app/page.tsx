@@ -97,11 +97,11 @@ export default function Home() {
         <p className="font-secondary text-zinc-300">
           Produtos e países com maior potencial para as exportações.
         </p>
-        <div className="w-full mt-2 gap-10 grid grid-cols-3">
-          <div className="col-span-2">
+        <div className="w-full mt-2 gap-10 grid grid-cols-5">
+          <div className="col-span-3">
             <TreemapSC selectedSectors={selectedSectors} />
           </div>
-          <div className="col-span-1">
+          <div className="col-span-2">
             <BarChartSC selectedSectors={selectedSectors} onSectorClick={handleSectorClick} />
           </div>
         </div>
