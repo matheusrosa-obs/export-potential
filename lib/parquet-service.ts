@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { DuckDBConnection, DuckDBInstance } from "@duckdb/node-api";
+import { parquetMetadata, parquetRead, parquetSchema } from "hyparquet";
+import { compressors } from "hyparquet-compressors";
 
 const DATA_DIRECTORY = path.join(process.cwd(), "public", "data");
 const REGISTRY_TTL_MS = 30_000;
@@ -25,12 +26,6 @@ type DatasetEntry = {
 type DatasetRegistry = {
   loadedAt: number;
   datasets: Map<string, DatasetEntry>;
-};
-
-type DescribeRow = {
-  column_name: string;
-  column_type: string;
-  null: string | null;
 };
 
 export type ListDatasetResult = {
@@ -69,84 +64,39 @@ export class DatasetNotFoundError extends Error {}
 export class InvalidQueryError extends Error {}
 
 declare global {
-  var __parquetConnectionPromise: Promise<DuckDBConnection> | undefined;
   var __parquetRegistry: DatasetRegistry | undefined;
   var __parquetRegistryPromise: Promise<DatasetRegistry> | undefined;
   var __parquetSchemaCache: Map<string, DatasetColumn[]> | undefined;
 }
 
-const schemaCache = globalThis.__parquetSchemaCache ?? new Map<string, DatasetColumn[]>();
+const schemaCache =
+  globalThis.__parquetSchemaCache ?? new Map<string, DatasetColumn[]>();
 globalThis.__parquetSchemaCache = schemaCache;
 
-async function getConnection(): Promise<DuckDBConnection> {
-  if (!globalThis.__parquetConnectionPromise) {
-    globalThis.__parquetConnectionPromise = DuckDBInstance.create(":memory:")
-      .then((instance) => instance.connect())
-      .catch((error) => {
-        globalThis.__parquetConnectionPromise = undefined;
-        throw error;
-      });
-  }
-
-  return globalThis.__parquetConnectionPromise;
-}
-
-function normalizePathForSql(filePath: string): string {
-  return filePath.replace(/\\/g, "/");
-}
-
-function escapeSqlString(value: string): string {
-  return value.replace(/'/g, "''");
-}
-
-function quoteIdentifier(value: string): string {
-  return `"${value.replace(/"/g, '""')}"`;
-}
-
-async function queryRows<T extends Record<string, unknown>>(sql: string): Promise<T[]> {
-  const connection = await getConnection();
-  const reader = await connection.runAndReadAll(sql);
-  return reader.getRowObjectsJS() as T[];
-}
-
-function normalizeForJson(value: unknown): unknown {
-  if (typeof value === "bigint") {
-    const asNumber = Number(value);
-    return Number.isSafeInteger(asNumber) ? asNumber : value.toString();
-  }
-
-  if (value instanceof Date) {
-    return value.toISOString();
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((item) => normalizeForJson(item));
-  }
-
-  if (value && typeof value === "object") {
-    const normalized: Record<string, unknown> = {};
-    for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-      normalized[key] = normalizeForJson(item);
-    }
-    return normalized;
-  }
-
-  return value;
+/** Read a parquet file and return an AsyncBuffer compatible with hyparquet. */
+async function readAsyncBuffer(filePath: string) {
+  const buffer = await fs.readFile(filePath);
+  const arrayBuffer: ArrayBuffer = buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength
+  ) as ArrayBuffer;
+  return {
+    byteLength: arrayBuffer.byteLength,
+    slice: (start: number, end: number) =>
+      Promise.resolve(arrayBuffer.slice(start, end)),
+  };
 }
 
 async function loadDatasetRegistry(): Promise<DatasetRegistry> {
-  const directoryEntries = await fs.readdir(DATA_DIRECTORY, { withFileTypes: true });
-  const parquetFiles = directoryEntries.filter(
-    (entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".parquet"),
-  );
-
+  const entries = await fs.readdir(DATA_DIRECTORY, { withFileTypes: true });
   const datasets = new Map<string, DatasetEntry>();
 
-  for (const entry of parquetFiles) {
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.toLowerCase().endsWith(".parquet"))
+      continue;
     const filePath = path.join(DATA_DIRECTORY, entry.name);
     const stat = await fs.stat(filePath);
     const id = path.basename(entry.name, ".parquet");
-
     datasets.set(id, {
       id,
       fileName: entry.name,
@@ -156,26 +106,17 @@ async function loadDatasetRegistry(): Promise<DatasetRegistry> {
     });
   }
 
-  return {
-    loadedAt: Date.now(),
-    datasets,
-  };
+  return { loadedAt: Date.now(), datasets };
 }
 
 async function getDatasetRegistry(forceRefresh = false): Promise<DatasetRegistry> {
   const cached = globalThis.__parquetRegistry;
-  const cacheFresh =
-    cached && Date.now() - cached.loadedAt < REGISTRY_TTL_MS;
+  const cacheFresh = cached && Date.now() - cached.loadedAt < REGISTRY_TTL_MS;
 
-  if (!forceRefresh && cacheFresh) {
-    return cached;
-  }
+  if (!forceRefresh && cacheFresh) return cached;
+  if (globalThis.__parquetRegistryPromise) return globalThis.__parquetRegistryPromise;
 
-  if (globalThis.__parquetRegistryPromise) {
-    return globalThis.__parquetRegistryPromise;
-  }
-
-  const refreshPromise = loadDatasetRegistry()
+  const promise = loadDatasetRegistry()
     .then((registry) => {
       globalThis.__parquetRegistry = registry;
       return registry;
@@ -184,151 +125,151 @@ async function getDatasetRegistry(forceRefresh = false): Promise<DatasetRegistry
       globalThis.__parquetRegistryPromise = undefined;
     });
 
-  globalThis.__parquetRegistryPromise = refreshPromise;
-  return refreshPromise;
+  globalThis.__parquetRegistryPromise = promise;
+  return promise;
 }
 
 async function getDatasetOrThrow(datasetId: string): Promise<DatasetEntry> {
   const registry = await getDatasetRegistry();
   const dataset = registry.datasets.get(datasetId);
-
-  if (dataset) {
-    return dataset;
-  }
+  if (dataset) return dataset;
 
   const refreshed = await getDatasetRegistry(true);
   const updated = refreshed.datasets.get(datasetId);
-
-  if (!updated) {
-    throw new DatasetNotFoundError(`Dataset '${datasetId}' nao encontrado.`);
-  }
-
+  if (!updated) throw new DatasetNotFoundError(`Dataset '${datasetId}' nao encontrado.`);
   return updated;
 }
 
 async function getSchema(dataset: DatasetEntry): Promise<DatasetColumn[]> {
   const schemaKey = `${dataset.id}:${dataset.updatedAt}`;
   const cached = schemaCache.get(schemaKey);
+  if (cached) return cached;
 
-  if (cached) {
-    return cached;
-  }
+  const asyncBuffer = await readAsyncBuffer(dataset.filePath);
+  const metadata = parquetMetadata(await asyncBuffer.slice(0, asyncBuffer.byteLength));
+  const schema = parquetSchema(metadata);
 
-  const safePath = escapeSqlString(normalizePathForSql(dataset.filePath));
-  const sql = `DESCRIBE SELECT * FROM read_parquet('${safePath}')`;
-  const schemaRows = await queryRows<DescribeRow>(sql);
-
-  const schema: DatasetColumn[] = schemaRows.map((row) => ({
-    name: row.column_name,
-    type: row.column_type,
-    nullable: row.null === "YES",
+  const columns: DatasetColumn[] = schema.children.map((field: any) => ({
+    name: field.element.name,
+    type: field.element.type ?? field.element.converted_type ?? "BYTE_ARRAY",
+    nullable: field.element.repetition_type !== "REQUIRED",
   }));
 
-  schemaCache.set(schemaKey, schema);
-  return schema;
+  schemaCache.set(schemaKey, columns);
+  return columns;
 }
 
 function normalizeSelectedColumns(
   requestedColumns: string[] | undefined,
-  availableColumns: DatasetColumn[],
+  availableColumns: DatasetColumn[]
 ): string[] {
-  if (!requestedColumns || requestedColumns.length === 0) {
-    return [];
+  if (!requestedColumns || requestedColumns.length === 0) return [];
+  const available = new Set(availableColumns.map((c) => c.name));
+  const unique = Array.from(new Set(requestedColumns));
+  for (const col of unique) {
+    if (!available.has(col))
+      throw new InvalidQueryError(`Coluna invalida: '${col}'.`);
   }
-
-  const available = new Set(availableColumns.map((column) => column.name));
-  const uniqueRequested = Array.from(new Set(requestedColumns));
-
-  for (const column of uniqueRequested) {
-    if (!available.has(column)) {
-      throw new InvalidQueryError(`Coluna invalida: '${column}'.`);
-    }
-  }
-
-  return uniqueRequested;
+  return unique;
 }
 
-function normalizeSortColumn(
-  sortBy: string | undefined,
-  availableColumns: DatasetColumn[],
-): string | undefined {
-  if (!sortBy) {
-    return undefined;
+function normalizeForJson(value: unknown): unknown {
+  if (typeof value === "bigint") {
+    const n = Number(value);
+    return Number.isSafeInteger(n) ? n : value.toString();
   }
-
-  const available = new Set(availableColumns.map((column) => column.name));
-  if (!available.has(sortBy)) {
-    throw new InvalidQueryError(`Coluna de ordenacao invalida: '${sortBy}'.`);
+  if (value instanceof Date) return value.toISOString();
+  if (Array.isArray(value)) return value.map(normalizeForJson);
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>))
+      out[k] = normalizeForJson(v);
+    return out;
   }
-
-  return sortBy;
+  return value;
 }
 
 export async function listAvailableDatasets(options?: {
   includeSchema?: boolean;
 }): Promise<ListDatasetResult[]> {
-  const includeSchema = options?.includeSchema ?? false;
   const registry = await getDatasetRegistry();
   const datasets = Array.from(registry.datasets.values()).sort((a, b) =>
-    a.id.localeCompare(b.id),
+    a.id.localeCompare(b.id)
   );
 
-  if (!includeSchema) {
-    return datasets.map((dataset) => ({
-      id: dataset.id,
-      fileName: dataset.fileName,
-      sizeBytes: dataset.sizeBytes,
-      updatedAt: dataset.updatedAt,
+  if (!options?.includeSchema) {
+    return datasets.map(({ id, fileName, sizeBytes, updatedAt }) => ({
+      id, fileName, sizeBytes, updatedAt,
     }));
   }
 
   return Promise.all(
-    datasets.map(async (dataset) => ({
-      id: dataset.id,
-      fileName: dataset.fileName,
-      sizeBytes: dataset.sizeBytes,
-      updatedAt: dataset.updatedAt,
-      schema: await getSchema(dataset),
-    })),
+    datasets.map(async (d) => ({
+      id: d.id,
+      fileName: d.fileName,
+      sizeBytes: d.sizeBytes,
+      updatedAt: d.updatedAt,
+      schema: await getSchema(d),
+    }))
   );
 }
 
 export async function queryDataset(
-  options: QueryDatasetOptions,
+  options: QueryDatasetOptions
 ): Promise<QueryDatasetResult> {
   const dataset = await getDatasetOrThrow(options.datasetId);
   const schema = await getSchema(dataset);
   const selectedColumns = normalizeSelectedColumns(options.columns, schema);
-  const sortColumn = normalizeSortColumn(options.sortBy, schema);
 
-  const safePath = escapeSqlString(normalizePathForSql(dataset.filePath));
-  const projection =
-    selectedColumns.length > 0
-      ? selectedColumns.map((column) => quoteIdentifier(column)).join(", ")
-      : "*";
-
-  const orderByClause = sortColumn
-    ? ` ORDER BY ${quoteIdentifier(sortColumn)} ${(options.sortDirection ?? "asc").toUpperCase()}`
-    : "";
-
-  const rowsSql = `SELECT ${projection} FROM read_parquet('${safePath}')${orderByClause} LIMIT ${options.limit} OFFSET ${options.offset}`;
-  const rawRows = await queryRows<Record<string, unknown>>(rowsSql);
-
-  let total: number | string | undefined;
-  if (options.includeTotal) {
-    const countSql = `SELECT COUNT(*) AS total FROM read_parquet('${safePath}')`;
-    const countRows = await queryRows<{ total: unknown }>(countSql);
-    total = normalizeForJson(countRows[0]?.total) as number | string | undefined;
+  if (options.sortBy) {
+    const available = new Set(schema.map((c) => c.name));
+    if (!available.has(options.sortBy))
+      throw new InvalidQueryError(`Coluna de ordenacao invalida: '${options.sortBy}'.`);
   }
 
-  const rows = rawRows.map((row) =>
-    normalizeForJson(row) as Record<string, unknown>,
-  );
+  const asyncBuffer = await readAsyncBuffer(dataset.filePath);
 
-  const outputColumns =
+  // Column names for the projection (in schema order)
+  const projectionNames =
     selectedColumns.length > 0
       ? selectedColumns
-      : schema.map((column) => column.name);
+      : schema.map((c) => c.name);
+
+  // Read all rows — hyparquet returns arrays, not objects
+  let rawRows: unknown[][] = [];
+  await parquetRead({
+    file: asyncBuffer,
+    compressors,
+    columns: selectedColumns.length > 0 ? selectedColumns : undefined,
+    onComplete(rows) {
+      rawRows = rows as unknown[][];
+    },
+  });
+
+  // Map arrays → objects using column names
+  let allRows: Record<string, unknown>[] = rawRows.map((row) =>
+    Object.fromEntries(projectionNames.map((name, i) => [name, row[i]]))
+  );
+
+  // Sort in memory when requested
+  if (options.sortBy) {
+    const key = options.sortBy;
+    const dir = options.sortDirection === "desc" ? -1 : 1;
+    allRows.sort((a, b) => {
+      const av = a[key];
+      const bv = b[key];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      return av < bv ? -dir : av > bv ? dir : 0;
+    });
+  }
+
+  const total = allRows.length;
+  const sliced = allRows.slice(options.offset, options.offset + options.limit);
+  const rows = sliced.map((r) => normalizeForJson(r) as Record<string, unknown>);
+
+  const outputColumns = projectionNames;
 
   return {
     dataset: {
@@ -340,7 +281,7 @@ export async function queryDataset(
     columns: outputColumns,
     limit: options.limit,
     offset: options.offset,
-    total,
+    total: options.includeTotal ? total : undefined,
     rows,
   };
 }
