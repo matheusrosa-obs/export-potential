@@ -12,14 +12,14 @@ const BUBBLE_MAX_PX = 120;    // tamanho máximo da bolha em pixels
 const BUBBLE_SCALE_POWER = 0.6; // potência da escala (< 1 = comprime contraste, = 1 = linear)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const CATEGORIES = ["Alto", "Médio-Alto", "Médio", "Médio-Baixo", "Baixo"] as const;
+const CATEGORIES = ["Muito Alto", "Alto", "Médio-Alto", "Médio", "Baixo"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  "Alto":        "#ef4444",
-  "Médio-Alto":  "#f97316",
+  "Muito Alto":  "#dc2626",
+  "Alto":        "#f97316",
+  "Médio-Alto":  "#0fb425",
   "Médio":       "#eab308",
-  "Médio-Baixo": "#22c55e",
   "Baixo":       "#3b82f6",
 };
 
