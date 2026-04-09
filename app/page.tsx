@@ -8,10 +8,13 @@ import BarChartSC from "@/components/BarChartSC";
 import WorldMapSC from "@/components/WorldMapSC";
 import ProductSearch from "@/components/ProductSearch";
 import ProductBarChart from "@/components/ProductBarChart";
+import CountrySearch from "@/components/CountrySearch";
+import CountryBarChart from "@/components/CountryBarChart";
 
 export default function Home() {
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
   const [selectedSH6, setSelectedSH6] = useState<string | null>("020714");
+  const [selectedImporter, setSelectedImporter] = useState<string | null>("USA");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const sectionButtons = [
@@ -187,9 +190,19 @@ export default function Home() {
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Mercados
         </h2>
-        <p className="font-secondary text-zinc-300">
+        <p className="font-secondary text-zinc-300 py-6">
           Detalhamento dos importadores de maior potencial para Santa Catarina, de acordo com os produtos demandados.
         </p>
+
+        <div className="w-full grid grid-cols-2 gap-6 mt-2">
+          <div className="col-span-1 flex flex-col gap-4">
+            <CountrySearch onSelect={setSelectedImporter} defaultISO3="USA" />
+            <CountryBarChart importer={selectedImporter} />
+          </div>
+          <div className="col-span-1">
+            {/* conteúdo futuro */}
+          </div>
+        </div>
 
         <button
           onClick={scrollToTop}
