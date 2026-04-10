@@ -138,6 +138,7 @@ const COUNTRY_NAMES_PT: Record<string, string> = {
   MSR: "Montserrat",
   MUS: "Maurício",
   MWI: "Malawi",
+  MYS: "Malásia",
   NAM: "Namíbia",
   NCL: "Nova Caledônia",
   NER: "Níger",
