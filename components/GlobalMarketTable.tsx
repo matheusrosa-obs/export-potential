@@ -71,7 +71,8 @@ export default function GlobalMarketTable({ sh6 }: Props) {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey | null>("Market Share (%)");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (!sh6) { setRows([]); return; }
@@ -103,9 +104,13 @@ export default function GlobalMarketTable({ sh6 }: Props) {
   const total = rows.reduce((acc, r) => acc + parseBRValue(r["Montante US$"]), 0);
 
   const sorted = useMemo(() => {
-    if (!sortKey) return rows;
-    return [...rows].sort((a, b) => parseNum(String(b[sortKey])) - parseNum(String(a[sortKey])));
-  }, [rows, sortKey]);
+    const base = sortKey
+      ? [...rows].sort((a, b) => parseNum(String(b[sortKey])) - parseNum(String(a[sortKey])))
+      : rows;
+    if (!search.trim()) return base;
+    const q = search.trim().toLowerCase();
+    return base.filter((r) => r["País"].toLowerCase().includes(q));
+  }, [rows, sortKey, search]);
 
   if (!sh6) return null;
 
@@ -134,14 +139,14 @@ export default function GlobalMarketTable({ sh6 }: Props) {
         <span className="text-[#54f394]">{formatTotal(total)}</span>
       </h3>
 
-      {/* Sort buttons */}
+      {/* Sort buttons + search */}
       <div className="flex items-center gap-1.5 mb-4">
-        <span className="text-xs text-zinc-500 mr-1">Ordenar por</span>
+        <span className="text-xs text-zinc-500 mr-1 shrink-0">Ordenar por</span>
         {SORT_OPTIONS.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setSortKey((prev) => (prev === key ? null : key))}
-            className={`px-3 py-1 rounded-full text-xs transition-colors ${
+            className={`shrink-0 px-3 py-1 rounded-full text-xs transition-colors ${
               sortKey === key
                 ? "border text-[#54f394] border-[#54f394]/50 bg-[#54f394]/10"
                 : "text-zinc-400 border border-zinc-700 hover:border-zinc-500 hover:text-zinc-200"
@@ -150,6 +155,30 @@ export default function GlobalMarketTable({ sh6 }: Props) {
             {label}
           </button>
         ))}
+        <div className="relative ml-auto">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar país…"
+            className="pl-12 pr-3 py-1 mb-1 rounded text-xs bg-transparent border border-zinc-700 rounded-full text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 w-52 transition-colors"
+          />
+        </div>
       </div>
 
       <div className="w-full overflow-y-auto rounded-xl border border-zinc-800" style={{ maxHeight: "710px" }}>

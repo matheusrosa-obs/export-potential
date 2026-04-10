@@ -11,6 +11,7 @@ import ProductBarChart from "@/components/ProductBarChart";
 import CountrySearch from "@/components/CountrySearch";
 import CountryBarChart from "@/components/CountryBarChart";
 import GlobalMarketTable from "@/components/GlobalMarketTable";
+import ProductWorldMap from "@/components/ProductWorldMap";
 
 export default function Home() {
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
@@ -175,6 +176,10 @@ export default function Home() {
           <div className="col-span-1">
             <GlobalMarketTable sh6={selectedSH6} />
           </div>
+        </div>
+
+        <div className="w-full mt-4 p-4">
+          <ProductWorldMap sh6={selectedSH6} />
         </div>
 
         <button

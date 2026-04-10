@@ -8,7 +8,7 @@ import { getCountryName } from "@/lib/country-names-pt";
 
 // ─── Ajuste estas constantes para calibrar as bolhas ──────────────────────────
 const BUBBLE_MIN_PX = 2;     // tamanho mínimo da bolha em pixels
-const BUBBLE_MAX_PX = 150;    // tamanho máximo da bolha em pixels
+const BUBBLE_MAX_PX = 120;    // tamanho máximo da bolha em pixels
 const BUBBLE_SCALE_POWER = 0.6; // potência da escala (< 1 = comprime contraste, = 1 = linear)
 // ─────────────────────────────────────────────────────────────────────────────
 
