@@ -78,7 +78,7 @@ export default function Home() {
       // ############################################################################
       // Página inicial com logo, título, descrição, cards e botão de rolagem.
       // ############################################################################
-      <main id="section-hero" ref={heroRef} className="min-h-screen grid place-content-center gap-3 px-8 text-center relative">
+      <main id="section-hero" ref={heroRef} className="min-h-screen grid place-content-center gap-3 px-8 -mt-10 text-center relative">
         <a href="https://observatorio.fiesc.com.br/" target="_blank" rel="noopener noreferrer">
           <Image src={logo} alt="Logo" className="mx-auto" width="300" />
         </a>
@@ -109,7 +109,7 @@ export default function Home() {
         <button
           onClick={scrollToNext}
           aria-label="Rolar para baixo"
-          className="absolute bottom-20 left-1/2 -translate-x-1/2 text-zinc-400 hover:text-zinc-100 transition-colors animate-bounce"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-zinc-400 hover:text-zinc-100 transition-colors animate-bounce"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M6 9l6 6 6-6" />
