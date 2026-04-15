@@ -162,7 +162,7 @@ function buildOption(rows: Row[], selectedSH6: string | null): object {
 type Props = {
   importer: string | null;
   selectedSH6: string | null;
-  onSH6Select: (sh6: string) => void;
+  onSH6Select: (sh6: string | null) => void;
 };
 
 export default function CountryBarChart({ importer, selectedSH6, onSH6Select }: Props) {
@@ -276,7 +276,8 @@ export default function CountryBarChart({ importer, selectedSH6, onSH6Select }: 
             click: (params: { dataIndex?: number }) => {
               const idx = params.dataIndex;
               if (typeof idx === "number" && sorted[idx]?.sh6) {
-                onSH6Select(sorted[idx].sh6);
+                const clickedSH6 = sorted[idx].sh6;
+                onSH6Select(clickedSH6 === selectedSH6 ? null : clickedSH6);
               }
             },
           }}

@@ -2,6 +2,7 @@
 
 import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
+import { buildCategoricalColorMap } from "@/lib/sector-colors";
 
 type Row = {
   year: string;
@@ -21,17 +22,6 @@ function formatValue(value: number): string {
   if (value >= 1e3) return `US$ ${(value / 1e3).toFixed(1)} mil`;
   return `US$ ${value.toFixed(0)}`;
 }
-
-const COLOR_SCALE = [
-  "#0ea5e9",
-  "#38bdf8",
-  "#22d3ee",
-  "#10b981",
-  "#84cc16",
-  "#f59e0b",
-  "#f97316",
-  "#ef4444",
-];
 
 export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
   const [rows, setRows] = useState<Row[]>([]);
@@ -82,13 +72,18 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
       });
     }
 
-    return Array.from(totals.entries())
+    const topExporters = Array.from(totals.entries())
       .sort((a, b) => b[1].value - a[1].value)
-      .slice(0, 30)
-      .map(([key, val], i) => ({
+      .slice(0, 30);
+
+    const colorMap = buildCategoricalColorMap(
+      topExporters.map(([key]) => key)
+    );
+
+    return topExporters.map(([key, val]) => ({
         name: val.label,
         value: val.value,
-        itemStyle: { color: COLOR_SCALE[i % COLOR_SCALE.length] },
+        itemStyle: { color: colorMap[key] },
       }));
   }, [rows]);
 

@@ -26,8 +26,69 @@ const SECTOR_COLOR_MAP: Record<string, string> = {
 
 const FALLBACK_COLOR = "#85d7d4";
 
+const DEFAULT_TREEMAP_PALETTE = [
+  ...new Set(Object.values(SECTOR_COLOR_MAP)),
+  FALLBACK_COLOR,
+];
+
+type BuildCategoricalColorMapOptions = {
+  overrides?: Record<string, string>;
+  palette?: string[];
+  fallbackColor?: string;
+};
+
+function normalizeKey(key: string): string {
+  return key.trim();
+}
+
+function stableHash(input: string): number {
+  let hash = 0;
+  for (let i = 0; i < input.length; i += 1) {
+    hash = (hash * 31 + input.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
+export function buildCategoricalColorMap(
+  keys: string[],
+  options: BuildCategoricalColorMapOptions = {}
+): Record<string, string> {
+  const overrides = options.overrides ?? {};
+  const palette =
+    options.palette && options.palette.length > 0
+      ? options.palette
+      : DEFAULT_TREEMAP_PALETTE;
+  const fallbackColor = options.fallbackColor ?? FALLBACK_COLOR;
+
+  const uniqueKeys = Array.from(
+    new Set(keys.map(normalizeKey).filter((key) => key.length > 0))
+  ).sort((a, b) => a.localeCompare(b));
+
+  const result: Record<string, string> = {};
+
+  for (const key of uniqueKeys) {
+    const overrideColor = overrides[key];
+    if (overrideColor) {
+      result[key] = overrideColor;
+      continue;
+    }
+
+    if (palette.length === 0) {
+      result[key] = fallbackColor;
+      continue;
+    }
+
+    const colorIndex = stableHash(key) % palette.length;
+    result[key] = palette[colorIndex] ?? fallbackColor;
+  }
+
+  return result;
+}
+
 export function buildSectorColorMap(sectors: string[]): Record<string, string> {
-  return Object.fromEntries(
-    sectors.map((s) => [s, SECTOR_COLOR_MAP[s] ?? FALLBACK_COLOR])
-  );
+  return buildCategoricalColorMap(sectors, {
+    overrides: SECTOR_COLOR_MAP,
+    palette: DEFAULT_TREEMAP_PALETTE,
+    fallbackColor: FALLBACK_COLOR,
+  });
 }

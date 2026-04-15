@@ -33,7 +33,7 @@ export default function MarketProductSearch({ importer, selectedSH6, onSelect }:
     }
 
     fetch(
-      `/api/data/df_competitors?columns=sh6,product_description_br&limit=5000&sortBy=sh6&sortDirection=asc&filter[importer]=${encodeURIComponent(importer)}`
+      `/api/data/epi_monetary_sc?columns=sh6,product_description_br&limit=5000&filter[importer]=${encodeURIComponent(importer)}`
     )
       .then(async (res) => {
         const json = await res.json();
