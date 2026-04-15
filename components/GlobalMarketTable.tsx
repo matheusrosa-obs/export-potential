@@ -188,7 +188,7 @@ export default function GlobalMarketTable({ sh6 }: Props) {
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-3 py-2.5 font-semibold text-zinc-400 border-b border-zinc-800 whitespace-nowrap ${
+                  className={`px-3 py-2.5 font-semibold text-zinc-300 border-b border-zinc-800 whitespace-nowrap ${
                     col.align === "center" ? "text-center" : col.align === "right" ? "text-right" : "text-left"
                   }`}
                 >

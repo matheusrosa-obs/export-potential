@@ -4,6 +4,8 @@ import { parquetMetadata, parquetRead, parquetSchema } from "hyparquet";
 import { compressors } from "hyparquet-compressors";
 
 const DATA_DIRECTORY = path.join(process.cwd(), "public", "data");
+const COMPETITORS_DIRECTORY = path.join(DATA_DIRECTORY, "competitors");
+const COMPETITORS_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.json");
 const REGISTRY_TTL_MS = 30_000;
 
 export const DEFAULT_LIMIT = 500;
@@ -26,6 +28,19 @@ type DatasetEntry = {
 type DatasetRegistry = {
   loadedAt: number;
   datasets: Map<string, DatasetEntry>;
+};
+
+type CompetitorIndexEntry = {
+  importer: string;
+  file_name: string;
+  rows?: number;
+  sh6_count?: number;
+  size_bytes?: number;
+};
+
+type CompetitorIndexCache = {
+  loadedAt: number;
+  byImporter: Map<string, CompetitorIndexEntry>;
 };
 
 export type ListDatasetResult = {
@@ -68,6 +83,8 @@ declare global {
   var __parquetRegistry: DatasetRegistry | undefined;
   var __parquetRegistryPromise: Promise<DatasetRegistry> | undefined;
   var __parquetSchemaCache: Map<string, DatasetColumn[]> | undefined;
+  var __competitorsIndexCache: CompetitorIndexCache | undefined;
+  var __competitorsIndexPromise: Promise<CompetitorIndexCache> | undefined;
 }
 
 const schemaCache =
@@ -139,6 +156,73 @@ async function getDatasetOrThrow(datasetId: string): Promise<DatasetEntry> {
   const updated = refreshed.datasets.get(datasetId);
   if (!updated) throw new DatasetNotFoundError(`Dataset '${datasetId}' nao encontrado.`);
   return updated;
+}
+
+async function loadCompetitorsIndex(): Promise<CompetitorIndexCache> {
+  const raw = await fs.readFile(COMPETITORS_INDEX_FILE, "utf-8");
+  const parsed = JSON.parse(raw) as CompetitorIndexEntry[];
+
+  const byImporter = new Map<string, CompetitorIndexEntry>();
+  for (const entry of parsed) {
+    if (!entry?.importer || !entry?.file_name) continue;
+    byImporter.set(entry.importer.toUpperCase(), entry);
+  }
+
+  return {
+    loadedAt: Date.now(),
+    byImporter,
+  };
+}
+
+async function getCompetitorsIndex(forceRefresh = false): Promise<CompetitorIndexCache> {
+  const cached = globalThis.__competitorsIndexCache;
+  const cacheFresh = cached && Date.now() - cached.loadedAt < REGISTRY_TTL_MS;
+
+  if (!forceRefresh && cacheFresh) return cached;
+  if (globalThis.__competitorsIndexPromise) return globalThis.__competitorsIndexPromise;
+
+  const promise = loadCompetitorsIndex()
+    .then((indexCache) => {
+      globalThis.__competitorsIndexCache = indexCache;
+      return indexCache;
+    })
+    .finally(() => {
+      globalThis.__competitorsIndexPromise = undefined;
+    });
+
+  globalThis.__competitorsIndexPromise = promise;
+  return promise;
+}
+
+async function getCompetitorPartitionDataset(importer: string): Promise<DatasetEntry> {
+  const normalizedImporter = importer.trim().toUpperCase();
+  if (!normalizedImporter) {
+    throw new InvalidQueryError("Filtro 'importer' vazio para df_competitors.");
+  }
+
+  const indexCache = await getCompetitorsIndex();
+  const entry = indexCache.byImporter.get(normalizedImporter);
+  if (!entry) {
+    throw new DatasetNotFoundError(
+      `Particao de df_competitors nao encontrada para importer='${normalizedImporter}'.`
+    );
+  }
+
+  const filePath = path.join(COMPETITORS_DIRECTORY, entry.file_name);
+  const stat = await fs.stat(filePath).catch(() => null);
+  if (!stat) {
+    throw new DatasetNotFoundError(
+      `Arquivo de particao nao encontrado: '${entry.file_name}'.`
+    );
+  }
+
+  return {
+    id: "df_competitors",
+    fileName: entry.file_name,
+    filePath,
+    sizeBytes: stat.size,
+    updatedAt: stat.mtime.toISOString(),
+  };
 }
 
 async function getSchema(dataset: DatasetEntry): Promise<DatasetColumn[]> {
@@ -218,7 +302,28 @@ export async function listAvailableDatasets(options?: {
 export async function queryDataset(
   options: QueryDatasetOptions
 ): Promise<QueryDatasetResult> {
-  const dataset = await getDatasetOrThrow(options.datasetId);
+  let dataset: DatasetEntry;
+  let effectiveFilters = options.filters;
+
+  if (options.datasetId === "df_competitors") {
+    const importer = options.filters?.importer;
+    if (!importer) {
+      throw new InvalidQueryError(
+        "Dataset 'df_competitors' requer o filtro filter[importer]."
+      );
+    }
+
+    dataset = await getCompetitorPartitionDataset(importer);
+
+    if (effectiveFilters) {
+      const { importer: _ignored, ...remainingFilters } = effectiveFilters;
+      effectiveFilters =
+        Object.keys(remainingFilters).length > 0 ? remainingFilters : undefined;
+    }
+  } else {
+    dataset = await getDatasetOrThrow(options.datasetId);
+  }
+
   const schema = await getSchema(dataset);
   const selectedColumns = normalizeSelectedColumns(options.columns, schema);
 
@@ -231,7 +336,7 @@ export async function queryDataset(
   const asyncBuffer = await readAsyncBuffer(dataset.filePath);
 
   // Columns needed for filters that aren't already in the requested projection
-  const filterCols = options.filters ? Object.keys(options.filters) : [];
+  const filterCols = effectiveFilters ? Object.keys(effectiveFilters) : [];
   const available = new Set(schema.map((c) => c.name));
   for (const col of filterCols) {
     if (!available.has(col))
@@ -269,8 +374,8 @@ export async function queryDataset(
   );
 
   // Filter in memory when requested
-  if (options.filters && Object.keys(options.filters).length > 0) {
-    for (const [col, val] of Object.entries(options.filters)) {
+  if (effectiveFilters && Object.keys(effectiveFilters).length > 0) {
+    for (const [col, val] of Object.entries(effectiveFilters)) {
       allRows = allRows.filter((row) => String(row[col]) === val);
     }
   }

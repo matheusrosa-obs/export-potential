@@ -26,7 +26,7 @@ function formatValue(v: number): string {
   return `US$ ${v.toFixed(0)}`;
 }
 
-function buildOption(rows: Row[]): object {
+function buildOption(rows: Row[], selectedSH6: string | null): object {
   const sh6s = rows.map((r) => r.sh6);
   const baseline = rows.map((r) => r.bilateral_exports_sc_sh6 ?? 0);
   const unrealized = rows.map((r) => r.unrealized_potential_value ?? 0);
@@ -74,7 +74,13 @@ function buildOption(rows: Row[]): object {
       type: "category",
       data: sh6s,
       inverse: true,
-      axisLabel: { color: "#a1a1aa", fontSize: 12, width: 70, overflow: "truncate" },
+      axisLabel: {
+        color: "#a1a1aa",
+        fontSize: 12,
+        width: 70,
+        overflow: "truncate",
+        formatter: (value: string) => (selectedSH6 === value ? `${value}  •` : value),
+      },
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { show: false },
@@ -96,18 +102,37 @@ function buildOption(rows: Row[]): object {
         name: "Potencial não realizado",
         type: "bar",
         stack: "gap",
-        data: unrealized,
+        data: unrealized.map((value, i) => ({
+          value,
+          itemStyle: {
+            color: "#54f394",
+            borderRadius: [0, 4, 4, 0],
+            opacity:
+              !selectedSH6 || rows[i].sh6 === selectedSH6
+                ? 0.85
+                : 0.22,
+          },
+        })),
         barMaxWidth: 16,
-        itemStyle: { color: "#54f394", borderRadius: [0, 4, 4, 0], opacity: 0.85 },
         z: 2,
       },
       // 2. Dot at bilateral_exports_sc_sh6
       {
         name: "Exportações atuais",
         type: "scatter",
-        data: baseline.map((v, i) => [v, i]),
+        data: baseline.map((v, i) => ({
+          value: [v, i],
+          itemStyle: {
+            color: "#fff",
+            borderColor: "#54f394",
+            borderWidth: 2,
+            opacity:
+              !selectedSH6 || rows[i].sh6 === selectedSH6
+                ? 1
+                : 0.32,
+          },
+        })),
         symbolSize: 10,
-        itemStyle: { color: "#fff", borderColor: "#54f394", borderWidth: 2 },
         z: 4,
         tooltip: { show: false },
       },
@@ -115,10 +140,18 @@ function buildOption(rows: Row[]): object {
       {
         name: "Potencial total",
         type: "scatter",
-        data: potential.map((v, i) => [v, i]),
+        data: potential.map((v, i) => ({
+          value: [v, i],
+          itemStyle: {
+            color: "#54f394",
+            opacity:
+              !selectedSH6 || rows[i].sh6 === selectedSH6
+                ? 1
+                : 0.32,
+          },
+        })),
         symbol: "rect",
         symbolSize: [4, 14],
-        itemStyle: { color: "#54f394" },
         z: 4,
         tooltip: { show: false },
       },
@@ -128,9 +161,11 @@ function buildOption(rows: Row[]): object {
 
 type Props = {
   importer: string | null;
+  selectedSH6: string | null;
+  onSH6Select: (sh6: string) => void;
 };
 
-export default function CountryBarChart({ importer }: Props) {
+export default function CountryBarChart({ importer, selectedSH6, onSH6Select }: Props) {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -161,7 +196,7 @@ export default function CountryBarChart({ importer }: Props) {
       .slice(0, 30);
   }, [rows, sortKey]);
 
-  const option = useMemo(() => buildOption(sorted), [sorted]);
+  const option = useMemo(() => buildOption(sorted, selectedSH6), [sorted, selectedSH6]);
 
   if (!importer) {
     return (
@@ -196,7 +231,7 @@ export default function CountryBarChart({ importer }: Props) {
   }
 
   return (
-    <div className="w-full mt-2">
+    <div className="w-full mt-2 h-[800px] flex flex-col">
       {/* Sort buttons */}
       <div className="flex items-center gap-1.5 mb-4">
         <span className="text-xs text-zinc-500 mr-1">Ordenar por</span>
@@ -231,12 +266,22 @@ export default function CountryBarChart({ importer }: Props) {
         </div>
       </div>
 
-      <ReactECharts
-        option={option}
-        style={{ width: "100%", height: "800px" }}
-        theme="dark"
-        notMerge
-      />
+      <div className="flex-1 min-h-0">
+        <ReactECharts
+          option={option}
+          style={{ width: "100%", height: "100%" }}
+          theme="dark"
+          notMerge
+          onEvents={{
+            click: (params: { dataIndex?: number }) => {
+              const idx = params.dataIndex;
+              if (typeof idx === "number" && sorted[idx]?.sh6) {
+                onSH6Select(sorted[idx].sh6);
+              }
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }

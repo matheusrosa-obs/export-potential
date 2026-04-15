@@ -12,11 +12,15 @@ import CountrySearch from "@/components/CountrySearch";
 import CountryBarChart from "@/components/CountryBarChart";
 import GlobalMarketTable from "@/components/GlobalMarketTable";
 import ProductWorldMap from "@/components/ProductWorldMap";
+import MarketProductSearch from "@/components/MarketProductSearch";
+import MarketCompetitorTable from "@/components/MarketCompetitorTable";
+import MarketCompetitorTreemap from "@/components/MarketCompetitorTreemap";
 
 export default function Home() {
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
   const [selectedSH6, setSelectedSH6] = useState<string | null>("020714");
   const [selectedImporter, setSelectedImporter] = useState<string | null>("USA");
+  const [selectedMarketSH6, setSelectedMarketSH6] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const sectionButtons = [
@@ -59,6 +63,11 @@ export default function Home() {
 
   function handleResetSectorFilters() {
     setSelectedSectors([]);
+  }
+
+  function handleImporterSelect(importer: string | null) {
+    setSelectedImporter(importer);
+    setSelectedMarketSH6(null);
   }
 
   function scrollToNext() {
@@ -203,13 +212,36 @@ export default function Home() {
           Detalhamento dos importadores de maior potencial para Santa Catarina, de acordo com os produtos demandados.
         </p>
 
-        <div className="w-full grid grid-cols-2 gap-6 mt-2">
+        <div className="w-full grid grid-cols-2 gap-4 mt-2">
+          <CountrySearch onSelect={handleImporterSelect} defaultISO3="USA" />
+          <MarketProductSearch
+            importer={selectedImporter}
+            selectedSH6={selectedMarketSH6}
+            onSelect={setSelectedMarketSH6}
+          />
+        </div>
+
+        <div className="w-full grid grid-cols-2 gap-6 mt-3">
           <div className="col-span-1 flex flex-col gap-4">
-            <CountrySearch onSelect={setSelectedImporter} defaultISO3="USA" />
-            <CountryBarChart importer={selectedImporter} />
+            <CountryBarChart
+              importer={selectedImporter}
+              selectedSH6={selectedMarketSH6}
+              onSH6Select={setSelectedMarketSH6}
+            />
           </div>
-          <div className="col-span-1">
-            {/* conteúdo futuro */}
+          <div className="col-span-1 h-[800px] flex flex-col gap-4">
+            <div className="h-[392px]">
+              <MarketCompetitorTable
+                importer={selectedImporter}
+                sh6={selectedMarketSH6}
+              />
+            </div>
+            <div className="h-[392px]">
+              <MarketCompetitorTreemap
+                importer={selectedImporter}
+                sh6={selectedMarketSH6}
+              />
+            </div>
           </div>
         </div>
 
