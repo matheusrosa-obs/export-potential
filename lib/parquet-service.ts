@@ -6,6 +6,7 @@ import { compressors } from "hyparquet-compressors";
 const DATA_DIRECTORY = path.join(process.cwd(), "public", "data");
 const COMPETITORS_DIRECTORY = path.join(DATA_DIRECTORY, "competitors");
 const COMPETITORS_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.json");
+const COMPETITORS_BLOB_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.blob.json");
 const REGISTRY_TTL_MS = 30_000;
 
 export const DEFAULT_LIMIT = 500;
@@ -33,6 +34,7 @@ type DatasetRegistry = {
 type CompetitorIndexEntry = {
   importer: string;
   file_name: string;
+  blob_url?: string;
   rows?: number;
   sh6_count?: number;
   size_bytes?: number;
@@ -91,13 +93,26 @@ const schemaCache =
   globalThis.__parquetSchemaCache ?? new Map<string, DatasetColumn[]>();
 globalThis.__parquetSchemaCache = schemaCache;
 
-/** Read a parquet file and return an AsyncBuffer compatible with hyparquet. */
-async function readAsyncBuffer(filePath: string) {
-  const buffer = await fs.readFile(filePath);
-  const arrayBuffer: ArrayBuffer = buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength
-  ) as ArrayBuffer;
+/** Read local or remote parquet and return an AsyncBuffer compatible with hyparquet. */
+async function readAsyncBuffer(filePathOrUrl: string) {
+  let arrayBuffer: ArrayBuffer;
+
+  if (/^https?:\/\//i.test(filePathOrUrl)) {
+    const response = await fetch(filePathOrUrl);
+    if (!response.ok) {
+      throw new Error(
+        `Falha ao baixar parquet remoto (${response.status}): ${filePathOrUrl}`
+      );
+    }
+    arrayBuffer = await response.arrayBuffer();
+  } else {
+    const buffer = await fs.readFile(filePathOrUrl);
+    arrayBuffer = buffer.buffer.slice(
+      buffer.byteOffset,
+      buffer.byteOffset + buffer.byteLength
+    ) as ArrayBuffer;
+  }
+
   return {
     byteLength: arrayBuffer.byteLength,
     slice: (start: number, end: number) =>
@@ -159,7 +174,20 @@ async function getDatasetOrThrow(datasetId: string): Promise<DatasetEntry> {
 }
 
 async function loadCompetitorsIndex(): Promise<CompetitorIndexCache> {
-  const raw = await fs.readFile(COMPETITORS_INDEX_FILE, "utf-8");
+  const preferredIndexFile =
+    process.env.COMPETITORS_INDEX_FILE === "index.json"
+      ? COMPETITORS_INDEX_FILE
+      : COMPETITORS_BLOB_INDEX_FILE;
+
+  const indexFilePath = await fs
+    .access(preferredIndexFile)
+    .then(() => preferredIndexFile)
+    .catch(async () => {
+      await fs.access(COMPETITORS_INDEX_FILE);
+      return COMPETITORS_INDEX_FILE;
+    });
+
+  const raw = await fs.readFile(indexFilePath, "utf-8");
   const parsed = JSON.parse(raw) as CompetitorIndexEntry[];
 
   const byImporter = new Map<string, CompetitorIndexEntry>();
@@ -208,20 +236,18 @@ async function getCompetitorPartitionDataset(importer: string): Promise<DatasetE
     );
   }
 
-  const filePath = path.join(COMPETITORS_DIRECTORY, entry.file_name);
-  const stat = await fs.stat(filePath).catch(() => null);
-  if (!stat) {
-    throw new DatasetNotFoundError(
-      `Arquivo de particao nao encontrado: '${entry.file_name}'.`
+  if (!entry.blob_url) {
+    throw new InvalidQueryError(
+      `Index de competitors sem blob_url para importer='${normalizedImporter}'. Execute o upload para Vercel Blob.`
     );
   }
 
   return {
     id: "df_competitors",
     fileName: entry.file_name,
-    filePath,
-    sizeBytes: stat.size,
-    updatedAt: stat.mtime.toISOString(),
+    filePath: entry.blob_url,
+    sizeBytes: entry.size_bytes ?? 0,
+    updatedAt: new Date(indexCache.loadedAt).toISOString(),
   };
 }
 

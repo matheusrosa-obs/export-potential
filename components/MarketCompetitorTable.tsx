@@ -127,7 +127,7 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
   }
 
   return (
-    <div className="h-full rounded-xl border border-zinc-800 bg-zinc-900/20 p-4 flex flex-col">
+    <div className="h-full rounded-xl bg-zinc-900/20 p-4 flex flex-col">
       <h3 className="text-sm font-semibold text-zinc-100 mb-3">
         Principais exporters do SH6 no mercado selecionado
       </h3>

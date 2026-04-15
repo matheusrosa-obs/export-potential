@@ -154,7 +154,7 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
   }
 
   return (
-    <div className="h-full rounded-xl border border-zinc-800 bg-zinc-900/20 p-3">
+    <div className="h-full rounded-xl bg-zinc-900/20 p-3">
       <h3 className="text-sm font-semibold text-zinc-100 mb-2">
         Distribuição do mercado entre exporters
       </h3>

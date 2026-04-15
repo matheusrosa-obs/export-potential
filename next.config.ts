@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     "@duckdb/node-bindings",
     "@duckdb/node-bindings-win32-x64",
   ],
+  outputFileTracingExcludes: {
+    "*": ["./public/data/competitors/**/*.parquet"],
+  },
 };
 
 export default nextConfig;
