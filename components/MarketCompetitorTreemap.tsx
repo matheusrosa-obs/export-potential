@@ -133,7 +133,7 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
   if (!importer || !sh6) {
     return (
       <div className="h-full rounded-xl border border-dashed border-zinc-700 px-4 py-6 text-sm text-zinc-500 flex items-center justify-center">
-        Selecione um país e um SH6 para ver a distribuição entre exporters.
+        Selecione um país e um SH6 para ver a distribuição entre competidores.
       </div>
     );
   }
@@ -141,7 +141,7 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
   if (loading) {
     return (
       <div className="h-full rounded-xl border border-zinc-800 px-4 py-6 text-sm text-zinc-500 flex items-center justify-center">
-        Carregando treemap de exporters...
+        Carregando treemap de competidores...
       </div>
     );
   }

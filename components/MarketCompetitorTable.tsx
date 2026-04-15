@@ -57,8 +57,8 @@ function formatValue(value: number): string {
 
 function formatPercent(value: number): string {
   return value.toLocaleString("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
   });
 }
 
@@ -163,7 +163,7 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
   if (!importer || !sh6) {
     return (
       <div className="h-full rounded-xl border border-dashed border-zinc-700 px-4 py-6 text-sm text-zinc-500 flex items-center justify-center">
-        Selecione um país e um SH6 para ver os principais exporters.
+        Selecione um país e um SH6 para ver os principais competidores.
       </div>
     );
   }
@@ -238,9 +238,9 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
             <tr>
               <th className="px-3 py-2 text-center font-semibold text-zinc-300 border-b border-zinc-800">#</th>
               <th className="px-3 py-2 text-left font-semibold text-zinc-300 border-b border-zinc-800">Exporter</th>
-              <th className="px-3 py-2 text-right font-semibold text-zinc-300 border-b border-zinc-800">Valor</th>
-              <th className="px-3 py-2 text-right font-semibold text-zinc-300 border-b border-zinc-800">Share (%)</th>
-              <th className="px-3 py-2 text-right font-semibold text-zinc-300 border-b border-zinc-800">CAGR 8a (%)</th>
+              <th className="px-3 py-2 text-center font-semibold text-zinc-300 border-b border-zinc-800">Valor</th>
+              <th className="px-3 py-2 text-center font-semibold text-zinc-300 border-b border-zinc-800">Share (%)</th>
+              <th className="px-3 py-2 text-center font-semibold text-zinc-300 border-b border-zinc-800">CAGR 8a (%)</th>
             </tr>
           </thead>
           <tbody>
@@ -252,9 +252,9 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
                   <span className="text-zinc-500"> - </span>
                   {row.exporter_name}
                 </td>
-                <td className="px-3 py-2 text-right text-zinc-300 whitespace-nowrap">{formatValue(row.value ?? 0)}</td>
-                <td className="px-3 py-2 text-right text-zinc-300 whitespace-nowrap">{formatPercent(row.importer_sh6_share)}%</td>
-                <td className={`px-3 py-2 text-right whitespace-nowrap ${cagrColor(row.cagr_8y_adj)}`}>{formatPercent(row.cagr_8y_adj)}%</td>
+                <td className="px-3 py-2 text-center text-zinc-300 whitespace-nowrap">{formatValue(row.value ?? 0)}</td>
+                <td className="px-3 py-2 text-center text-zinc-300 whitespace-nowrap">{formatPercent(row.importer_sh6_share)}%</td>
+                <td className={`px-3 py-2 text-center whitespace-nowrap ${cagrColor(row.cagr_8y_adj)}`}>{formatPercent(row.cagr_8y_adj)}%</td>
               </tr>
             ))}
           </tbody>

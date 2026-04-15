@@ -178,11 +178,11 @@ export default function Home() {
           <ProductSearch onSelect={setSelectedSH6} defaultSH6="020714" />
         </div>
 
-        <div className="w-full grid grid-cols-2 gap-8">
-          <div className="col-span-1">
+        <div className="w-full grid grid-cols-20 gap-8">
+          <div className="col-span-9">
             <ProductBarChart sh6={selectedSH6} />
           </div>
-          <div className="col-span-1">
+          <div className="col-span-11">
             <GlobalMarketTable sh6={selectedSH6} />
           </div>
         </div>
@@ -206,10 +206,10 @@ export default function Home() {
       // ############################################################################
       <section id="section-4" className="relative min-h-screen grid content-start justify-items-start gap-3 px-60 py-15 text-left">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
-          Mercados
+          Mercados e competidores
         </h2>
         <p className="font-secondary text-zinc-300 py-3">
-          Detalhamento dos importadores de maior potencial para Santa Catarina, de acordo com os produtos demandados.
+          Detalhamento dos importadores de maior potencial para Santa Catarina, de acordo com os produtos demandados. Detalhe dos competidores nos mercados-alvo.
         </p>
 
         <div className="w-full grid grid-cols-2 gap-4 mt-2">
@@ -221,15 +221,15 @@ export default function Home() {
           />
         </div>
 
-        <div className="w-full grid grid-cols-2 gap-6 mt-3">
-          <div className="col-span-1 flex flex-col gap-4">
+        <div className="w-full grid grid-cols-20 gap-6 mt-3">
+          <div className="col-span-9 flex flex-col gap-4">
             <CountryBarChart
               importer={selectedImporter}
               selectedSH6={selectedMarketSH6}
               onSH6Select={setSelectedMarketSH6}
             />
           </div>
-          <div className="col-span-1 h-[800px] flex flex-col gap-4">
+          <div className="col-span-11 h-[800px] flex flex-col gap-4">
             <div className="h-[392px]">
               <MarketCompetitorTable
                 importer={selectedImporter}
