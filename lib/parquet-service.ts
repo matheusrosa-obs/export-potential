@@ -9,6 +9,8 @@ const COMPETITORS_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.json");
 const COMPETITORS_BLOB_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.blob.json");
 const REGISTRY_TTL_MS = 30_000;
 
+type CompetitorsSourceMode = "local" | "blob";
+
 export const DEFAULT_LIMIT = 500;
 export const MAX_LIMIT = 5_000;
 
@@ -174,18 +176,8 @@ async function getDatasetOrThrow(datasetId: string): Promise<DatasetEntry> {
 }
 
 async function loadCompetitorsIndex(): Promise<CompetitorIndexCache> {
-  const preferredIndexFile =
-    process.env.COMPETITORS_INDEX_FILE === "index.json"
-      ? COMPETITORS_INDEX_FILE
-      : COMPETITORS_BLOB_INDEX_FILE;
-
-  const indexFilePath = await fs
-    .access(preferredIndexFile)
-    .then(() => preferredIndexFile)
-    .catch(async () => {
-      await fs.access(COMPETITORS_INDEX_FILE);
-      return COMPETITORS_INDEX_FILE;
-    });
+  const sourceMode = resolveCompetitorsSourceMode();
+  const indexFilePath = await resolveCompetitorsIndexFile(sourceMode);
 
   const raw = await fs.readFile(indexFilePath, "utf-8");
   const parsed = JSON.parse(raw) as CompetitorIndexEntry[];
@@ -200,6 +192,50 @@ async function loadCompetitorsIndex(): Promise<CompetitorIndexCache> {
     loadedAt: Date.now(),
     byImporter,
   };
+}
+
+function resolveCompetitorsSourceMode(): CompetitorsSourceMode {
+  const explicit = process.env.COMPETITORS_SOURCE?.trim().toLowerCase();
+  if (explicit === "local" || explicit === "blob") {
+    return explicit;
+  }
+
+  const vercelFlag = process.env.VERCEL?.trim().toLowerCase();
+  const runningOnVercel = vercelFlag === "1" || vercelFlag === "true";
+
+  return runningOnVercel ? "blob" : "local";
+}
+
+async function resolveCompetitorsIndexFile(
+  sourceMode: CompetitorsSourceMode
+): Promise<string> {
+  const explicit = process.env.COMPETITORS_INDEX_FILE?.trim();
+  if (explicit === "index.json") {
+    await fs.access(COMPETITORS_INDEX_FILE);
+    return COMPETITORS_INDEX_FILE;
+  }
+
+  if (explicit === "index.blob.json") {
+    await fs.access(COMPETITORS_BLOB_INDEX_FILE);
+    return COMPETITORS_BLOB_INDEX_FILE;
+  }
+
+  if (sourceMode === "local") {
+    await fs.access(COMPETITORS_INDEX_FILE);
+    return COMPETITORS_INDEX_FILE;
+  }
+
+  const blobIndexExists = await fs
+    .access(COMPETITORS_BLOB_INDEX_FILE)
+    .then(() => true)
+    .catch(() => false);
+
+  if (blobIndexExists) {
+    return COMPETITORS_BLOB_INDEX_FILE;
+  }
+
+  await fs.access(COMPETITORS_INDEX_FILE);
+  return COMPETITORS_INDEX_FILE;
 }
 
 async function getCompetitorsIndex(forceRefresh = false): Promise<CompetitorIndexCache> {
@@ -224,6 +260,8 @@ async function getCompetitorsIndex(forceRefresh = false): Promise<CompetitorInde
 
 async function getCompetitorPartitionDataset(importer: string): Promise<DatasetEntry> {
   const normalizedImporter = importer.trim().toUpperCase();
+  const sourceMode = resolveCompetitorsSourceMode();
+
   if (!normalizedImporter) {
     throw new InvalidQueryError("Filtro 'importer' vazio para df_competitors.");
   }
@@ -236,9 +274,28 @@ async function getCompetitorPartitionDataset(importer: string): Promise<DatasetE
     );
   }
 
+  if (sourceMode === "local") {
+    const localFilePath = path.join(COMPETITORS_DIRECTORY, entry.file_name);
+    const stat = await fs.stat(localFilePath).catch(() => null);
+
+    if (!stat) {
+      throw new DatasetNotFoundError(
+        `Arquivo de particao local nao encontrado: '${entry.file_name}'.`
+      );
+    }
+
+    return {
+      id: "df_competitors",
+      fileName: entry.file_name,
+      filePath: localFilePath,
+      sizeBytes: stat.size,
+      updatedAt: stat.mtime.toISOString(),
+    };
+  }
+
   if (!entry.blob_url) {
     throw new InvalidQueryError(
-      `Index de competitors sem blob_url para importer='${normalizedImporter}'. Execute o upload para Vercel Blob.`
+      `Index de competitors sem blob_url para importer='${normalizedImporter}' em modo Blob.`
     );
   }
 

@@ -5,6 +5,7 @@ import * as echarts from "echarts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import countryCoords from "@/lib/country-coords.json";
 import { getCountryName } from "@/lib/country-names-pt";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 // ─── Ajuste estas constantes para calibrar as bolhas ──────────────────────────
 const BUBBLE_MIN_PX = 2;     // tamanho mínimo da bolha em pixels
@@ -181,9 +182,9 @@ export default function WorldMapSC() {
     tooltip: {
       trigger: "item",
       formatter: (params: any) => {
-        const [, , value] = params.value as [number, number, number];
+        const value = Array.isArray(params.value) ? (params.value[2] as number) : 0;
         const countryName = getCountryName(params.name);
-        return `<strong>${countryName}</strong><br/>Potencial: ${formatValue(value)}<br/>Categoria: <strong>${params.seriesName}</strong>`;
+        return `${formatTooltipTitle(countryName)}<br/>Potencial: ${formatValue(value ?? 0)}<br/>Categoria: <strong>${params.seriesName}</strong>`;
       },
     },
     geo: {

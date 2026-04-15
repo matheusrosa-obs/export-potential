@@ -3,6 +3,7 @@
 import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
 import { getCountryName } from "@/lib/country-names-pt";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 type Row = {
   importer: string;
@@ -50,7 +51,7 @@ function buildOption(rows: Row[]): object {
         const base = baseline[params[0].dataIndex];
         const unr = unrealized[params[0].dataIndex];
         return [
-          `<strong>${country}</strong>`,
+          formatTooltipTitle(country),
           `Potencial total: <b>${formatValue(pot)}</b>`,
           `Exportações atuais: <b>${formatValue(base)}</b>`,
           `Potencial não realizado: <b>${formatValue(unr)}</b>`,

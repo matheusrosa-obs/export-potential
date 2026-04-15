@@ -3,6 +3,7 @@
 import ReactECharts from "echarts-for-react";
 import { useEffect, useState } from "react";
 import { buildSectorColorMap } from "@/lib/sector-colors";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 type Row = {
   sc_comp: string;
@@ -82,7 +83,7 @@ export default function BarChartSC({ selectedSectors, onSectorClick, onResetFilt
       axisPointer: { type: "shadow" },
       formatter: (params: { name: string; value: number }[]) => {
         const p = params[0];
-        return `<strong>${p.name}</strong><br/>Potencial: ${formatValue(p.value)}`;
+        return `${formatTooltipTitle(p.name)}<br/>Potencial: ${formatValue(p.value)}`;
       },
     },
     grid: { left: 16, right: 24, top: 60, bottom: 5, containLabel: true },

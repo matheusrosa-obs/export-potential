@@ -3,6 +3,7 @@
 import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
 import { buildCategoricalColorMap } from "@/lib/sector-colors";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 type Row = {
   year: string;
@@ -38,9 +39,14 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
     setError(null);
     const cols = "year,exporter,exporter_name,value,sh6";
 
-    fetch(
-      `/api/data/df_competitors?columns=${cols}&limit=5000&filter[importer]=${encodeURIComponent(importer)}&filter[sh6]=${encodeURIComponent(sh6)}`
-    )
+    const params = new URLSearchParams({
+      columns: cols,
+      limit: "5000",
+      "filter[importer]": importer,
+      "filter[sh6]": sh6,
+    });
+
+    fetch(`/api/data/df_competitors?${params.toString()}`)
       .then(async (res) => {
         const json = await res.json();
         if (!res.ok || json.error) {
@@ -92,7 +98,7 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
       backgroundColor: "transparent",
       tooltip: {
         formatter: (info: { name: string; value: number }) =>
-          `<strong>${info.name}</strong><br/>Exportações: ${formatValue(info.value)}`,
+          `${formatTooltipTitle(info.name)}<br/>Exportações: ${formatValue(info.value)}`,
       },
       series: [
         {

@@ -2,6 +2,7 @@
 
 import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 type Row = {
   sh6: string;
@@ -46,7 +47,7 @@ function buildOption(rows: Row[], selectedSH6: string | null): object {
       formatter(params: any[]) {
         const i = params[0].dataIndex;
         return [
-          `<strong>${rows[i].sh6} – ${rows[i].product_description_br}</strong>`,
+          formatTooltipTitle(`${rows[i].sh6} - ${rows[i].product_description_br}`),
           `Potencial total: <b>${formatValue(potential[i])}</b>`,
           `Exportações atuais: <b>${formatValue(baseline[i])}</b>`,
           `Potencial não realizado: <b>${formatValue(unrealized[i])}</b>`,
@@ -232,6 +233,9 @@ export default function CountryBarChart({ importer, selectedSH6, onSH6Select }: 
 
   return (
     <div className="w-full mt-2 h-[800px] flex flex-col">
+      <h3 className="text-sm font-semibold text-zinc-100 mb-4">
+        Potencial de exportação e potencial não realizado por produto
+      </h3>
       {/* Sort buttons */}
       <div className="flex items-center gap-1.5 mb-4">
         <span className="text-xs text-zinc-500 mr-1">Ordenar por</span>

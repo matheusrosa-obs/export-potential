@@ -5,6 +5,7 @@ import * as echarts from "echarts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import countryCoords from "@/lib/country-coords.json";
 import { getCountryName } from "@/lib/country-names-pt";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 const BUBBLE_MIN_PX = 2;
 const BUBBLE_MAX_PX = 120;
@@ -98,8 +99,8 @@ export default function ProductWorldMap({ sh6 }: Props) {
     tooltip: {
       trigger: "item",
       formatter: (params: any) => {
-        const [, , value] = params.value as [number, number, number];
-        return `<strong>${getCountryName(params.name)}</strong><br/>${activeLabel}: ${formatValue(value)}`;
+        const value = Array.isArray(params.value) ? (params.value[2] as number) : 0;
+        return `${formatTooltipTitle(getCountryName(params.name))}<br/>${activeLabel}: ${formatValue(value ?? 0)}`;
       },
     },
     geo: {

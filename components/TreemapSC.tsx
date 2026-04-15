@@ -3,6 +3,7 @@
 import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
 import { buildSectorColorMap } from "@/lib/sector-colors";
+import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 type Row = {
   sh6: string;
@@ -84,19 +85,7 @@ export default function TreemapSC({ selectedSectors }: Props) {
     },
     tooltip: {
       formatter: (info: { name: string; value: number }) => {
-        const words = info.name.split(" ");
-        const lines: string[] = [];
-        let current = "";
-        for (const word of words) {
-          if ((current + " " + word).trim().length > 60) {
-            lines.push(current.trim());
-            current = word;
-          } else {
-            current = (current + " " + word).trim();
-          }
-        }
-        if (current) lines.push(current);
-        return `<strong>${lines.join("<br/>")}</strong><br/>Potencial: ${formatValue(info.value)}`;
+        return `${formatTooltipTitle(info.name)}<br/>Potencial: ${formatValue(info.value)}`;
       },
     },
     series: [

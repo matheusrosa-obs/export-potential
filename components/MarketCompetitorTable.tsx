@@ -2,13 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Row = {
+type ApiRow = {
   year: string;
+  exporter: string | null;
+  exporter_name: string | null;
+  value: number;
+  importer_sh6_share?: string | number;
+  cagr_8y_adj?: string | number;
+};
+
+type Row = {
   exporter: string;
   exporter_name: string;
   value: number;
-  importer_sh6_share: string;
-  cagr_8y_adj: string;
+  importer_sh6_share: number;
+  cagr_8y_adj: number;
 };
 
 type SortKey = "value" | "importer_sh6_share" | "cagr_8y_adj";
@@ -24,8 +32,19 @@ type Props = {
   sh6: string | null;
 };
 
-function parseLocalizedNumber(input: string): number {
-  const num = parseFloat(String(input ?? "").replace(/\./g, "").replace(",", "."));
+function parseLocalizedNumber(input: string | number | undefined | null): number {
+  if (typeof input === "number") {
+    return Number.isFinite(input) ? input : 0;
+  }
+
+  const raw = String(input ?? "").trim();
+  if (!raw) return 0;
+
+  const normalized = raw.includes(",")
+    ? raw.replace(/\./g, "").replace(",", ".")
+    : raw;
+
+  const num = Number(normalized);
   return Number.isFinite(num) ? num : 0;
 }
 
@@ -36,11 +55,26 @@ function formatValue(value: number): string {
   return `US$ ${value.toFixed(0)}`;
 }
 
-function cagrColor(v: string): string {
-  const n = parseLocalizedNumber(v);
-  if (n > 0) return "text-emerald-400";
-  if (n < 0) return "text-red-400";
+function formatPercent(value: number): string {
+  return value.toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function cagrColor(value: number): string {
+  if (value > 0) return "text-emerald-400";
+  if (value < 0) return "text-red-400";
   return "text-zinc-400";
+}
+
+function normalizeText(value: string | null | undefined, fallback: string): string {
+  const normalized = String(value ?? "").trim();
+  return normalized.length > 0 ? normalized : fallback;
+}
+
+function rowId(row: Row): string {
+  return `${row.exporter}||${row.exporter_name}`;
 }
 
 export default function MarketCompetitorTable({ importer, sh6 }: Props) {
@@ -60,9 +94,14 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
     setError(null);
     const cols = "year,exporter,exporter_name,value,importer_sh6_share,cagr_8y_adj,sh6";
 
-    fetch(
-      `/api/data/df_competitors?columns=${cols}&limit=5000&filter[importer]=${encodeURIComponent(importer)}&filter[sh6]=${encodeURIComponent(sh6)}`
-    )
+    const params = new URLSearchParams({
+      columns: cols,
+      limit: "5000",
+      "filter[importer]": importer,
+      "filter[sh6]": sh6,
+    });
+
+    fetch(`/api/data/df_competitors?${params.toString()}`)
       .then(async (res) => {
         const json = await res.json();
         if (!res.ok || json.error) {
@@ -71,13 +110,21 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
         return json;
       })
       .then((json) => {
-        const fetched = (json.rows as Row[]) ?? [];
+        const fetched = (json.rows as ApiRow[]) ?? [];
         const latestYear = fetched.reduce((acc, row) => Math.max(acc, Number(row.year) || 0), 0);
-        const latestRows = fetched
-          .filter((row) => (Number(row.year) || 0) === latestYear)
-          .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
+        const latestRows = fetched.filter((row) => (Number(row.year) || 0) === latestYear);
 
-        setRows(latestRows);
+        const normalizedRows = latestRows
+          .map((row) => ({
+            exporter: normalizeText(row.exporter, "N/A"),
+            exporter_name: normalizeText(row.exporter_name, "Sem nome"),
+            value: row.value ?? 0,
+            importer_sh6_share: parseLocalizedNumber(row.importer_sh6_share),
+            cagr_8y_adj: parseLocalizedNumber(row.cagr_8y_adj),
+          }))
+          .sort((a, b) => b.value - a.value);
+
+        setRows(normalizedRows);
         setLoading(false);
       })
       .catch((err: unknown) => {
@@ -91,16 +138,27 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
     const searched = q
       ? rows.filter(
           (r) =>
-            r.exporter.toLowerCase().includes(q) ||
-            r.exporter_name.toLowerCase().includes(q)
+            normalizeText(r.exporter, "").toLowerCase().includes(q) ||
+            normalizeText(r.exporter_name, "").toLowerCase().includes(q)
         )
       : rows;
 
     return [...searched].sort((a, b) => {
       if (sortKey === "value") return (b.value ?? 0) - (a.value ?? 0);
-      return parseLocalizedNumber(String(b[sortKey])) - parseLocalizedNumber(String(a[sortKey]));
+      return (b[sortKey] ?? 0) - (a[sortKey] ?? 0);
     });
   }, [rows, search, sortKey]);
+
+  const valueRankByRowId = useMemo(() => {
+    const rankMap = new Map<string, number>();
+    const byValue = [...rows].sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
+
+    for (let i = 0; i < byValue.length; i += 1) {
+      rankMap.set(rowId(byValue[i]), i + 1);
+    }
+
+    return rankMap;
+  }, [rows]);
 
   if (!importer || !sh6) {
     return (
@@ -188,15 +246,15 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
           <tbody>
             {filteredRows.map((row, i) => (
               <tr key={`${row.exporter}-${i}`} className="border-b border-zinc-800/60 hover:bg-zinc-800/40 transition-colors">
-                <td className="px-3 py-2 text-center text-zinc-500">{i + 1}</td>
+                <td className="px-3 py-2 text-center text-zinc-500">{valueRankByRowId.get(rowId(row)) ?? "-"}</td>
                 <td className="px-3 py-2 text-zinc-300 whitespace-nowrap max-w-[190px] truncate" title={`${row.exporter} - ${row.exporter_name}`}>
                   <span className="font-mono text-zinc-400">{row.exporter}</span>
                   <span className="text-zinc-500"> - </span>
                   {row.exporter_name}
                 </td>
                 <td className="px-3 py-2 text-right text-zinc-300 whitespace-nowrap">{formatValue(row.value ?? 0)}</td>
-                <td className="px-3 py-2 text-right text-zinc-300 whitespace-nowrap">{row.importer_sh6_share}%</td>
-                <td className={`px-3 py-2 text-right whitespace-nowrap ${cagrColor(row.cagr_8y_adj)}`}>{row.cagr_8y_adj}%</td>
+                <td className="px-3 py-2 text-right text-zinc-300 whitespace-nowrap">{formatPercent(row.importer_sh6_share)}%</td>
+                <td className={`px-3 py-2 text-right whitespace-nowrap ${cagrColor(row.cagr_8y_adj)}`}>{formatPercent(row.cagr_8y_adj)}%</td>
               </tr>
             ))}
           </tbody>
