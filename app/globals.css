@@ -124,3 +124,12 @@ body {
   outline: 2px solid #0077fc;
   outline-offset: 2px;
 }
+
+.map-touch-scope {
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.map-touch-scope canvas {
+  touch-action: none;
+}

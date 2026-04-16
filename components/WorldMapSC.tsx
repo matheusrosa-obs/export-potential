@@ -2,7 +2,7 @@
 
 import ReactECharts from "echarts-for-react";
 import * as echarts from "echarts";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import countryCoords from "@/lib/country-coords.json";
 import { getCountryName } from "@/lib/country-names-pt";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
@@ -87,8 +87,34 @@ export default function WorldMapSC() {
   const [error, setError] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(mapRegistered);
   const [chartResetKey, setChartResetKey] = useState(0);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   // null = todas visíveis; Set = apenas as categorias do Set estão ativas
   const [activeCategories, setActiveCategories] = useState<Set<string> | null>(null);
+
+  useEffect(() => {
+    const el = mapContainerRef.current;
+    if (!el) return;
+
+    const preventMultiTouchZoom = (event: TouchEvent) => {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    };
+
+    const preventGestureEvent = (event: Event) => {
+      event.preventDefault();
+    };
+
+    el.addEventListener("touchmove", preventMultiTouchZoom, { passive: false });
+    el.addEventListener("gesturestart", preventGestureEvent, { passive: false });
+    el.addEventListener("gesturechange", preventGestureEvent, { passive: false });
+
+    return () => {
+      el.removeEventListener("touchmove", preventMultiTouchZoom);
+      el.removeEventListener("gesturestart", preventGestureEvent);
+      el.removeEventListener("gesturechange", preventGestureEvent);
+    };
+  }, []);
 
   const handleLegendClick = useCallback((params: { name: string }) => {
     const clicked = params.name;
@@ -217,7 +243,7 @@ export default function WorldMapSC() {
   }
 
   return (
-    <div className="relative w-full h-[800px]">
+    <div ref={mapContainerRef} className="relative w-full h-[800px] map-touch-scope">
       // Botão para resetar pan/zoom do mapa.
       <button
         type="button"
