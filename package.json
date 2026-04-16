@@ -15,9 +15,11 @@
     "echarts-for-react": "^3.0.6",
     "hyparquet": "^1.25.6",
     "hyparquet-compressors": "^1.1.1",
+    "katex": "^0.16.45",
     "next": "16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-katex": "^3.1.0",
     "topojson-client": "^3.1.0",
     "vercel": "^51.2.1",
     "world-atlas": "^2.0.2"
@@ -27,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-katex": "^3.0.4",
     "@vercel/blob": "^2.3.3",
     "tailwindcss": "^4.2.2",
     "typescript": "5.9.3"

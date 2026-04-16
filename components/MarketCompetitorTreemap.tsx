@@ -157,7 +157,7 @@ export default function MarketCompetitorTreemap({ importer, sh6 }: Props) {
   return (
     <div className="h-full rounded-xl bg-zinc-900/20 p-3">
       <h3 className="text-sm font-semibold text-zinc-100 mb-2">
-        Distribuição do mercado entre exporters
+        Distribuição do mercado entre competidores
       </h3>
       <ReactECharts option={option} style={{ width: "100%", height: "calc(100% - 26px)" }} theme="dark" notMerge />
     </div>

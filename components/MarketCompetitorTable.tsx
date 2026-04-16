@@ -128,7 +128,7 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
         setLoading(false);
       })
       .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : "Erro ao carregar os exporters.");
+        setError(err instanceof Error ? err.message : "Erro ao carregar os competidores.");
         setLoading(false);
       });
   }, [importer, sh6]);
@@ -171,7 +171,7 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
   if (loading) {
     return (
       <div className="h-full rounded-xl border border-zinc-800 px-4 py-6 text-sm text-zinc-500 flex items-center justify-center">
-        Carregando tabela de exporters...
+        Carregando tabela de competidores...
       </div>
     );
   }
@@ -187,7 +187,7 @@ export default function MarketCompetitorTable({ importer, sh6 }: Props) {
   return (
     <div className="h-full rounded-xl bg-zinc-900/20 p-4 flex flex-col">
       <h3 className="text-sm font-semibold text-zinc-100 mb-3">
-        Principais exporters do SH6 no mercado selecionado
+        Principais competidores do SH6 no mercado selecionado
       </h3>
 
       <div className="flex items-center gap-1.5 mb-3">
