@@ -9,6 +9,9 @@ const COMPETITORS_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.json");
 const COMPETITORS_BLOB_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.blob.json");
 const REGISTRY_TTL_MS = 30_000;
 
+const DEFAULT_COMPETITORS_PARQUET_CACHE_TTL_MS = 15 * 60_000;
+const DEFAULT_COMPETITORS_PARQUET_CACHE_MAX_ENTRIES = 8;
+
 type CompetitorsSourceMode = "local" | "blob";
 
 export const DEFAULT_LIMIT = 500;
@@ -45,6 +48,12 @@ type CompetitorIndexEntry = {
 type CompetitorIndexCache = {
   loadedAt: number;
   byImporter: Map<string, CompetitorIndexEntry>;
+};
+
+type CompetitorParquetCacheEntry = {
+  arrayBuffer: ArrayBuffer;
+  loadedAt: number;
+  lastAccessedAt: number;
 };
 
 export type ListDatasetResult = {
@@ -89,37 +98,177 @@ declare global {
   var __parquetSchemaCache: Map<string, DatasetColumn[]> | undefined;
   var __competitorsIndexCache: CompetitorIndexCache | undefined;
   var __competitorsIndexPromise: Promise<CompetitorIndexCache> | undefined;
+  var __competitorsParquetCache:
+    | Map<string, CompetitorParquetCacheEntry>
+    | undefined;
+  var __competitorsParquetCachePromises:
+    | Map<string, Promise<ArrayBuffer>>
+    | undefined;
 }
 
 const schemaCache =
   globalThis.__parquetSchemaCache ?? new Map<string, DatasetColumn[]>();
 globalThis.__parquetSchemaCache = schemaCache;
 
-/** Read local or remote parquet and return an AsyncBuffer compatible with hyparquet. */
-async function readAsyncBuffer(filePathOrUrl: string) {
-  let arrayBuffer: ArrayBuffer;
+const competitorsParquetCache =
+  globalThis.__competitorsParquetCache ??
+  new Map<string, CompetitorParquetCacheEntry>();
+globalThis.__competitorsParquetCache = competitorsParquetCache;
 
-  if (/^https?:\/\//i.test(filePathOrUrl)) {
+const competitorsParquetCachePromises =
+  globalThis.__competitorsParquetCachePromises ??
+  new Map<string, Promise<ArrayBuffer>>();
+globalThis.__competitorsParquetCachePromises = competitorsParquetCachePromises;
+
+function parsePositiveIntEnv(
+  value: string | undefined,
+  fallback: number
+): number {
+  if (!value) return fallback;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
+}
+
+const COMPETITORS_PARQUET_CACHE_TTL_MS = parsePositiveIntEnv(
+  process.env.COMPETITORS_PARQUET_CACHE_TTL_MS,
+  DEFAULT_COMPETITORS_PARQUET_CACHE_TTL_MS
+);
+
+const COMPETITORS_PARQUET_CACHE_MAX_ENTRIES = parsePositiveIntEnv(
+  process.env.COMPETITORS_PARQUET_CACHE_MAX_ENTRIES,
+  DEFAULT_COMPETITORS_PARQUET_CACHE_MAX_ENTRIES
+);
+
+function isRemotePath(filePathOrUrl: string): boolean {
+  return /^https?:\/\//i.test(filePathOrUrl);
+}
+
+function toAsyncBuffer(arrayBuffer: ArrayBuffer) {
+  return {
+    byteLength: arrayBuffer.byteLength,
+    slice: (start: number, end: number) =>
+      Promise.resolve(arrayBuffer.slice(start, end)),
+  };
+}
+
+async function readArrayBuffer(filePathOrUrl: string): Promise<ArrayBuffer> {
+  if (isRemotePath(filePathOrUrl)) {
     const response = await fetch(filePathOrUrl);
     if (!response.ok) {
       throw new Error(
         `Falha ao baixar parquet remoto (${response.status}): ${filePathOrUrl}`
       );
     }
-    arrayBuffer = await response.arrayBuffer();
-  } else {
-    const buffer = await fs.readFile(filePathOrUrl);
-    arrayBuffer = buffer.buffer.slice(
-      buffer.byteOffset,
-      buffer.byteOffset + buffer.byteLength
-    ) as ArrayBuffer;
+    return response.arrayBuffer();
   }
 
-  return {
-    byteLength: arrayBuffer.byteLength,
-    slice: (start: number, end: number) =>
-      Promise.resolve(arrayBuffer.slice(start, end)),
-  };
+  const buffer = await fs.readFile(filePathOrUrl);
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength
+  ) as ArrayBuffer;
+}
+
+function getCachedCompetitorParquet(cacheKey: string): ArrayBuffer | undefined {
+  const cached = competitorsParquetCache.get(cacheKey);
+  if (!cached) return undefined;
+
+  const now = Date.now();
+  const expired = now - cached.loadedAt > COMPETITORS_PARQUET_CACHE_TTL_MS;
+  if (expired) {
+    competitorsParquetCache.delete(cacheKey);
+    return undefined;
+  }
+
+  cached.lastAccessedAt = now;
+  return cached.arrayBuffer;
+}
+
+function pruneCompetitorsParquetCache(now: number) {
+  if (COMPETITORS_PARQUET_CACHE_MAX_ENTRIES <= 0) {
+    competitorsParquetCache.clear();
+    return;
+  }
+
+  for (const [key, entry] of competitorsParquetCache.entries()) {
+    if (now - entry.loadedAt > COMPETITORS_PARQUET_CACHE_TTL_MS) {
+      competitorsParquetCache.delete(key);
+    }
+  }
+
+  if (competitorsParquetCache.size <= COMPETITORS_PARQUET_CACHE_MAX_ENTRIES) {
+    return;
+  }
+
+  const orderedByLastAccess = Array.from(competitorsParquetCache.entries()).sort(
+    (a, b) => a[1].lastAccessedAt - b[1].lastAccessedAt
+  );
+
+  while (competitorsParquetCache.size > COMPETITORS_PARQUET_CACHE_MAX_ENTRIES) {
+    const oldest = orderedByLastAccess.shift();
+    if (!oldest) break;
+    competitorsParquetCache.delete(oldest[0]);
+  }
+}
+
+function setCachedCompetitorParquet(cacheKey: string, arrayBuffer: ArrayBuffer) {
+  if (
+    COMPETITORS_PARQUET_CACHE_MAX_ENTRIES <= 0 ||
+    COMPETITORS_PARQUET_CACHE_TTL_MS <= 0
+  ) {
+    return;
+  }
+
+  const now = Date.now();
+  competitorsParquetCache.set(cacheKey, {
+    arrayBuffer,
+    loadedAt: now,
+    lastAccessedAt: now,
+  });
+
+  pruneCompetitorsParquetCache(now);
+}
+
+/** Read local or remote parquet and return an AsyncBuffer compatible with hyparquet. */
+async function readAsyncBuffer(
+  filePathOrUrl: string,
+  options?: { useCompetitorsCache?: boolean }
+) {
+  const cacheEnabled =
+    options?.useCompetitorsCache === true &&
+    isRemotePath(filePathOrUrl) &&
+    COMPETITORS_PARQUET_CACHE_MAX_ENTRIES > 0 &&
+    COMPETITORS_PARQUET_CACHE_TTL_MS > 0;
+
+  if (!cacheEnabled) {
+    const arrayBuffer = await readArrayBuffer(filePathOrUrl);
+    return toAsyncBuffer(arrayBuffer);
+  }
+
+  const cached = getCachedCompetitorParquet(filePathOrUrl);
+  if (cached) {
+    return toAsyncBuffer(cached);
+  }
+
+  const inFlight = competitorsParquetCachePromises.get(filePathOrUrl);
+  if (inFlight) {
+    const arrayBuffer = await inFlight;
+    return toAsyncBuffer(arrayBuffer);
+  }
+
+  const loadPromise = readArrayBuffer(filePathOrUrl)
+    .then((arrayBuffer) => {
+      setCachedCompetitorParquet(filePathOrUrl, arrayBuffer);
+      return arrayBuffer;
+    })
+    .finally(() => {
+      competitorsParquetCachePromises.delete(filePathOrUrl);
+    });
+
+  competitorsParquetCachePromises.set(filePathOrUrl, loadPromise);
+
+  const arrayBuffer = await loadPromise;
+  return toAsyncBuffer(arrayBuffer);
 }
 
 async function loadDatasetRegistry(): Promise<DatasetRegistry> {
@@ -313,7 +462,9 @@ async function getSchema(dataset: DatasetEntry): Promise<DatasetColumn[]> {
   const cached = schemaCache.get(schemaKey);
   if (cached) return cached;
 
-  const asyncBuffer = await readAsyncBuffer(dataset.filePath);
+  const asyncBuffer = await readAsyncBuffer(dataset.filePath, {
+    useCompetitorsCache: dataset.id === "df_competitors",
+  });
   const metadata = parquetMetadata(await asyncBuffer.slice(0, asyncBuffer.byteLength));
   const schema = parquetSchema(metadata);
 
@@ -416,7 +567,9 @@ export async function queryDataset(
       throw new InvalidQueryError(`Coluna de ordenacao invalida: '${options.sortBy}'.`);
   }
 
-  const asyncBuffer = await readAsyncBuffer(dataset.filePath);
+  const asyncBuffer = await readAsyncBuffer(dataset.filePath, {
+    useCompetitorsCache: dataset.id === "df_competitors",
+  });
 
   // Columns needed for filters that aren't already in the requested projection
   const filterCols = effectiveFilters ? Object.keys(effectiveFilters) : [];
