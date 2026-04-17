@@ -171,7 +171,7 @@ export default function WorldMapSC() {
         name: cat,
         itemStyle: { color: CATEGORY_COLORS[cat] },
       })),
-      bottom: 12,
+      bottom: 40,
       left: "center",
       orient: "horizontal",
       textStyle: { color: "#d4d4dc", fontSize: 12 },
