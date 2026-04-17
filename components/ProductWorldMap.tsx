@@ -173,7 +173,7 @@ export default function ProductWorldMap({ sh6 }: Props) {
       </div>
 
       {/* Map */}
-      <div className="relative w-full h-[800px]">
+      <div className="relative w-full h-[800px] -mb-20">
         <button
           type="button"
           onClick={handleResetMapView}

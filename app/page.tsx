@@ -91,7 +91,7 @@ export default function Home() {
       // ############################################################################
       // Página inicial com logo, título, descrição, cards e botão de rolagem.
       // ############################################################################
-      <main id="section-hero" ref={heroRef} className="min-h-[92vh] grid place-content-center gap-3 px-8 -mt-10 text-center relative">
+      <main id="section-hero" ref={heroRef} className="relative min-h-screen w-full grid place-content-center gap-3 px-8 -mt-10 text-center">
         <a href="https://observatorio.fiesc.com.br/" target="_blank" rel="noopener noreferrer">
           <Image src={logo} alt="Logo" className="mx-auto" width="300" />
         </a>
@@ -133,7 +133,7 @@ export default function Home() {
       // ############################################################################
       // Visão geral, apresentação básica dos dados agregados.
       // ############################################################################
-      <section id="section-2" className="relative min-h-[88vh] grid content-start justify-items-start gap-3 px-60 pt-12 pb-8 text-left">
+      <section id="section-2" className="relative w-full grid content-start justify-items-start gap-3 px-60 pt-10 pb-8 text-left scroll-mt-6">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Visão geral
         </h2>
@@ -193,7 +193,7 @@ export default function Home() {
       // ############################################################################
       // Produtos, filtro por SH6 e detalhamento do potencial não realizado.
       // ############################################################################
-      <section id="section-3" className="relative min-h-[88vh] grid content-start justify-items-start gap-3 px-60 pt-12 pb-8 text-left">
+      <section id="section-3" className="relative w-full grid content-start justify-items-start gap-3 px-60 pt-5 pb-5 text-left scroll-mt-6">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Produtos
         </h2>
@@ -214,7 +214,15 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full mt-4 p-4">
+        <p className="font-secondary text-zinc-300">
+          O gráfico de barras permite a identificação direita do <b>potencial realizado</b> e <b>potencial não realizado</b> para os produtos nos mercados importadores.
+        </p>
+
+        <p className="font-secondary text-zinc-300">
+          A tabela complementa o gráfico ao fornecer <b>detalhes do mercado mundial</b> do produto selecionado.
+        </p>
+
+        <div className="w-full mt-4">
           <ProductWorldMap sh6={selectedSH6} />
         </div>
 
@@ -231,7 +239,7 @@ export default function Home() {
       // ############################################################################
       // Mercados, filtro por país e detalhamento do potencial por produto.
       // ############################################################################
-      <section id="section-4" className="relative min-h-[88vh] grid content-start justify-items-start gap-3 px-60 pt-12 pb-8 text-left">
+      <section id="section-4" className="relative w-full grid content-start justify-items-start gap-3 px-60 pt-5 pb-5 text-left scroll-mt-6">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Mercados e competidores
         </h2>
@@ -285,7 +293,7 @@ export default function Home() {
       // ############################################################################
       // Sobre, com informações metodológicas, referências e usabilidade.
       // ############################################################################
-      <section id="section-5" className="relative min-h-[88vh] grid content-start justify-items-start gap-3 px-60 pt-12 pb-8 text-left">
+      <section id="section-5" className="relative w-full grid content-start justify-items-start gap-3 px-60 pt-5 pb-5 text-left scroll-mt-6">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Sobre
         </h2>
