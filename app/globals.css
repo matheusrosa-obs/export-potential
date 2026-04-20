@@ -16,28 +16,28 @@ body {
   font-family: var(--font-open-sans), sans-serif;
 }
 
-@keyframes hero-nav-border-spin {
+@keyframes hero-nav-border-spin-green {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes hero-nav-glow-cycle {
+@keyframes hero-nav-glow-cycle-green {
   0%,
   18%,
   100% {
-    border-color: rgba(113, 113, 122, 0.9);
-    box-shadow: 0 0 0 1px rgba(0, 119, 252, 0), 0 0 0 rgba(0, 119, 252, 0);
+    border-color: rgba(84, 243, 148, 0.42);
+    box-shadow: 0 0 0 1px rgba(84, 243, 148, 0.06), 0 0 0 rgba(84, 243, 148, 0);
   }
 
   34%,
   58% {
-    border-color: rgba(0, 119, 252, 0.55);
-    box-shadow: 0 0 0 1px rgba(0, 119, 252, 0.22), 0 0 14px rgba(0, 119, 252, 0.16);
+    border-color: rgba(84, 243, 148, 0.8);
+    box-shadow: 0 0 0 1px rgba(84, 243, 148, 0.36), 0 0 18px rgba(84, 243, 148, 0.24);
   }
 }
 
-@keyframes hero-nav-glow-visibility {
+@keyframes hero-nav-glow-visibility-green {
   0%,
   18%,
   100% {
@@ -60,11 +60,11 @@ body {
   min-height: 108px;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(113, 113, 122, 0.9);
+  border: 1px solid rgba(84, 243, 148, 0.35);
   color: #e4e4e7;
   background: rgba(24, 24, 33, 0.55);
   --nav-delay: 0s;
-  animation: hero-nav-glow-cycle 4.8s linear infinite;
+  animation: hero-nav-glow-cycle-green 4.8s linear infinite;
   animation-delay: var(--nav-delay);
   transition: transform 200ms ease, color 200ms ease;
 }
@@ -76,9 +76,9 @@ body {
   height: 420%;
   top: -160%;
   left: -40%;
-  background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 119, 252, 0.62) 45deg, transparent 95deg);
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(84, 243, 148, 0.62) 45deg, transparent 95deg);
   opacity: 0;
-  animation: hero-nav-border-spin 2.8s linear infinite, hero-nav-glow-visibility 4.8s linear infinite;
+  animation: hero-nav-border-spin-green 2.8s linear infinite, hero-nav-glow-visibility-green 4.8s linear infinite;
   animation-delay: var(--nav-delay), var(--nav-delay);
 }
 
@@ -121,6 +121,6 @@ body {
 }
 
 .hero-nav-btn:focus-visible {
-  outline: 2px solid #0077fc;
+  outline: 2px solid #54f394;
   outline-offset: 2px;
 }

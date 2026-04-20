@@ -15,6 +15,7 @@ import ProductWorldMap from "@/components/ProductWorldMap";
 import MarketProductSearch from "@/components/MarketProductSearch";
 import MarketCompetitorTable from "@/components/MarketCompetitorTable";
 import MarketCompetitorTreemap from "@/components/MarketCompetitorTreemap";
+import MarketFlightsGLMap from "@/components/MarketFlightsGLMap";
 import AboutMethodology from "@/components/AboutMethodology";
 import AboutUsability from "@/components/AboutUsability";
 
@@ -239,7 +240,7 @@ export default function Home() {
       // ############################################################################
       // Mercados, filtro por país e detalhamento do potencial por produto.
       // ############################################################################
-      <section id="section-4" className="relative w-full grid content-start justify-items-start gap-3 px-60 pt-5 pb-5 text-left scroll-mt-6">
+      <section id="section-4" className="relative w-full grid content-start justify-items-start gap-3 px-60 pt-5 text-left scroll-mt-6">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">
           Mercados e competidores
         </h2>
@@ -247,7 +248,7 @@ export default function Home() {
           Detalhamento dos importadores de maior potencial para Santa Catarina, de acordo com os produtos demandados. Detalhe dos competidores nos mercados-alvo.
         </p>
 
-        <div className="w-full grid grid-cols-2 gap-4 mt-2">
+        <div className="w-full grid grid-cols-2 mt-2">
           <CountrySearch onSelect={handleImporterSelect} defaultISO3="USA" />
           <MarketProductSearch
             importer={selectedImporter}
@@ -278,6 +279,13 @@ export default function Home() {
               />
             </div>
           </div>
+        </div>
+
+        <div className="w-full mt-6">
+          <MarketFlightsGLMap
+            importer={selectedImporter}
+            sh6={selectedMarketSH6}
+          />
         </div>
 
         <button
