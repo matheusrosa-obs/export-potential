@@ -110,8 +110,8 @@ function buildOption(rows: Row[], selectedSH6: string | null): object {
             borderRadius: [0, 4, 4, 0],
             opacity:
               !selectedSH6 || rows[i].sh6 === selectedSH6
-                ? 0.85
-                : 0.22,
+                ? 0.3
+                : 0.1,
           },
         })),
         barMaxWidth: 16,

@@ -281,12 +281,28 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full mt-6">
+        <p className="font-secondary text-zinc-300">
+          O gráfico de barras permite a identificação direita do <b>potencial realizado</b> e <b>potencial não realizado</b> para os produtos nos mercados importadores.
+        </p>
+
+        <p className="font-secondary text-zinc-300">
+          A tabela e o gráfico de áreas complementam o gráfico ao fornecer <b>detalhes dos competidores</b> no mercado importador selecionado.
+        </p>
+
+        <p className="font-secondary text-zinc-300">
+          A identificação dos competidores permite uma análise mais aprofundada, aproximando a compreensão sobre o <b>cenário competitivo</b> e o <b>perfil dos produtos</b> demandados.
+        </p>
+
+        <div className="w-full mt-2">
           <MarketFlightsGLMap
             importer={selectedImporter}
             sh6={selectedMarketSH6}
           />
         </div>
+
+        <p className="font-secondary text-zinc-300 -mt-8">
+          Para o produto filtrado, o mapa mostra os <b>fluxos comerciais</b> entre os exportadores e o importador selecionado.
+        </p>
 
         <button
           onClick={scrollToTop}

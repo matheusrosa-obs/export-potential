@@ -103,7 +103,7 @@ function buildOption(rows: Row[]): object {
         stack: "gap",
         data: unrealized,
         barMaxWidth: 16,
-        itemStyle: { color: "#54f394", borderRadius: [0, 4, 4, 0], opacity: 0.85 },
+        itemStyle: { color: "#54f394", borderRadius: [0, 4, 4, 0], opacity: 0.3 },
         z: 2,
       },
       // 3. Dot at bilateral_exports_sc_sh6

@@ -46,7 +46,7 @@ function scaleBubble(value: number, maxValue: number): number {
 function buildSeries(
   rows: Row[],
   maxValue: number
-): echarts.ScatterSeriesOption[] {
+): echarts.EffectScatterSeriesOption[] {
   const byCategory = new Map<Category, BubblePoint[]>();
   for (const cat of CATEGORIES) byCategory.set(cat, []);
 
@@ -66,9 +66,10 @@ function buildSeries(
 
   return CATEGORIES.map((cat) => ({
     name: cat,
-    type: "scatter" as const,
+    type: "effectScatter" as const,
     coordinateSystem: "geo" as const,
     data: byCategory.get(cat)!,
+    rippleEffect: { scale: 1.2, brushType: "stroke" },
     itemStyle: { color: CATEGORY_COLORS[cat], opacity: 0.8 },
     emphasis: { itemStyle: { opacity: 1 } },
     encode: { tooltip: [2] },

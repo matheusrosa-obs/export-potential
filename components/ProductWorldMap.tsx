@@ -116,9 +116,10 @@ export default function ProductWorldMap({ sh6 }: Props) {
     },
     series: [
       {
-        type: "scatter" as const,
+        type: "effectScatter" as const,
         coordinateSystem: "geo" as const,
         data: seriesData,
+        rippleEffect: { scale: 1.2, brushType: "stroke" },
         itemStyle: { color: activeColor, opacity: 0.8 },
         emphasis: { itemStyle: { opacity: 1 } },
         encode: { tooltip: [2] },
