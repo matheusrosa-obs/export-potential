@@ -91,6 +91,10 @@ function HomeContent() {
   const selectedUf = useSelectedUf();
   const ufContentKey = selectedUf ?? "BR";
 
+  function prefetchDataset(dataset: string, params: URLSearchParams) {
+    void fetch(`/api/data/${dataset}?${params.toString()}`).catch(() => undefined);
+  }
+
   useEffect(() => {
     let cancelled = false;
 
@@ -134,6 +138,98 @@ function HomeContent() {
       cancelled = true;
     };
   }, [selectedUf]);
+
+  useEffect(() => {
+    const treemapParams = new URLSearchParams({
+      columns: "sh6,product_description_br,sc_comp,potential_value",
+      limit: "5000",
+      sortBy: "potential_value",
+      sortDirection: "desc",
+    });
+    applyUfFilter(treemapParams, selectedUf);
+    prefetchDataset("epi_monetary_ufs_sh6", treemapParams);
+
+    const sectorParams = new URLSearchParams({
+      columns: "sc_comp,potential_value",
+      limit: "5000",
+    });
+    applyUfFilter(sectorParams, selectedUf);
+    prefetchDataset("epi_monetary_ufs_sh6", sectorParams);
+
+    const worldMapParams = new URLSearchParams({
+      columns: "importer,potential_value,potential_category",
+      limit: "5000",
+    });
+    applyUfFilter(worldMapParams, selectedUf);
+    prefetchDataset("epi_monetary_ufs_country", worldMapParams);
+  }, [selectedUf]);
+
+  useEffect(() => {
+    if (!selectedSH6) return;
+
+    const productParams = new URLSearchParams({
+      columns: "importer,bilateral_exports_uf_sh6,potential_value,unrealized_potential_value",
+      limit: "5000",
+      "filter[sh6]": selectedSH6,
+    });
+    applyUfFilter(productParams, selectedUf);
+    prefetchDataset("epi_monetary_ufs", productParams);
+
+    const globalMarketParams = new URLSearchParams({
+      columns: "Posição,País,Montante US$,Market Share (%),CAGR 5 anos (%),Share Brasil (%),Share SC (%)",
+      limit: "5000",
+      sortBy: "Posição",
+      sortDirection: "asc",
+      "filter[sh6]": selectedSH6,
+    });
+    prefetchDataset("global_market_sh6", globalMarketParams);
+  }, [selectedSH6, selectedUf]);
+
+  useEffect(() => {
+    if (!selectedImporter) return;
+
+    const importerProductsParams = new URLSearchParams({
+      columns: "sh6,product_description_br",
+      limit: "5000",
+      "filter[importer]": selectedImporter,
+    });
+    applyUfFilter(importerProductsParams, selectedUf);
+    prefetchDataset("epi_monetary_ufs", importerProductsParams);
+
+    const importerBarsParams = new URLSearchParams({
+      columns: "sh6,product_description_br,bilateral_exports_uf_sh6,potential_value,unrealized_potential_value",
+      limit: "5000",
+      "filter[importer]": selectedImporter,
+    });
+    applyUfFilter(importerBarsParams, selectedUf);
+    prefetchDataset("epi_monetary_ufs", importerBarsParams);
+
+    if (!selectedMarketSH6) return;
+
+    const competitorTableParams = new URLSearchParams({
+      columns: "year,exporter,exporter_name,value,importer_sh6_share,cagr_8y_adj,sh6",
+      limit: "5000",
+      "filter[importer]": selectedImporter,
+      "filter[sh6]": selectedMarketSH6,
+    });
+    prefetchDataset("df_competitors", competitorTableParams);
+
+    const competitorTreemapParams = new URLSearchParams({
+      columns: "year,exporter,exporter_name,value,sh6",
+      limit: "5000",
+      "filter[importer]": selectedImporter,
+      "filter[sh6]": selectedMarketSH6,
+    });
+    prefetchDataset("df_competitors", competitorTreemapParams);
+
+    const flightsParams = new URLSearchParams({
+      columns: "year,exporter,exporter_name,value",
+      limit: "5000",
+      "filter[importer]": selectedImporter,
+      "filter[sh6]": selectedMarketSH6,
+    });
+    prefetchDataset("df_competitors", flightsParams);
+  }, [selectedImporter, selectedMarketSH6, selectedUf]);
 
   return (
     <>
