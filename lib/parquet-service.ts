@@ -21,6 +21,10 @@ const REGISTRY_TTL_MS = 30_000;
 
 const DEFAULT_COMPETITORS_PARQUET_CACHE_TTL_MS = 15 * 60_000;
 const DEFAULT_COMPETITORS_PARQUET_CACHE_MAX_ENTRIES = 8;
+const DEFAULT_REMOTE_PARQUET_CACHE_TTL_MS = 10 * 60_000;
+const DEFAULT_REMOTE_PARQUET_CACHE_MAX_ENTRIES = 16;
+const DEFAULT_QUERY_RESULT_CACHE_TTL_MS = 5 * 60_000;
+const DEFAULT_QUERY_RESULT_CACHE_MAX_ENTRIES = 200;
 
 type CompetitorsSourceMode = "local" | "blob";
 type UfPartitionsSourceMode = "local" | "blob";
@@ -94,6 +98,18 @@ type CompetitorParquetCacheEntry = {
   lastAccessedAt: number;
 };
 
+type RemoteParquetCacheEntry = {
+  arrayBuffer: ArrayBuffer;
+  loadedAt: number;
+  lastAccessedAt: number;
+};
+
+type QueryResultCacheEntry = {
+  data: QueryDatasetResult;
+  loadedAt: number;
+  lastAccessedAt: number;
+};
+
 export type ListDatasetResult = {
   id: string;
   fileName: string;
@@ -148,6 +164,13 @@ declare global {
   var __competitorsParquetCachePromises:
     | Map<string, Promise<ArrayBuffer>>
     | undefined;
+  var __remoteParquetCache:
+    | Map<string, RemoteParquetCacheEntry>
+    | undefined;
+  var __remoteParquetCachePromises:
+    | Map<string, Promise<ArrayBuffer>>
+    | undefined;
+  var __queryResultCache: Map<string, QueryResultCacheEntry> | undefined;
 }
 
 const schemaCache =
@@ -163,6 +186,19 @@ const competitorsParquetCachePromises =
   globalThis.__competitorsParquetCachePromises ??
   new Map<string, Promise<ArrayBuffer>>();
 globalThis.__competitorsParquetCachePromises = competitorsParquetCachePromises;
+
+const remoteParquetCache =
+  globalThis.__remoteParquetCache ?? new Map<string, RemoteParquetCacheEntry>();
+globalThis.__remoteParquetCache = remoteParquetCache;
+
+const remoteParquetCachePromises =
+  globalThis.__remoteParquetCachePromises ??
+  new Map<string, Promise<ArrayBuffer>>();
+globalThis.__remoteParquetCachePromises = remoteParquetCachePromises;
+
+const queryResultCache =
+  globalThis.__queryResultCache ?? new Map<string, QueryResultCacheEntry>();
+globalThis.__queryResultCache = queryResultCache;
 
 
 function parsePositiveIntEnv(
@@ -182,6 +218,26 @@ const COMPETITORS_PARQUET_CACHE_TTL_MS = parsePositiveIntEnv(
 const COMPETITORS_PARQUET_CACHE_MAX_ENTRIES = parsePositiveIntEnv(
   process.env.COMPETITORS_PARQUET_CACHE_MAX_ENTRIES,
   DEFAULT_COMPETITORS_PARQUET_CACHE_MAX_ENTRIES
+);
+
+const REMOTE_PARQUET_CACHE_TTL_MS = parsePositiveIntEnv(
+  process.env.REMOTE_PARQUET_CACHE_TTL_MS,
+  DEFAULT_REMOTE_PARQUET_CACHE_TTL_MS
+);
+
+const REMOTE_PARQUET_CACHE_MAX_ENTRIES = parsePositiveIntEnv(
+  process.env.REMOTE_PARQUET_CACHE_MAX_ENTRIES,
+  DEFAULT_REMOTE_PARQUET_CACHE_MAX_ENTRIES
+);
+
+const QUERY_RESULT_CACHE_TTL_MS = parsePositiveIntEnv(
+  process.env.QUERY_RESULT_CACHE_TTL_MS,
+  DEFAULT_QUERY_RESULT_CACHE_TTL_MS
+);
+
+const QUERY_RESULT_CACHE_MAX_ENTRIES = parsePositiveIntEnv(
+  process.env.QUERY_RESULT_CACHE_MAX_ENTRIES,
+  DEFAULT_QUERY_RESULT_CACHE_MAX_ENTRIES
 );
 
 function isRemotePath(filePathOrUrl: string): boolean {
@@ -329,6 +385,120 @@ function setCachedCompetitorParquet(cacheKey: string, arrayBuffer: ArrayBuffer) 
   pruneCompetitorsParquetCache(now);
 }
 
+function getCachedRemoteParquet(cacheKey: string): ArrayBuffer | undefined {
+  const cached = remoteParquetCache.get(cacheKey);
+  if (!cached) return undefined;
+
+  const now = Date.now();
+  const expired = now - cached.loadedAt > REMOTE_PARQUET_CACHE_TTL_MS;
+  if (expired) {
+    remoteParquetCache.delete(cacheKey);
+    return undefined;
+  }
+
+  cached.lastAccessedAt = now;
+  return cached.arrayBuffer;
+}
+
+function pruneRemoteParquetCache(now: number) {
+  if (REMOTE_PARQUET_CACHE_MAX_ENTRIES <= 0) {
+    remoteParquetCache.clear();
+    return;
+  }
+
+  for (const [key, entry] of remoteParquetCache.entries()) {
+    if (now - entry.loadedAt > REMOTE_PARQUET_CACHE_TTL_MS) {
+      remoteParquetCache.delete(key);
+    }
+  }
+
+  if (remoteParquetCache.size <= REMOTE_PARQUET_CACHE_MAX_ENTRIES) {
+    return;
+  }
+
+  const orderedByLastAccess = Array.from(remoteParquetCache.entries()).sort(
+    (a, b) => a[1].lastAccessedAt - b[1].lastAccessedAt
+  );
+
+  while (remoteParquetCache.size > REMOTE_PARQUET_CACHE_MAX_ENTRIES) {
+    const oldest = orderedByLastAccess.shift();
+    if (!oldest) break;
+    remoteParquetCache.delete(oldest[0]);
+  }
+}
+
+function setCachedRemoteParquet(cacheKey: string, arrayBuffer: ArrayBuffer) {
+  if (REMOTE_PARQUET_CACHE_MAX_ENTRIES <= 0 || REMOTE_PARQUET_CACHE_TTL_MS <= 0) {
+    return;
+  }
+
+  const now = Date.now();
+  remoteParquetCache.set(cacheKey, {
+    arrayBuffer,
+    loadedAt: now,
+    lastAccessedAt: now,
+  });
+
+  pruneRemoteParquetCache(now);
+}
+
+function getCachedQueryResult(cacheKey: string): QueryDatasetResult | undefined {
+  const cached = queryResultCache.get(cacheKey);
+  if (!cached) return undefined;
+
+  const now = Date.now();
+  const expired = now - cached.loadedAt > QUERY_RESULT_CACHE_TTL_MS;
+  if (expired) {
+    queryResultCache.delete(cacheKey);
+    return undefined;
+  }
+
+  cached.lastAccessedAt = now;
+  return cached.data;
+}
+
+function pruneQueryResultCache(now: number) {
+  if (QUERY_RESULT_CACHE_MAX_ENTRIES <= 0) {
+    queryResultCache.clear();
+    return;
+  }
+
+  for (const [key, entry] of queryResultCache.entries()) {
+    if (now - entry.loadedAt > QUERY_RESULT_CACHE_TTL_MS) {
+      queryResultCache.delete(key);
+    }
+  }
+
+  if (queryResultCache.size <= QUERY_RESULT_CACHE_MAX_ENTRIES) {
+    return;
+  }
+
+  const orderedByLastAccess = Array.from(queryResultCache.entries()).sort(
+    (a, b) => a[1].lastAccessedAt - b[1].lastAccessedAt
+  );
+
+  while (queryResultCache.size > QUERY_RESULT_CACHE_MAX_ENTRIES) {
+    const oldest = orderedByLastAccess.shift();
+    if (!oldest) break;
+    queryResultCache.delete(oldest[0]);
+  }
+}
+
+function setCachedQueryResult(cacheKey: string, data: QueryDatasetResult) {
+  if (QUERY_RESULT_CACHE_MAX_ENTRIES <= 0 || QUERY_RESULT_CACHE_TTL_MS <= 0) {
+    return;
+  }
+
+  const now = Date.now();
+  queryResultCache.set(cacheKey, {
+    data,
+    loadedAt: now,
+    lastAccessedAt: now,
+  });
+
+  pruneQueryResultCache(now);
+}
+
 /** Read local or remote parquet and return an AsyncBuffer compatible with hyparquet. */
 async function readAsyncBuffer(
   filePathOrUrl: string,
@@ -337,20 +507,20 @@ async function readAsyncBuffer(
   const cacheEnabled =
     options?.useParquetCache === true &&
     isRemotePath(filePathOrUrl) &&
-    COMPETITORS_PARQUET_CACHE_MAX_ENTRIES > 0 &&
-    COMPETITORS_PARQUET_CACHE_TTL_MS > 0;
+    REMOTE_PARQUET_CACHE_MAX_ENTRIES > 0 &&
+    REMOTE_PARQUET_CACHE_TTL_MS > 0;
 
   if (!cacheEnabled) {
     const arrayBuffer = await readArrayBuffer(filePathOrUrl);
     return toAsyncBuffer(arrayBuffer);
   }
 
-  const cached = getCachedCompetitorParquet(filePathOrUrl);
+  const cached = getCachedRemoteParquet(filePathOrUrl);
   if (cached) {
     return toAsyncBuffer(cached);
   }
 
-  const inFlight = competitorsParquetCachePromises.get(filePathOrUrl);
+  const inFlight = remoteParquetCachePromises.get(filePathOrUrl);
   if (inFlight) {
     const arrayBuffer = await inFlight;
     return toAsyncBuffer(arrayBuffer);
@@ -358,14 +528,14 @@ async function readAsyncBuffer(
 
   const loadPromise = readArrayBuffer(filePathOrUrl)
     .then((arrayBuffer) => {
-      setCachedCompetitorParquet(filePathOrUrl, arrayBuffer);
+      setCachedRemoteParquet(filePathOrUrl, arrayBuffer);
       return arrayBuffer;
     })
     .finally(() => {
-      competitorsParquetCachePromises.delete(filePathOrUrl);
+      remoteParquetCachePromises.delete(filePathOrUrl);
     });
 
-  competitorsParquetCachePromises.set(filePathOrUrl, loadPromise);
+  remoteParquetCachePromises.set(filePathOrUrl, loadPromise);
 
   const arrayBuffer = await loadPromise;
   return toAsyncBuffer(arrayBuffer);
@@ -804,9 +974,7 @@ async function getUfPartitionDataset(
 
 function shouldUseParquetCache(dataset: DatasetEntry): boolean {
   if (!isRemotePath(dataset.filePath)) return false;
-  if (dataset.id === "df_competitors") return true;
-  if (UF_PARTITIONED_DATASETS.has(dataset.id)) return true;
-  return GLOBAL_BLOB_CACHE_DATASETS.has(dataset.id);
+  return REMOTE_PARQUET_CACHE_MAX_ENTRIES > 0 && REMOTE_PARQUET_CACHE_TTL_MS > 0;
 }
 
 async function getSchema(dataset: DatasetEntry): Promise<DatasetColumn[]> {
@@ -858,6 +1026,31 @@ function normalizeForJson(value: unknown): unknown {
     return out;
   }
   return value;
+}
+
+function buildQueryCacheKey(
+  dataset: DatasetEntry,
+  options: QueryDatasetOptions,
+  columns: string[],
+  filters: Record<string, string> | undefined
+): string {
+  const normalizedFilters = filters
+    ? Object.entries(filters)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([key, value]) => [key, value])
+    : [];
+
+  return JSON.stringify({
+    datasetId: dataset.id,
+    updatedAt: dataset.updatedAt,
+    columns,
+    limit: options.limit,
+    offset: options.offset,
+    includeTotal: options.includeTotal,
+    sortBy: options.sortBy ?? null,
+    sortDirection: options.sortDirection ?? null,
+    filters: normalizedFilters,
+  });
 }
 
 export async function listAvailableDatasets(options?: {
@@ -930,10 +1123,6 @@ export async function queryDataset(
       throw new InvalidQueryError(`Coluna de ordenacao invalida: '${options.sortBy}'.`);
   }
 
-  const asyncBuffer = await readAsyncBuffer(dataset.filePath, {
-    useParquetCache: shouldUseParquetCache(dataset),
-  });
-
   // Columns needed for filters that aren't already in the requested projection
   const filterCols = effectiveFilters ? Object.keys(effectiveFilters) : [];
   const available = new Set(schema.map((c) => c.name));
@@ -941,6 +1130,19 @@ export async function queryDataset(
     if (!available.has(col))
       throw new InvalidQueryError(`Coluna de filtro invalida: '${col}'.`);
   }
+
+  const cacheKey = buildQueryCacheKey(
+    dataset,
+    options,
+    selectedColumns.length > 0 ? selectedColumns : schema.map((c) => c.name),
+    effectiveFilters
+  );
+  const cachedResult = getCachedQueryResult(cacheKey);
+  if (cachedResult) return cachedResult;
+
+  const asyncBuffer = await readAsyncBuffer(dataset.filePath, {
+    useParquetCache: shouldUseParquetCache(dataset),
+  });
 
   // Extra filter columns that must be read but should not appear in the output
   const extraFilterCols =
@@ -1010,7 +1212,7 @@ export async function queryDataset(
   const outputColumns =
     selectedColumns.length > 0 ? selectedColumns : projectionNames;
 
-  return {
+  const result: QueryDatasetResult = {
     dataset: {
       id: dataset.id,
       fileName: dataset.fileName,
@@ -1023,4 +1225,7 @@ export async function queryDataset(
     total: options.includeTotal ? total : undefined,
     rows,
   };
+
+  setCachedQueryResult(cacheKey, result);
+  return result;
 }
