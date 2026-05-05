@@ -37,8 +37,7 @@ yarn-error.log*
 .vercel
 
 # large local data artifacts
-public/data/competitors/
-public/data/ufs/
+public/data/**/*.parquet
 
 # typescript
 *.tsbuildinfo
