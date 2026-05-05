@@ -171,6 +171,43 @@ function isRemotePath(filePathOrUrl: string): boolean {
   return /^https?:\/\//i.test(filePathOrUrl);
 }
 
+function getPublicBaseUrl(): string | null {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const vercelUrl = process.env.VERCEL_URL?.trim();
+  if (!vercelUrl) return null;
+  if (vercelUrl.startsWith("http://") || vercelUrl.startsWith("https://")) {
+    return vercelUrl.replace(/\/$/, "");
+  }
+  return `https://${vercelUrl.replace(/\/$/, "")}`;
+}
+
+function toPublicUrl(filePath: string): string | null {
+  const baseUrl = getPublicBaseUrl();
+  if (!baseUrl) return null;
+
+  const relative = path.relative(DATA_DIRECTORY, filePath);
+  if (!relative || relative.startsWith("..")) return null;
+
+  const normalized = relative.split(path.sep).join("/");
+  return `${baseUrl}/data/${normalized}`;
+}
+
+function hasParquetMagic(buffer: ArrayBuffer): boolean {
+  if (buffer.byteLength < 8) return false;
+  const bytes = new Uint8Array(buffer);
+  const head = String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]);
+  const tailIndex = bytes.length - 4;
+  const tail = String.fromCharCode(
+    bytes[tailIndex],
+    bytes[tailIndex + 1],
+    bytes[tailIndex + 2],
+    bytes[tailIndex + 3]
+  );
+  return head === "PAR1" && tail === "PAR1";
+}
+
 function toAsyncBuffer(arrayBuffer: ArrayBuffer) {
   return {
     byteLength: arrayBuffer.byteLength,
@@ -191,10 +228,23 @@ async function readArrayBuffer(filePathOrUrl: string): Promise<ArrayBuffer> {
   }
 
   const buffer = await fs.readFile(filePathOrUrl);
-  return buffer.buffer.slice(
+  const arrayBuffer = buffer.buffer.slice(
     buffer.byteOffset,
     buffer.byteOffset + buffer.byteLength
   ) as ArrayBuffer;
+
+  if (process.env.VERCEL && !hasParquetMagic(arrayBuffer)) {
+    const publicUrl = toPublicUrl(filePathOrUrl);
+    if (publicUrl) {
+      const response = await fetch(publicUrl);
+      if (response.ok) {
+        const remoteBuffer = await response.arrayBuffer();
+        if (hasParquetMagic(remoteBuffer)) return remoteBuffer;
+      }
+    }
+  }
+
+  return arrayBuffer;
 }
 
 function getCachedCompetitorParquet(cacheKey: string): ArrayBuffer | undefined {
