@@ -4,6 +4,7 @@ import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
 import { buildSectorColorMap } from "@/lib/sector-colors";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
+import { applyUfFilter, getUfLabel, useSelectedUf } from "@/lib/uf-filter";
 
 type Row = {
   sh6: string;
@@ -45,14 +46,21 @@ function buildTreemapData(rows: Row[], selectedSectors: string[]): any[] {
 }
 
 export default function TreemapSC({ selectedSectors }: Props) {
+  const selectedUf = useSelectedUf();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(
-      "/api/data/epi_monetary_sc_sh6?columns=sh6,product_description_br,sc_comp,potential_value&limit=5000&sortBy=potential_value&sortDirection=desc"
-    )
+    const params = new URLSearchParams({
+      columns: "sh6,product_description_br,sc_comp,potential_value",
+      limit: "5000",
+      sortBy: "potential_value",
+      sortDirection: "desc",
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs_sh6?${params.toString()}`)
       .then((res) => res.json())
       .then((json) => {
         setRows(json.rows as Row[]);
@@ -62,7 +70,7 @@ export default function TreemapSC({ selectedSectors }: Props) {
         setError("Erro ao carregar os dados.");
         setLoading(false);
       });
-  }, []);
+  }, [selectedUf]);
 
   const data = useMemo(
     () => buildTreemapData(rows, selectedSectors),
@@ -70,8 +78,8 @@ export default function TreemapSC({ selectedSectors }: Props) {
   );
 
   const title = selectedSectors.length > 0
-    ? `${selectedSectors.join(", ")} – produtos por potencial (SH6)`
-    : "Potencial de exportação de Santa Catarina, por produto (SH6)";
+    ? `${selectedSectors.join(", ")} – produtos por potencial (SH6) em ${getUfLabel(selectedUf)}`
+    : `Potencial de exportação em ${getUfLabel(selectedUf)}, por produto (SH6)`;
 
   const option = {
     title: {

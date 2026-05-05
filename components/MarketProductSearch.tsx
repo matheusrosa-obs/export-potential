@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { applyUfFilter, useSelectedUf } from "@/lib/uf-filter";
 
 type ProductOption = {
   sh6: string;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function MarketProductSearch({ importer, selectedSH6, onSelect }: Props) {
+  const selectedUf = useSelectedUf();
   const [options, setOptions] = useState<ProductOption[]>([]);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -23,18 +25,34 @@ export default function MarketProductSearch({ importer, selectedSH6, onSelect }:
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
+  // Ref so the effect always calls the latest onSelect without it being a dep
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+
   useEffect(() => {
     if (!importer) {
       setOptions([]);
       setSelected(null);
       setQuery("");
       setOpen(false);
+      onSelectRef.current(null);
       return;
     }
 
-    fetch(
-      `/api/data/epi_monetary_sc?columns=sh6,product_description_br&limit=5000&filter[importer]=${encodeURIComponent(importer)}`
-    )
+    setOptions([]);
+    setSelected(null);
+    setQuery("");
+    setOpen(false);
+    onSelectRef.current(null);
+
+    const params = new URLSearchParams({
+      columns: "sh6,product_description_br",
+      limit: "5000",
+      "filter[importer]": importer,
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs?${params.toString()}`)
       .then(async (res) => {
         const json = await res.json();
         if (!res.ok || json.error) {
@@ -62,7 +80,7 @@ export default function MarketProductSearch({ importer, selectedSH6, onSelect }:
       .catch(() => {
         setOptions([]);
       });
-  }, [importer]);
+  }, [importer, selectedUf]);
 
   useEffect(() => {
     if (!selectedSH6) {

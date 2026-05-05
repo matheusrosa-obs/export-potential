@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getCountryName } from "@/lib/country-names-pt";
+import { applyUfFilter, useSelectedUf } from "@/lib/uf-filter";
 
 type CountryOption = {
   iso3: string;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export default function CountrySearch({ onSelect, defaultISO3 }: Props) {
+  const selectedUf = useSelectedUf();
   const [options, setOptions] = useState<CountryOption[]>([]);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -22,10 +24,26 @@ export default function CountrySearch({ onSelect, defaultISO3 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
+  // Ref so the effect always calls the latest onSelect without it being a dep
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+
   useEffect(() => {
-    fetch(
-      "/api/data/epi_monetary_sc_country?columns=importer&limit=5000&sortBy=importer&sortDirection=asc"
-    )
+    setOptions([]);
+    setSelected(null);
+    setQuery("");
+    setOpen(false);
+    onSelectRef.current(null);
+
+    const params = new URLSearchParams({
+      columns: "importer",
+      limit: "5000",
+      sortBy: "importer",
+      sortDirection: "asc",
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs_country?${params.toString()}`)
       .then((res) => res.json())
       .then((json) => {
         const rows = json.rows as { importer: string }[];
@@ -38,7 +56,6 @@ export default function CountrySearch({ onSelect, defaultISO3 }: Props) {
             opts.push({ iso3: row.importer, label: `${row.importer} – ${name}` });
           }
         }
-        // Sort by country name in Portuguese
         opts.sort((a, b) => getCountryName(a.iso3).localeCompare(getCountryName(b.iso3), "pt"));
         setOptions(opts);
 
@@ -47,12 +64,12 @@ export default function CountrySearch({ onSelect, defaultISO3 }: Props) {
           if (def) {
             setSelected(def);
             setQuery(def.label);
-            onSelect(def.iso3);
+            onSelectRef.current(def.iso3);
           }
         }
       })
       .catch(() => {});
-  }, []);
+  }, [defaultISO3, selectedUf]);
 
   const filtered =
     query.length === 0

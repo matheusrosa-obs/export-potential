@@ -4,19 +4,20 @@ import ReactECharts from "echarts-for-react";
 import { useEffect, useMemo, useState } from "react";
 import { getCountryName } from "@/lib/country-names-pt";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
+import { applyUfFilter, getUfLabel, useSelectedUf } from "@/lib/uf-filter";
 
 type Row = {
   importer: string;
-  bilateral_exports_sc_sh6: number;
+  bilateral_exports_uf_sh6: number;
   potential_value: number;
   unrealized_potential_value: number;
 };
 
-type SortKey = "potential_value" | "bilateral_exports_sc_sh6" | "unrealized_potential_value";
+type SortKey = "potential_value" | "bilateral_exports_uf_sh6" | "unrealized_potential_value";
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "potential_value", label: "Potencial total" },
-  { key: "bilateral_exports_sc_sh6", label: "Exportações atuais" },
+  { key: "bilateral_exports_uf_sh6", label: "Exportações atuais" },
   { key: "unrealized_potential_value", label: "Potencial não realizado" },
 ];
 
@@ -30,7 +31,7 @@ function formatValue(v: number): string {
 function buildOption(rows: Row[]): object {
   // Y-axis: country names in Portuguese
   const importers = rows.map((r) => getCountryName(r.importer));
-  const baseline = rows.map((r) => r.bilateral_exports_sc_sh6 ?? 0);
+  const baseline = rows.map((r) => r.bilateral_exports_uf_sh6 ?? 0);
   const unrealized = rows.map((r) => r.unrealized_potential_value ?? 0);
   const potential = rows.map((r) => r.potential_value ?? 0);
 
@@ -136,6 +137,7 @@ type Props = {
 };
 
 export default function ProductBarChart({ sh6 }: Props) {
+  const selectedUf = useSelectedUf();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -145,10 +147,14 @@ export default function ProductBarChart({ sh6 }: Props) {
     if (!sh6) { setRows([]); return; }
     setLoading(true);
     setError(null);
-    const cols = "importer,bilateral_exports_sc_sh6,potential_value,unrealized_potential_value";
-    fetch(
-      `/api/data/epi_monetary_sc?columns=${cols}&limit=5000&filter[sh6]=${encodeURIComponent(sh6)}`
-    )
+    const params = new URLSearchParams({
+      columns: "importer,bilateral_exports_uf_sh6,potential_value,unrealized_potential_value",
+      limit: "5000",
+      "filter[sh6]": sh6,
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs?${params.toString()}`)
       .then((res) => res.json())
       .then((json) => {
         setRows(json.rows as Row[]);
@@ -158,7 +164,7 @@ export default function ProductBarChart({ sh6 }: Props) {
         setError("Erro ao carregar os dados.");
         setLoading(false);
       });
-  }, [sh6]);
+  }, [sh6, selectedUf]);
 
   const sorted = useMemo(() => {
     return [...rows]
@@ -203,7 +209,7 @@ export default function ProductBarChart({ sh6 }: Props) {
   return (
     <div className="w-full">
       <h3 className="text-sm font-semibold text-zinc-100 mb-4">
-        Potencial de exportação e potencial não realizado por importador
+        Potencial de exportação e potencial não realizado por importador em {getUfLabel(selectedUf)}
       </h3>
       {/* Sort buttons */}
       <div className="flex items-center gap-1.5 mb-4">

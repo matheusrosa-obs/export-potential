@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import countryCoords from "@/lib/country-coords.json";
 import { getCountryName } from "@/lib/country-names-pt";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
+import { applyUfFilter, getUfLabel, useSelectedUf } from "@/lib/uf-filter";
 
 // ─── Ajuste estas constantes para calibrar as bolhas ──────────────────────────
 const BUBBLE_MIN_PX = 2;     // tamanho mínimo da bolha em pixels
@@ -83,6 +84,7 @@ function formatValue(value: number): string {
 }
 
 export default function WorldMapSC() {
+  const selectedUf = useSelectedUf();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -135,9 +137,13 @@ export default function WorldMapSC() {
   }, []);
 
   useEffect(() => {
-    fetch(
-      "/api/data/epi_monetary_sc_country?columns=importer,potential_value,potential_category&limit=5000"
-    )
+    const params = new URLSearchParams({
+      columns: "importer,potential_value,potential_category",
+      limit: "5000",
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs_country?${params.toString()}`)
       .then((r) => r.json())
       .then((json) => {
         setRows(json.rows as Row[]);
@@ -147,7 +153,7 @@ export default function WorldMapSC() {
         setError("Erro ao carregar os dados.");
         setLoading(false);
       });
-  }, []);
+  }, [selectedUf]);
 
   const maxValue = useMemo(
     () => Math.max(...rows.map((r) => r.potential_value), 1),
@@ -162,7 +168,7 @@ export default function WorldMapSC() {
   const option: echarts.EChartsOption = {
     backgroundColor: "transparent",
     title: {
-      text: "Potencial de exportação de Santa Catarina, por país importador",
+      text: `Potencial de exportação de ${getUfLabel(selectedUf)}, por país importador`,
       left: "left",
       top: 18,
       textStyle: { color: "#f4f4f5", fontSize: 16, fontWeight: "bold" },

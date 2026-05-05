@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { applyUfFilter, useSelectedUf } from "@/lib/uf-filter";
 
 type ProductOption = {
   sh6: string;
@@ -10,10 +11,11 @@ type ProductOption = {
 
 type Props = {
   onSelect: (sh6: string | null) => void;
-  defaultSH6?: string;
+  selectedSH6?: string | null;
 };
 
-export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
+export default function ProductSearch({ onSelect, selectedSH6 }: Props) {
+  const selectedUf = useSelectedUf();
   const [options, setOptions] = useState<ProductOption[]>([]);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -22,10 +24,25 @@ export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+
   useEffect(() => {
-    fetch(
-      "/api/data/epi_monetary_sc_sh6?columns=sh6,product_description_br&limit=5000&sortBy=sh6&sortDirection=asc"
-    )
+    setOptions([]);
+    setSelected(null);
+    setQuery("");
+    setOpen(false);
+    onSelectRef.current(null);
+
+    const params = new URLSearchParams({
+      columns: "sh6,product_description_br",
+      limit: "5000",
+      sortBy: "sh6",
+      sortDirection: "asc",
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs_sh6?${params.toString()}`)
       .then((res) => res.json())
       .then((json) => {
         const rows = json.rows as { sh6: string; product_description_br: string }[];
@@ -42,18 +59,25 @@ export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
           }
         }
         setOptions(opts);
-
-        if (defaultSH6) {
-          const def = opts.find((o) => o.sh6 === defaultSH6);
-          if (def) {
-            setSelected(def);
-            setQuery(def.label);
-            onSelect(def.sh6);
-          }
-        }
       })
       .catch(() => {});
-  }, []);
+  }, [selectedUf]);
+
+  useEffect(() => {
+    if (!selectedSH6) {
+      setSelected(null);
+      setQuery("");
+      return;
+    }
+    const found = options.find((o) => o.sh6 === selectedSH6);
+    if (found) {
+      setSelected(found);
+      setQuery(found.label);
+      return;
+    }
+    setSelected({ sh6: selectedSH6, description: "", label: selectedSH6 });
+    setQuery(selectedSH6);
+  }, [selectedSH6, options]);
 
   const filtered =
     query.length === 0
@@ -103,7 +127,6 @@ export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
     }
   }
 
-  // Scroll highlighted item into view
   useEffect(() => {
     if (!listRef.current) return;
     const item = listRef.current.children[highlighted] as HTMLElement | undefined;
@@ -113,7 +136,6 @@ export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
   return (
     <div className="relative w-full max-w-2xl">
       <div className="relative flex items-center">
-        {/* Search icon */}
         <svg
           className="absolute left-3 text-zinc-500 pointer-events-none"
           width="16"
@@ -142,7 +164,6 @@ export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
           className="w-full rounded-xl border border-zinc-700 bg-zinc-900/70 py-2.5 pl-9 pr-10 text-sm text-zinc-100 placeholder-zinc-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/40 transition-colors"
         />
 
-        {/* Clear button */}
         {query.length > 0 && (
           <button
             onMouseDown={(e) => { e.preventDefault(); clearSelection(); }}
@@ -157,7 +178,6 @@ export default function ProductSearch({ onSelect, defaultSH6 }: Props) {
         )}
       </div>
 
-      {/* Dropdown */}
       {open && filtered.length > 0 && (
         <ul
           ref={listRef}

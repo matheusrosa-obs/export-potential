@@ -4,6 +4,7 @@ import ReactECharts from "echarts-for-react";
 import { useEffect, useState } from "react";
 import { buildSectorColorMap } from "@/lib/sector-colors";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
+import { applyUfFilter, getUfLabel, useSelectedUf } from "@/lib/uf-filter";
 
 type Row = {
   sc_comp: string;
@@ -44,6 +45,7 @@ type Props = {
 };
 
 export default function BarChartSC({ selectedSectors, onSectorClick, onResetFilters }: Props) {
+  const selectedUf = useSelectedUf();
   const [data, setData] = useState<SectorTotal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,9 +54,13 @@ export default function BarChartSC({ selectedSectors, onSectorClick, onResetFilt
   const chartTitleLineHeight = 20;
 
   useEffect(() => {
-    fetch(
-      "/api/data/epi_monetary_sc_sh6?columns=sc_comp,potential_value&limit=5000"
-    )
+    const params = new URLSearchParams({
+      columns: "sc_comp,potential_value",
+      limit: "5000",
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs_sh6?${params.toString()}`)
       .then((res) => res.json())
       .then((json) => {
         setData(aggregateBySector(json.rows as Row[]));
@@ -64,11 +70,11 @@ export default function BarChartSC({ selectedSectors, onSectorClick, onResetFilt
         setError("Erro ao carregar os dados.");
         setLoading(false);
       });
-  }, []);
+  }, [selectedUf]);
 
   const option = {
     title: {
-      text: "Potencial agregado por setor (SC Competitiva)",
+      text: `Potencial agregado por setor (${getUfLabel(selectedUf)})`,
       left: "left",
       top: chartTitleTop,
       textStyle: {

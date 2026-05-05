@@ -1,0 +1,488 @@
+[
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "AC",
+    "file_name": "sg_uf=AC.parquet",
+    "size_bytes": 3521019
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "AL",
+    "file_name": "sg_uf=AL.parquet",
+    "size_bytes": 6379881
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "AP",
+    "file_name": "sg_uf=AP.parquet",
+    "size_bytes": 5829606
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "AM",
+    "file_name": "sg_uf=AM.parquet",
+    "size_bytes": 8083810
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "BA",
+    "file_name": "sg_uf=BA.parquet",
+    "size_bytes": 10239932
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "CE",
+    "file_name": "sg_uf=CE.parquet",
+    "size_bytes": 9618438
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "DF",
+    "file_name": "sg_uf=DF.parquet",
+    "size_bytes": 4104025
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "ES",
+    "file_name": "sg_uf=ES.parquet",
+    "size_bytes": 11133910
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "GO",
+    "file_name": "sg_uf=GO.parquet",
+    "size_bytes": 8068884
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "MA",
+    "file_name": "sg_uf=MA.parquet",
+    "size_bytes": 7619777
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "MT",
+    "file_name": "sg_uf=MT.parquet",
+    "size_bytes": 3878494
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "MS",
+    "file_name": "sg_uf=MS.parquet",
+    "size_bytes": 6923405
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "MG",
+    "file_name": "sg_uf=MG.parquet",
+    "size_bytes": 12853239
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "PA",
+    "file_name": "sg_uf=PA.parquet",
+    "size_bytes": 7868933
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "PB",
+    "file_name": "sg_uf=PB.parquet",
+    "size_bytes": 3004727
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "PR",
+    "file_name": "sg_uf=PR.parquet",
+    "size_bytes": 14639792
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "PE",
+    "file_name": "sg_uf=PE.parquet",
+    "size_bytes": 7831730
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "PI",
+    "file_name": "sg_uf=PI.parquet",
+    "size_bytes": 2121032
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "RJ",
+    "file_name": "sg_uf=RJ.parquet",
+    "size_bytes": 13777637
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "RN",
+    "file_name": "sg_uf=RN.parquet",
+    "size_bytes": 3753193
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "RS",
+    "file_name": "sg_uf=RS.parquet",
+    "size_bytes": 14262198
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "RO",
+    "file_name": "sg_uf=RO.parquet",
+    "size_bytes": 4331291
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "RR",
+    "file_name": "sg_uf=RR.parquet",
+    "size_bytes": 7037504
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "SC",
+    "file_name": "sg_uf=SC.parquet",
+    "size_bytes": 14275298
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "SP",
+    "file_name": "sg_uf=SP.parquet",
+    "size_bytes": 16417367
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "SE",
+    "file_name": "sg_uf=SE.parquet",
+    "size_bytes": 2716963
+  },
+  {
+    "dataset": "epi_monetary_ufs",
+    "sg_uf": "TO",
+    "file_name": "sg_uf=TO.parquet",
+    "size_bytes": 1990198
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "AC",
+    "file_name": "sg_uf=AC.parquet",
+    "size_bytes": 246903
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "AL",
+    "file_name": "sg_uf=AL.parquet",
+    "size_bytes": 269937
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "AP",
+    "file_name": "sg_uf=AP.parquet",
+    "size_bytes": 265090
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "AM",
+    "file_name": "sg_uf=AM.parquet",
+    "size_bytes": 284708
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "BA",
+    "file_name": "sg_uf=BA.parquet",
+    "size_bytes": 304296
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "CE",
+    "file_name": "sg_uf=CE.parquet",
+    "size_bytes": 298358
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "DF",
+    "file_name": "sg_uf=DF.parquet",
+    "size_bytes": 251129
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "ES",
+    "file_name": "sg_uf=ES.parquet",
+    "size_bytes": 308471
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "GO",
+    "file_name": "sg_uf=GO.parquet",
+    "size_bytes": 281917
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "MA",
+    "file_name": "sg_uf=MA.parquet",
+    "size_bytes": 280335
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "MT",
+    "file_name": "sg_uf=MT.parquet",
+    "size_bytes": 249894
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "MS",
+    "file_name": "sg_uf=MS.parquet",
+    "size_bytes": 273445
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "MG",
+    "file_name": "sg_uf=MG.parquet",
+    "size_bytes": 327518
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "PA",
+    "file_name": "sg_uf=PA.parquet",
+    "size_bytes": 282286
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "PB",
+    "file_name": "sg_uf=PB.parquet",
+    "size_bytes": 242517
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "PR",
+    "file_name": "sg_uf=PR.parquet",
+    "size_bytes": 347576
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "PE",
+    "file_name": "sg_uf=PE.parquet",
+    "size_bytes": 281942
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "PI",
+    "file_name": "sg_uf=PI.parquet",
+    "size_bytes": 233116
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "RJ",
+    "file_name": "sg_uf=RJ.parquet",
+    "size_bytes": 340434
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "RN",
+    "file_name": "sg_uf=RN.parquet",
+    "size_bytes": 250380
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "RS",
+    "file_name": "sg_uf=RS.parquet",
+    "size_bytes": 344389
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "RO",
+    "file_name": "sg_uf=RO.parquet",
+    "size_bytes": 255122
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "RR",
+    "file_name": "sg_uf=RR.parquet",
+    "size_bytes": 272801
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "SC",
+    "file_name": "sg_uf=SC.parquet",
+    "size_bytes": 345208
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "SP",
+    "file_name": "sg_uf=SP.parquet",
+    "size_bytes": 370823
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "SE",
+    "file_name": "sg_uf=SE.parquet",
+    "size_bytes": 237275
+  },
+  {
+    "dataset": "epi_monetary_ufs_sh6",
+    "sg_uf": "TO",
+    "file_name": "sg_uf=TO.parquet",
+    "size_bytes": 230775
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "AC",
+    "file_name": "sg_uf=AC.parquet",
+    "size_bytes": 9682
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "AL",
+    "file_name": "sg_uf=AL.parquet",
+    "size_bytes": 9686
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "AP",
+    "file_name": "sg_uf=AP.parquet",
+    "size_bytes": 9670
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "AM",
+    "file_name": "sg_uf=AM.parquet",
+    "size_bytes": 9676
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "BA",
+    "file_name": "sg_uf=BA.parquet",
+    "size_bytes": 9673
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "CE",
+    "file_name": "sg_uf=CE.parquet",
+    "size_bytes": 9674
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "DF",
+    "file_name": "sg_uf=DF.parquet",
+    "size_bytes": 9524
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "ES",
+    "file_name": "sg_uf=ES.parquet",
+    "size_bytes": 9685
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "GO",
+    "file_name": "sg_uf=GO.parquet",
+    "size_bytes": 9697
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "MA",
+    "file_name": "sg_uf=MA.parquet",
+    "size_bytes": 9683
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "MT",
+    "file_name": "sg_uf=MT.parquet",
+    "size_bytes": 9690
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "MS",
+    "file_name": "sg_uf=MS.parquet",
+    "size_bytes": 9676
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "MG",
+    "file_name": "sg_uf=MG.parquet",
+    "size_bytes": 9676
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "PA",
+    "file_name": "sg_uf=PA.parquet",
+    "size_bytes": 9687
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "PB",
+    "file_name": "sg_uf=PB.parquet",
+    "size_bytes": 9543
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "PR",
+    "file_name": "sg_uf=PR.parquet",
+    "size_bytes": 9693
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "PE",
+    "file_name": "sg_uf=PE.parquet",
+    "size_bytes": 9698
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "PI",
+    "file_name": "sg_uf=PI.parquet",
+    "size_bytes": 9420
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "RJ",
+    "file_name": "sg_uf=RJ.parquet",
+    "size_bytes": 9668
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "RN",
+    "file_name": "sg_uf=RN.parquet",
+    "size_bytes": 9536
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "RS",
+    "file_name": "sg_uf=RS.parquet",
+    "size_bytes": 9689
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "RO",
+    "file_name": "sg_uf=RO.parquet",
+    "size_bytes": 9684
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "RR",
+    "file_name": "sg_uf=RR.parquet",
+    "size_bytes": 9689
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "SC",
+    "file_name": "sg_uf=SC.parquet",
+    "size_bytes": 9677
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "SP",
+    "file_name": "sg_uf=SP.parquet",
+    "size_bytes": 9687
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "SE",
+    "file_name": "sg_uf=SE.parquet",
+    "size_bytes": 9537
+  },
+  {
+    "dataset": "epi_monetary_ufs_country",
+    "sg_uf": "TO",
+    "file_name": "sg_uf=TO.parquet",
+    "size_bytes": 9553
+  }
+]

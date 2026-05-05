@@ -38,6 +38,7 @@ yarn-error.log*
 
 # large local data artifacts
 public/data/competitors/*.parquet
+public/data/ufs/*.parquet
 
 # typescript
 *.tsbuildinfo

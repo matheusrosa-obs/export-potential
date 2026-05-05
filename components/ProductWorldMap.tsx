@@ -6,22 +6,23 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import countryCoords from "@/lib/country-coords.json";
 import { getCountryName } from "@/lib/country-names-pt";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
+import { applyUfFilter, getUfLabel, useSelectedUf } from "@/lib/uf-filter";
 
 const BUBBLE_MIN_PX = 2;
 const BUBBLE_MAX_PX = 120;
 const BUBBLE_SCALE_POWER = 0.6;
 
-type ViewMode = "potential_value" | "bilateral_exports_sc_sh6" | "unrealized_potential_value";
+type ViewMode = "potential_value" | "bilateral_exports_uf_sh6" | "unrealized_potential_value";
 
 const VIEW_OPTIONS: { key: ViewMode; label: string; color: string }[] = [
   { key: "potential_value",              label: "Potencial total",          color: "#4a9eff" },
-  { key: "bilateral_exports_sc_sh6",     label: "Exportações atuais",       color: "#ffae00" },
+  { key: "bilateral_exports_uf_sh6",     label: "Exportações atuais",       color: "#ffae00" },
   { key: "unrealized_potential_value",   label: "Potencial não realizado",  color: "#54f394" },
 ];
 
 type Row = {
   importer: string;
-  bilateral_exports_sc_sh6: number;
+  bilateral_exports_uf_sh6: number;
   potential_value: number;
   unrealized_potential_value: number;
 };
@@ -44,6 +45,7 @@ type Props = {
 };
 
 export default function ProductWorldMap({ sh6 }: Props) {
+  const selectedUf = useSelectedUf();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -69,8 +71,14 @@ export default function ProductWorldMap({ sh6 }: Props) {
     if (!sh6) { setRows([]); return; }
     setLoading(true);
     setError(null);
-    const cols = "importer,bilateral_exports_sc_sh6,potential_value,unrealized_potential_value";
-    fetch(`/api/data/epi_monetary_sc?columns=${cols}&limit=5000&filter[sh6]=${encodeURIComponent(sh6)}`)
+    const params = new URLSearchParams({
+      columns: "importer,bilateral_exports_uf_sh6,potential_value,unrealized_potential_value",
+      limit: "5000",
+      "filter[sh6]": sh6,
+    });
+    applyUfFilter(params, selectedUf);
+
+    fetch(`/api/data/epi_monetary_ufs?${params.toString()}`)
       .then((r) => r.json())
       .then((json) => {
         setRows(json.rows as Row[]);
@@ -80,7 +88,7 @@ export default function ProductWorldMap({ sh6 }: Props) {
         setError("Erro ao carregar os dados.");
         setLoading(false);
       });
-  }, [sh6]);
+  }, [sh6, selectedUf]);
 
   const { seriesData, activeColor, activeLabel } = useMemo(() => {
     const opt = VIEW_OPTIONS.find((v) => v.key === viewMode)!;
@@ -148,7 +156,7 @@ export default function ProductWorldMap({ sh6 }: Props) {
   return (
     <div className="w-full mt-1">
       <h3 className="text-sm font-semibold text-zinc-100 mb-4">
-        Distribuição geográfica do potencial de exportação
+        Distribuição geográfica do potencial de exportação em {getUfLabel(selectedUf)}
       </h3>
       {/* View mode toggle */}
       <div className="flex items-center gap-1.5 mb-3">
