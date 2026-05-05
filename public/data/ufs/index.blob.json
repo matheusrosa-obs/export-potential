@@ -1,0 +1,812 @@
+[
+  {
+    "sg_uf": "AC",
+    "file_name": "sg_uf=AC.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=AC.parquet",
+    "rows": 833300,
+    "size_bytes": 4550435,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DAC.parquet"
+  },
+  {
+    "sg_uf": "AL",
+    "file_name": "sg_uf=AL.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=AL.parquet",
+    "rows": 833300,
+    "size_bytes": 7047519,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DAL.parquet"
+  },
+  {
+    "sg_uf": "AM",
+    "file_name": "sg_uf=AM.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=AM.parquet",
+    "rows": 833300,
+    "size_bytes": 8744780,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DAM.parquet"
+  },
+  {
+    "sg_uf": "AP",
+    "file_name": "sg_uf=AP.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=AP.parquet",
+    "rows": 833300,
+    "size_bytes": 6672616,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DAP.parquet"
+  },
+  {
+    "sg_uf": "BA",
+    "file_name": "sg_uf=BA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=BA.parquet",
+    "rows": 833300,
+    "size_bytes": 10613575,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DBA.parquet"
+  },
+  {
+    "sg_uf": "CE",
+    "file_name": "sg_uf=CE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=CE.parquet",
+    "rows": 833300,
+    "size_bytes": 10055043,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DCE.parquet"
+  },
+  {
+    "sg_uf": "DF",
+    "file_name": "sg_uf=DF.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=DF.parquet",
+    "rows": 833300,
+    "size_bytes": 4943238,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DDF.parquet"
+  },
+  {
+    "sg_uf": "ES",
+    "file_name": "sg_uf=ES.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=ES.parquet",
+    "rows": 833300,
+    "size_bytes": 11288741,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DES.parquet"
+  },
+  {
+    "sg_uf": "GO",
+    "file_name": "sg_uf=GO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=GO.parquet",
+    "rows": 833300,
+    "size_bytes": 8666330,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DGO.parquet"
+  },
+  {
+    "sg_uf": "MA",
+    "file_name": "sg_uf=MA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=MA.parquet",
+    "rows": 833300,
+    "size_bytes": 8170390,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DMA.parquet"
+  },
+  {
+    "sg_uf": "MG",
+    "file_name": "sg_uf=MG.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=MG.parquet",
+    "rows": 833300,
+    "size_bytes": 12975508,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DMG.parquet"
+  },
+  {
+    "sg_uf": "MS",
+    "file_name": "sg_uf=MS.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=MS.parquet",
+    "rows": 833300,
+    "size_bytes": 7572944,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DMS.parquet"
+  },
+  {
+    "sg_uf": "MT",
+    "file_name": "sg_uf=MT.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=MT.parquet",
+    "rows": 833300,
+    "size_bytes": 4800827,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DMT.parquet"
+  },
+  {
+    "sg_uf": "PA",
+    "file_name": "sg_uf=PA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=PA.parquet",
+    "rows": 833300,
+    "size_bytes": 8471571,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DPA.parquet"
+  },
+  {
+    "sg_uf": "PB",
+    "file_name": "sg_uf=PB.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=PB.parquet",
+    "rows": 833300,
+    "size_bytes": 3974648,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DPB.parquet"
+  },
+  {
+    "sg_uf": "PE",
+    "file_name": "sg_uf=PE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=PE.parquet",
+    "rows": 833300,
+    "size_bytes": 8382426,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DPE.parquet"
+  },
+  {
+    "sg_uf": "PI",
+    "file_name": "sg_uf=PI.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=PI.parquet",
+    "rows": 833300,
+    "size_bytes": 3142057,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DPI.parquet"
+  },
+  {
+    "sg_uf": "PR",
+    "file_name": "sg_uf=PR.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=PR.parquet",
+    "rows": 833300,
+    "size_bytes": 14553995,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DPR.parquet"
+  },
+  {
+    "sg_uf": "RJ",
+    "file_name": "sg_uf=RJ.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=RJ.parquet",
+    "rows": 833300,
+    "size_bytes": 13729358,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DRJ.parquet"
+  },
+  {
+    "sg_uf": "RN",
+    "file_name": "sg_uf=RN.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=RN.parquet",
+    "rows": 833300,
+    "size_bytes": 4708399,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DRN.parquet"
+  },
+  {
+    "sg_uf": "RO",
+    "file_name": "sg_uf=RO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=RO.parquet",
+    "rows": 833300,
+    "size_bytes": 5138569,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DRO.parquet"
+  },
+  {
+    "sg_uf": "RR",
+    "file_name": "sg_uf=RR.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=RR.parquet",
+    "rows": 833300,
+    "size_bytes": 7679812,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DRR.parquet"
+  },
+  {
+    "sg_uf": "RS",
+    "file_name": "sg_uf=RS.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=RS.parquet",
+    "rows": 833300,
+    "size_bytes": 14140702,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DRS.parquet"
+  },
+  {
+    "sg_uf": "SC",
+    "file_name": "sg_uf=SC.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=SC.parquet",
+    "rows": 833300,
+    "size_bytes": 14254036,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DSC.parquet"
+  },
+  {
+    "sg_uf": "SE",
+    "file_name": "sg_uf=SE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=SE.parquet",
+    "rows": 833300,
+    "size_bytes": 3652530,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DSE.parquet"
+  },
+  {
+    "sg_uf": "SP",
+    "file_name": "sg_uf=SP.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=SP.parquet",
+    "rows": 833300,
+    "size_bytes": 16064148,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DSP.parquet"
+  },
+  {
+    "sg_uf": "TO",
+    "file_name": "sg_uf=TO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_by_uf/sg_uf=TO.parquet",
+    "rows": 833300,
+    "size_bytes": 2980743,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs/sg_uf%3DTO.parquet"
+  },
+  {
+    "sg_uf": "AC",
+    "file_name": "sg_uf=AC.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=AC.parquet",
+    "rows": 4863,
+    "size_bytes": 248628,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DAC.parquet"
+  },
+  {
+    "sg_uf": "AL",
+    "file_name": "sg_uf=AL.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=AL.parquet",
+    "rows": 4863,
+    "size_bytes": 270816,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DAL.parquet"
+  },
+  {
+    "sg_uf": "AM",
+    "file_name": "sg_uf=AM.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=AM.parquet",
+    "rows": 4863,
+    "size_bytes": 286740,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DAM.parquet"
+  },
+  {
+    "sg_uf": "AP",
+    "file_name": "sg_uf=AP.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=AP.parquet",
+    "rows": 4863,
+    "size_bytes": 266873,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DAP.parquet"
+  },
+  {
+    "sg_uf": "BA",
+    "file_name": "sg_uf=BA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=BA.parquet",
+    "rows": 4863,
+    "size_bytes": 306848,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DBA.parquet"
+  },
+  {
+    "sg_uf": "CE",
+    "file_name": "sg_uf=CE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=CE.parquet",
+    "rows": 4863,
+    "size_bytes": 300990,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DCE.parquet"
+  },
+  {
+    "sg_uf": "DF",
+    "file_name": "sg_uf=DF.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=DF.parquet",
+    "rows": 4863,
+    "size_bytes": 253373,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DDF.parquet"
+  },
+  {
+    "sg_uf": "ES",
+    "file_name": "sg_uf=ES.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=ES.parquet",
+    "rows": 4863,
+    "size_bytes": 310632,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DES.parquet"
+  },
+  {
+    "sg_uf": "GO",
+    "file_name": "sg_uf=GO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=GO.parquet",
+    "rows": 4863,
+    "size_bytes": 284395,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DGO.parquet"
+  },
+  {
+    "sg_uf": "MA",
+    "file_name": "sg_uf=MA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=MA.parquet",
+    "rows": 4863,
+    "size_bytes": 281827,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DMA.parquet"
+  },
+  {
+    "sg_uf": "MG",
+    "file_name": "sg_uf=MG.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=MG.parquet",
+    "rows": 4863,
+    "size_bytes": 330118,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DMG.parquet"
+  },
+  {
+    "sg_uf": "MS",
+    "file_name": "sg_uf=MS.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=MS.parquet",
+    "rows": 4863,
+    "size_bytes": 275445,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DMS.parquet"
+  },
+  {
+    "sg_uf": "MT",
+    "file_name": "sg_uf=MT.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=MT.parquet",
+    "rows": 4863,
+    "size_bytes": 251965,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DMT.parquet"
+  },
+  {
+    "sg_uf": "PA",
+    "file_name": "sg_uf=PA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=PA.parquet",
+    "rows": 4863,
+    "size_bytes": 284309,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DPA.parquet"
+  },
+  {
+    "sg_uf": "PB",
+    "file_name": "sg_uf=PB.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=PB.parquet",
+    "rows": 4863,
+    "size_bytes": 245511,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DPB.parquet"
+  },
+  {
+    "sg_uf": "PE",
+    "file_name": "sg_uf=PE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=PE.parquet",
+    "rows": 4863,
+    "size_bytes": 283664,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DPE.parquet"
+  },
+  {
+    "sg_uf": "PI",
+    "file_name": "sg_uf=PI.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=PI.parquet",
+    "rows": 4863,
+    "size_bytes": 239450,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DPI.parquet"
+  },
+  {
+    "sg_uf": "PR",
+    "file_name": "sg_uf=PR.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=PR.parquet",
+    "rows": 4863,
+    "size_bytes": 349478,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DPR.parquet"
+  },
+  {
+    "sg_uf": "RJ",
+    "file_name": "sg_uf=RJ.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=RJ.parquet",
+    "rows": 4863,
+    "size_bytes": 342450,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DRJ.parquet"
+  },
+  {
+    "sg_uf": "RN",
+    "file_name": "sg_uf=RN.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=RN.parquet",
+    "rows": 4863,
+    "size_bytes": 251366,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DRN.parquet"
+  },
+  {
+    "sg_uf": "RO",
+    "file_name": "sg_uf=RO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=RO.parquet",
+    "rows": 4863,
+    "size_bytes": 255027,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DRO.parquet"
+  },
+  {
+    "sg_uf": "RR",
+    "file_name": "sg_uf=RR.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=RR.parquet",
+    "rows": 4863,
+    "size_bytes": 275322,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DRR.parquet"
+  },
+  {
+    "sg_uf": "RS",
+    "file_name": "sg_uf=RS.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=RS.parquet",
+    "rows": 4863,
+    "size_bytes": 346610,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DRS.parquet"
+  },
+  {
+    "sg_uf": "SC",
+    "file_name": "sg_uf=SC.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=SC.parquet",
+    "rows": 4863,
+    "size_bytes": 347107,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DSC.parquet"
+  },
+  {
+    "sg_uf": "SE",
+    "file_name": "sg_uf=SE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=SE.parquet",
+    "rows": 4863,
+    "size_bytes": 242871,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DSE.parquet"
+  },
+  {
+    "sg_uf": "SP",
+    "file_name": "sg_uf=SP.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=SP.parquet",
+    "rows": 4863,
+    "size_bytes": 372937,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DSP.parquet"
+  },
+  {
+    "sg_uf": "TO",
+    "file_name": "sg_uf=TO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_sh6_by_uf/sg_uf=TO.parquet",
+    "rows": 4863,
+    "size_bytes": 237187,
+    "sh6_count": 4863,
+    "dataset": "epi_monetary_ufs_sh6",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_sh6/sg_uf%3DTO.parquet"
+  },
+  {
+    "sg_uf": "AC",
+    "file_name": "sg_uf=AC.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=AC.parquet",
+    "rows": 226,
+    "size_bytes": 11515,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DAC.parquet"
+  },
+  {
+    "sg_uf": "AL",
+    "file_name": "sg_uf=AL.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=AL.parquet",
+    "rows": 226,
+    "size_bytes": 11509,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DAL.parquet"
+  },
+  {
+    "sg_uf": "AM",
+    "file_name": "sg_uf=AM.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=AM.parquet",
+    "rows": 226,
+    "size_bytes": 11511,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DAM.parquet"
+  },
+  {
+    "sg_uf": "AP",
+    "file_name": "sg_uf=AP.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=AP.parquet",
+    "rows": 226,
+    "size_bytes": 11509,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DAP.parquet"
+  },
+  {
+    "sg_uf": "BA",
+    "file_name": "sg_uf=BA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=BA.parquet",
+    "rows": 226,
+    "size_bytes": 11503,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DBA.parquet"
+  },
+  {
+    "sg_uf": "CE",
+    "file_name": "sg_uf=CE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=CE.parquet",
+    "rows": 226,
+    "size_bytes": 11508,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DCE.parquet"
+  },
+  {
+    "sg_uf": "DF",
+    "file_name": "sg_uf=DF.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=DF.parquet",
+    "rows": 226,
+    "size_bytes": 11385,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DDF.parquet"
+  },
+  {
+    "sg_uf": "ES",
+    "file_name": "sg_uf=ES.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=ES.parquet",
+    "rows": 226,
+    "size_bytes": 11513,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DES.parquet"
+  },
+  {
+    "sg_uf": "GO",
+    "file_name": "sg_uf=GO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=GO.parquet",
+    "rows": 226,
+    "size_bytes": 11515,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DGO.parquet"
+  },
+  {
+    "sg_uf": "MA",
+    "file_name": "sg_uf=MA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=MA.parquet",
+    "rows": 226,
+    "size_bytes": 11512,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DMA.parquet"
+  },
+  {
+    "sg_uf": "MG",
+    "file_name": "sg_uf=MG.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=MG.parquet",
+    "rows": 226,
+    "size_bytes": 11509,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DMG.parquet"
+  },
+  {
+    "sg_uf": "MS",
+    "file_name": "sg_uf=MS.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=MS.parquet",
+    "rows": 226,
+    "size_bytes": 11501,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DMS.parquet"
+  },
+  {
+    "sg_uf": "MT",
+    "file_name": "sg_uf=MT.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=MT.parquet",
+    "rows": 226,
+    "size_bytes": 11522,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DMT.parquet"
+  },
+  {
+    "sg_uf": "PA",
+    "file_name": "sg_uf=PA.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=PA.parquet",
+    "rows": 226,
+    "size_bytes": 11520,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DPA.parquet"
+  },
+  {
+    "sg_uf": "PB",
+    "file_name": "sg_uf=PB.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=PB.parquet",
+    "rows": 226,
+    "size_bytes": 11380,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DPB.parquet"
+  },
+  {
+    "sg_uf": "PE",
+    "file_name": "sg_uf=PE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=PE.parquet",
+    "rows": 226,
+    "size_bytes": 11522,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DPE.parquet"
+  },
+  {
+    "sg_uf": "PI",
+    "file_name": "sg_uf=PI.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=PI.parquet",
+    "rows": 226,
+    "size_bytes": 11251,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DPI.parquet"
+  },
+  {
+    "sg_uf": "PR",
+    "file_name": "sg_uf=PR.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=PR.parquet",
+    "rows": 226,
+    "size_bytes": 11525,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DPR.parquet"
+  },
+  {
+    "sg_uf": "RJ",
+    "file_name": "sg_uf=RJ.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=RJ.parquet",
+    "rows": 226,
+    "size_bytes": 11499,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DRJ.parquet"
+  },
+  {
+    "sg_uf": "RN",
+    "file_name": "sg_uf=RN.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=RN.parquet",
+    "rows": 226,
+    "size_bytes": 11372,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DRN.parquet"
+  },
+  {
+    "sg_uf": "RO",
+    "file_name": "sg_uf=RO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=RO.parquet",
+    "rows": 226,
+    "size_bytes": 11516,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DRO.parquet"
+  },
+  {
+    "sg_uf": "RR",
+    "file_name": "sg_uf=RR.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=RR.parquet",
+    "rows": 226,
+    "size_bytes": 11525,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DRR.parquet"
+  },
+  {
+    "sg_uf": "RS",
+    "file_name": "sg_uf=RS.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=RS.parquet",
+    "rows": 226,
+    "size_bytes": 11515,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DRS.parquet"
+  },
+  {
+    "sg_uf": "SC",
+    "file_name": "sg_uf=SC.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=SC.parquet",
+    "rows": 226,
+    "size_bytes": 11508,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DSC.parquet"
+  },
+  {
+    "sg_uf": "SE",
+    "file_name": "sg_uf=SE.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=SE.parquet",
+    "rows": 226,
+    "size_bytes": 11371,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DSE.parquet"
+  },
+  {
+    "sg_uf": "SP",
+    "file_name": "sg_uf=SP.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=SP.parquet",
+    "rows": 226,
+    "size_bytes": 11518,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DSP.parquet"
+  },
+  {
+    "sg_uf": "TO",
+    "file_name": "sg_uf=TO.parquet",
+    "relative_path": "data/processed/epi_monetary_ufs_country_by_uf/sg_uf=TO.parquet",
+    "rows": 226,
+    "size_bytes": 11317,
+    "sh6_count": 1,
+    "dataset": "epi_monetary_ufs_country",
+    "blob_url": "https://bd6nx2fvgcydhvyt.public.blob.vercel-storage.com/ufs/epi_monetary_ufs_country/sg_uf%3DTO.parquet"
+  }
+]

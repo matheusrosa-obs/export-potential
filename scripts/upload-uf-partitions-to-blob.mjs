@@ -4,9 +4,10 @@ import { put } from "@vercel/blob";
 
 const root = process.cwd();
 const partitionsDir = path.join(root, "public", "data", "ufs");
-const localIndexPath = path.join(partitionsDir, "index.json");
 const blobIndexPath = path.join(partitionsDir, "index.blob.json");
 const concurrency = Number(process.env.BLOB_UPLOAD_CONCURRENCY ?? "6");
+
+const DATASETS = ["epi_monetary_ufs", "epi_monetary_ufs_sh6", "epi_monetary_ufs_country"];
 
 if (!process.env.BLOB_READ_WRITE_TOKEN) {
   throw new Error(
@@ -40,10 +41,7 @@ async function uploadInBatches(entries) {
 
         console.log(`Uploaded ${entry.dataset}/${entry.file_name} -> ${blob.url}`);
 
-        return {
-          ...entry,
-          blob_url: blob.url,
-        };
+        return { ...entry, blob_url: blob.url };
       })
     );
 
@@ -55,15 +53,24 @@ async function uploadInBatches(entries) {
 }
 
 async function main() {
-  const raw = await fs.readFile(localIndexPath, "utf-8");
   /** @type {IndexEntry[]} */
-  const entries = JSON.parse(raw);
+  const allEntries = [];
 
-  if (!Array.isArray(entries) || entries.length === 0) {
-    throw new Error("index.json de particoes UF vazio ou invalido.");
+  for (const datasetId of DATASETS) {
+    const indexFile = path.join(partitionsDir, datasetId, "index.json");
+    const raw = await fs.readFile(indexFile, "utf-8");
+    const entries = JSON.parse(raw);
+
+    if (!Array.isArray(entries) || entries.length === 0) {
+      throw new Error(`index.json de ${datasetId} vazio ou invalido.`);
+    }
+
+    for (const entry of entries) {
+      allEntries.push({ ...entry, dataset: datasetId });
+    }
   }
 
-  const result = await uploadInBatches(entries);
+  const result = await uploadInBatches(allEntries);
 
   await fs.writeFile(blobIndexPath, JSON.stringify(result, null, 2), "utf-8");
   console.log(`Wrote ${blobIndexPath} with ${result.length} blob URLs.`);

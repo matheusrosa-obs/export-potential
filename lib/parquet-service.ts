@@ -479,29 +479,41 @@ async function resolveUfPartitionsIndexFile(
 
 async function loadUfPartitionsIndex(): Promise<UfPartitionsIndexCache> {
   const sourceMode = resolveUfPartitionsSourceMode();
-  const indexFilePath = await resolveUfPartitionsIndexFile(sourceMode);
-
-  if (!indexFilePath) {
-    throw new Error("Index de particoes por UF nao encontrado.");
-  }
-
-  const raw = await fs.readFile(indexFilePath, "utf-8");
-  const parsed = JSON.parse(raw) as UfPartitionIndexEntry[];
-
   const byKey = new Map<string, UfPartitionIndexEntry>();
-  for (const entry of parsed) {
-    if (!entry?.dataset || !entry?.sg_uf || !entry?.file_name) continue;
-    const normalizedUf = normalizeUfCode(entry.sg_uf);
-    byKey.set(`${entry.dataset}:${normalizedUf}`, {
-      ...entry,
-      sg_uf: normalizedUf,
-    });
+
+  if (sourceMode === "local") {
+    for (const datasetId of UF_PARTITIONED_DATASETS) {
+      const indexFile = path.join(UF_PARTITIONS_DIRECTORY, datasetId, "index.json");
+      const raw = await fs.readFile(indexFile, "utf-8");
+      const parsed = JSON.parse(raw) as Omit<UfPartitionIndexEntry, "dataset">[];
+      for (const entry of parsed) {
+        if (!entry?.sg_uf || !entry?.file_name) continue;
+        const normalizedUf = normalizeUfCode(entry.sg_uf);
+        byKey.set(`${datasetId}:${normalizedUf}`, {
+          ...entry,
+          dataset: datasetId,
+          sg_uf: normalizedUf,
+        });
+      }
+    }
+  } else {
+    const indexFilePath = await resolveUfPartitionsIndexFile(sourceMode);
+    if (!indexFilePath) {
+      throw new Error("Index de particoes por UF nao encontrado.");
+    }
+    const raw = await fs.readFile(indexFilePath, "utf-8");
+    const parsed = JSON.parse(raw) as UfPartitionIndexEntry[];
+    for (const entry of parsed) {
+      if (!entry?.dataset || !entry?.sg_uf || !entry?.file_name) continue;
+      const normalizedUf = normalizeUfCode(entry.sg_uf);
+      byKey.set(`${entry.dataset}:${normalizedUf}`, {
+        ...entry,
+        sg_uf: normalizedUf,
+      });
+    }
   }
 
-  return {
-    loadedAt: Date.now(),
-    byKey,
-  };
+  return { loadedAt: Date.now(), byKey };
 }
 
 async function getUfPartitionsIndex(

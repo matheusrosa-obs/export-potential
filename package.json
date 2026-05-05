@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "blob:upload-competitors": "node scripts/upload-competitors-to-blob.mjs",
-    "partition:ufs": "node scripts/partition-uf-parquets.mjs",
     "blob:upload-ufs": "node scripts/upload-uf-partitions-to-blob.mjs"
   },
   "dependencies": {
