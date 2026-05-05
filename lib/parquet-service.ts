@@ -7,6 +7,7 @@ const DATA_DIRECTORY = path.join(process.cwd(), "public", "data");
 const COMPETITORS_DIRECTORY = path.join(DATA_DIRECTORY, "competitors");
 const COMPETITORS_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.json");
 const COMPETITORS_BLOB_INDEX_FILE = path.join(COMPETITORS_DIRECTORY, "index.blob.json");
+const GLOBAL_BLOB_INDEX_FILE = path.join(DATA_DIRECTORY, "index.blob.json");
 const UF_PARTITIONS_DIRECTORY = path.join(DATA_DIRECTORY, "ufs");
 const UF_PARTITIONS_INDEX_FILE = path.join(UF_PARTITIONS_DIRECTORY, "index.json");
 const UF_PARTITIONS_BLOB_INDEX_FILE = path.join(UF_PARTITIONS_DIRECTORY, "index.blob.json");
@@ -15,6 +16,7 @@ const UF_PARTITIONED_DATASETS = new Set([
   "epi_monetary_ufs_sh6",
   "epi_monetary_ufs_country",
 ]);
+const GLOBAL_BLOB_CACHE_DATASETS = new Set(["global_market_sh6"]);
 const REGISTRY_TTL_MS = 30_000;
 
 const DEFAULT_COMPETITORS_PARQUET_CACHE_TTL_MS = 15 * 60_000;
@@ -54,6 +56,14 @@ type CompetitorIndexEntry = {
   size_bytes?: number;
 };
 
+type GlobalBlobIndexEntry = {
+  id: string;
+  file_name?: string;
+  size_bytes?: number;
+  updated_at?: string;
+  blob_url?: string;
+};
+
 type UfPartitionIndexEntry = {
   dataset: string;
   sg_uf: string;
@@ -71,6 +81,11 @@ type CompetitorIndexCache = {
 type UfPartitionsIndexCache = {
   loadedAt: number;
   byKey: Map<string, UfPartitionIndexEntry>;
+};
+
+type GlobalBlobIndexCache = {
+  loadedAt: number;
+  byId: Map<string, GlobalBlobIndexEntry>;
 };
 
 type CompetitorParquetCacheEntry = {
@@ -121,6 +136,8 @@ declare global {
   var __parquetSchemaCache: Map<string, DatasetColumn[]> | undefined;
   var __competitorsIndexCache: CompetitorIndexCache | undefined;
   var __competitorsIndexPromise: Promise<CompetitorIndexCache> | undefined;
+  var __globalBlobIndexCache: GlobalBlobIndexCache | undefined;
+  var __globalBlobIndexPromise: Promise<GlobalBlobIndexCache | null> | undefined;
   var __ufPartitionsIndexCache: UfPartitionsIndexCache | undefined;
   var __ufPartitionsIndexPromise:
     | Promise<UfPartitionsIndexCache | null>
@@ -169,6 +186,11 @@ const COMPETITORS_PARQUET_CACHE_MAX_ENTRIES = parsePositiveIntEnv(
 
 function isRemotePath(filePathOrUrl: string): boolean {
   return /^https?:\/\//i.test(filePathOrUrl);
+}
+
+function isRunningOnVercel(): boolean {
+  const vercelFlag = process.env.VERCEL?.trim().toLowerCase();
+  return vercelFlag === "1" || vercelFlag === "true";
 }
 
 function getPublicBaseUrl(): string | null {
@@ -392,6 +414,9 @@ async function getDatasetRegistry(forceRefresh = false): Promise<DatasetRegistry
 }
 
 async function getDatasetOrThrow(datasetId: string): Promise<DatasetEntry> {
+  const blobDataset = await getGlobalBlobDataset(datasetId);
+  if (blobDataset) return blobDataset;
+
   const registry = await getDatasetRegistry();
   const dataset = registry.datasets.get(datasetId);
   if (dataset) return dataset;
@@ -427,10 +452,7 @@ function resolveCompetitorsSourceMode(): CompetitorsSourceMode {
     return explicit;
   }
 
-  const vercelFlag = process.env.VERCEL?.trim().toLowerCase();
-  const runningOnVercel = vercelFlag === "1" || vercelFlag === "true";
-
-  return runningOnVercel ? "blob" : "local";
+  return isRunningOnVercel() ? "blob" : "local";
 }
 
 async function resolveCompetitorsIndexFile(
@@ -475,10 +497,16 @@ function resolveUfPartitionsSourceMode(): UfPartitionsSourceMode {
     return explicit;
   }
 
-  const vercelFlag = process.env.VERCEL?.trim().toLowerCase();
-  const runningOnVercel = vercelFlag === "1" || vercelFlag === "true";
+  return isRunningOnVercel() ? "blob" : "local";
+}
 
-  return runningOnVercel ? "blob" : "local";
+function resolveGlobalDatasetsSourceMode(): "local" | "blob" {
+  const explicit = process.env.GLOBAL_DATASETS_SOURCE?.trim().toLowerCase();
+  if (explicit === "local" || explicit === "blob") {
+    return explicit;
+  }
+
+  return isRunningOnVercel() ? "blob" : "local";
 }
 
 async function resolveUfPartitionsIndexFile(
@@ -591,6 +619,52 @@ async function getUfPartitionsIndex(
   return promise;
 }
 
+async function loadGlobalBlobIndex(): Promise<GlobalBlobIndexCache | null> {
+  const exists = await fs
+    .access(GLOBAL_BLOB_INDEX_FILE)
+    .then(() => true)
+    .catch(() => false);
+
+  if (!exists) return null;
+
+  const raw = await fs.readFile(GLOBAL_BLOB_INDEX_FILE, "utf-8");
+  const parsed = JSON.parse(raw) as GlobalBlobIndexEntry[];
+  const byId = new Map<string, GlobalBlobIndexEntry>();
+
+  for (const entry of parsed) {
+    if (!entry?.id) continue;
+    byId.set(entry.id, entry);
+  }
+
+  return { loadedAt: Date.now(), byId };
+}
+
+async function getGlobalBlobIndex(
+  forceRefresh = false
+): Promise<GlobalBlobIndexCache | null> {
+  const cached = globalThis.__globalBlobIndexCache;
+  const cacheFresh = cached && Date.now() - cached.loadedAt < REGISTRY_TTL_MS;
+
+  if (!forceRefresh && cacheFresh) return cached;
+  if (globalThis.__globalBlobIndexPromise)
+    return globalThis.__globalBlobIndexPromise;
+
+  const promise = loadGlobalBlobIndex()
+    .then((indexCache) => {
+      if (indexCache) {
+        globalThis.__globalBlobIndexCache = indexCache;
+      }
+      return indexCache;
+    })
+    .catch(() => null)
+    .finally(() => {
+      globalThis.__globalBlobIndexPromise = undefined;
+    });
+
+  globalThis.__globalBlobIndexPromise = promise;
+  return promise;
+}
+
 async function getCompetitorsIndex(forceRefresh = false): Promise<CompetitorIndexCache> {
   const cached = globalThis.__competitorsIndexCache;
   const cacheFresh = cached && Date.now() - cached.loadedAt < REGISTRY_TTL_MS;
@@ -609,6 +683,25 @@ async function getCompetitorsIndex(forceRefresh = false): Promise<CompetitorInde
 
   globalThis.__competitorsIndexPromise = promise;
   return promise;
+}
+
+async function getGlobalBlobDataset(datasetId: string): Promise<DatasetEntry | null> {
+  const sourceMode = resolveGlobalDatasetsSourceMode();
+  if (sourceMode !== "blob") return null;
+
+  const indexCache = await getGlobalBlobIndex();
+  if (!indexCache) return null;
+
+  const entry = indexCache.byId.get(datasetId);
+  if (!entry?.blob_url) return null;
+
+  return {
+    id: entry.id,
+    fileName: entry.file_name ?? `${entry.id}.parquet`,
+    filePath: entry.blob_url,
+    sizeBytes: entry.size_bytes ?? 0,
+    updatedAt: entry.updated_at ?? new Date(indexCache.loadedAt).toISOString(),
+  };
 }
 
 async function getCompetitorPartitionDataset(importer: string): Promise<DatasetEntry> {
@@ -712,7 +805,8 @@ async function getUfPartitionDataset(
 function shouldUseParquetCache(dataset: DatasetEntry): boolean {
   if (!isRemotePath(dataset.filePath)) return false;
   if (dataset.id === "df_competitors") return true;
-  return UF_PARTITIONED_DATASETS.has(dataset.id);
+  if (UF_PARTITIONED_DATASETS.has(dataset.id)) return true;
+  return GLOBAL_BLOB_CACHE_DATASETS.has(dataset.id);
 }
 
 async function getSchema(dataset: DatasetEntry): Promise<DatasetColumn[]> {
