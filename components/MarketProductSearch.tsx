@@ -43,7 +43,6 @@ export default function MarketProductSearch({ importer, selectedSH6, onSelect }:
     setSelected(null);
     setQuery("");
     setOpen(false);
-    onSelectRef.current(null);
 
     const params = new URLSearchParams({
       columns: "sh6,product_description_br",

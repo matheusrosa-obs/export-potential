@@ -92,23 +92,47 @@ function HomeContent() {
   const ufContentKey = selectedUf ?? "BR";
 
   useEffect(() => {
-    const params = new URLSearchParams({
-      columns: "sh6",
-      limit: "1",
-      sortBy: "potential_value",
-      sortDirection: "desc",
-    });
-    applyUfFilter(params, selectedUf);
+    let cancelled = false;
 
-    fetch(`/api/data/epi_monetary_ufs_sh6?${params.toString()}`)
-      .then((res) => res.json())
-      .then((json) => {
-        const sh6: string | null = json.rows?.[0]?.sh6 ?? null;
-        setUfTopSH6(sh6);
-        setSelectedSH6(sh6);
-        setSelectedMarketSH6(sh6);
-      })
-      .catch(() => {});
+    const fetchTopSh6 = async (params: URLSearchParams) => {
+      const res = await fetch(`/api/data/epi_monetary_ufs_sh6?${params.toString()}`);
+      const json = await res.json();
+      if (!res.ok || json.error) return null;
+      return (json.rows?.[0]?.sh6 as string | null) ?? null;
+    };
+
+    const loadTopSh6 = async () => {
+      const exportParams = new URLSearchParams({
+        columns: "sh6,bilateral_exports_uf_sh6",
+        limit: "1",
+        sortBy: "bilateral_exports_uf_sh6",
+        sortDirection: "desc",
+      });
+      applyUfFilter(exportParams, selectedUf);
+
+      let sh6 = await fetchTopSh6(exportParams);
+
+      if (!sh6) {
+        const fallbackParams = new URLSearchParams({
+          columns: "sh6",
+          limit: "1",
+          sortBy: "potential_value",
+          sortDirection: "desc",
+        });
+        applyUfFilter(fallbackParams, selectedUf);
+        sh6 = await fetchTopSh6(fallbackParams);
+      }
+
+      if (cancelled) return;
+      setUfTopSH6(sh6);
+      setSelectedSH6(sh6);
+      setSelectedMarketSH6(sh6);
+    };
+
+    void loadTopSh6();
+    return () => {
+      cancelled = true;
+    };
   }, [selectedUf]);
 
   return (

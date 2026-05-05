@@ -1,33 +1,46 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getCountryName } from "@/lib/country-names-pt";
 
 type Row = {
-  importer: string;
-  potential_value: number;
-  bilateral_exports_uf: number;
-  unrealized_potential_value: number;
-  potential_utilization_ratio: number;
-  potential_category: string;
+  rank: number;
+  country: string;
+  amount: number;
+  marketShare: number;
+  cagr5: number;
+  shareBrazil: number;
+  shareSC: number;
 };
 
+const COLUMN_MAP = {
+  rank: "Posição",
+  country: "País",
+  amount: "Montante US$",
+  marketShare: "Market Share (%)",
+  cagr5: "CAGR 5 anos (%)",
+  shareBrazil: "Share Brasil (%)",
+  shareSC: "Share SC (%)",
+} as const;
+
 const COLUMNS: { key: keyof Row; label: string; align: "left" | "right" | "center" }[] = [
-  { key: "importer", label: "País", align: "left" },
-  { key: "potential_value", label: "Potencial total", align: "center" },
-  { key: "bilateral_exports_uf", label: "Exportações atuais", align: "center" },
-  { key: "unrealized_potential_value", label: "Potencial não realizado", align: "center" },
-  { key: "potential_utilization_ratio", label: "Aproveitamento", align: "center" },
-  { key: "potential_category", label: "Categoria", align: "center" },
+  { key: "rank", label: "Posição", align: "center" },
+  { key: "country", label: "País", align: "left" },
+  { key: "amount", label: "Montante", align: "center" },
+  { key: "marketShare", label: "Market Share", align: "center" },
+  { key: "cagr5", label: "CAGR 5 anos", align: "center" },
+  { key: "shareBrazil", label: "Share Brasil", align: "center" },
+  { key: "shareSC", label: "Share SC", align: "center" },
 ];
 
-type SortKey = "potential_value" | "bilateral_exports_uf" | "unrealized_potential_value" | "potential_utilization_ratio";
+type SortKey = keyof Pick<Row, "rank" | "amount" | "marketShare" | "cagr5" | "shareBrazil" | "shareSC">;
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: "potential_value", label: "Potencial total" },
-  { key: "bilateral_exports_uf", label: "Exportações atuais" },
-  { key: "unrealized_potential_value", label: "Potencial não realizado" },
-  { key: "potential_utilization_ratio", label: "Aproveitamento" },
+  { key: "rank", label: "Posição" },
+  { key: "amount", label: "Montante" },
+  { key: "marketShare", label: "Market Share" },
+  { key: "cagr5", label: "CAGR 5 anos" },
+  { key: "shareBrazil", label: "Share Brasil" },
+  { key: "shareSC", label: "Share SC" },
 ];
 
 function formatMoney(total: number): string {
@@ -39,14 +52,45 @@ function formatMoney(total: number): string {
 }
 
 function formatPercent(value: number): string {
-  return `${(value * 100).toFixed(1)}%`;
+  if (!Number.isFinite(value)) return "-";
+  return `${value.toFixed(1)}%`;
 }
 
-function categoryColor(value: string): string {
-  if (value.includes("Muito Alto")) return "text-emerald-400";
-  if (value.includes("Alto")) return "text-amber-400";
-  if (value.includes("Médio")) return "text-zinc-300";
-  return "text-zinc-500";
+function parsePtNumber(value: unknown): number {
+  if (value == null) return 0;
+  if (typeof value === "number") return value;
+  if (typeof value === "bigint") return Number(value);
+  if (typeof value !== "string") return 0;
+
+  let input = value.trim().toLowerCase();
+  if (!input) return 0;
+
+  let multiplier = 1;
+  if (input.endsWith("tri")) {
+    multiplier = 1e12;
+    input = input.slice(0, -3).trim();
+  } else if (input.endsWith("bi")) {
+    multiplier = 1e9;
+    input = input.slice(0, -2).trim();
+  } else if (input.endsWith("mi")) {
+    multiplier = 1e6;
+    input = input.slice(0, -2).trim();
+  } else if (input.endsWith("mil")) {
+    multiplier = 1e3;
+    input = input.slice(0, -3).trim();
+  }
+
+  input = input.replace("us$", "").trim();
+  input = input.replace(/\./g, "").replace(",", ".");
+  input = input.replace(/[^0-9.-]/g, "");
+  const parsed = Number.parseFloat(input);
+  if (!Number.isFinite(parsed)) return 0;
+  return parsed * multiplier;
+}
+
+function parseRank(value: unknown): number {
+  const parsed = parsePtNumber(value);
+  return Number.isFinite(parsed) ? Math.trunc(parsed) : 0;
 }
 
 type Props = {
@@ -57,7 +101,7 @@ export default function GlobalMarketTable({ sh6 }: Props) {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sortKey, setSortKey] = useState<SortKey>("potential_value");
+  const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -70,35 +114,34 @@ export default function GlobalMarketTable({ sh6 }: Props) {
     setError(null);
 
     const params = new URLSearchParams({
-      columns: "importer,potential_value,bilateral_exports_uf,unrealized_potential_value,potential_utilization_ratio,potential_category",
+      columns: Object.values(COLUMN_MAP).join(","),
       limit: "5000",
+      sortBy: COLUMN_MAP.rank,
+      sortDirection: "asc",
       "filter[sh6]": sh6,
     });
 
-    fetch(`/api/data/epi_monetary_ufs_country?${params.toString()}`)
-      .then((res) => res.json())
-      .then((json) => {
-        const rawRows = (json.rows as Row[]) ?? [];
-        const aggregated = new Map<string, Row>();
-
-        for (const row of rawRows) {
-          const key = row.importer;
-          const existing = aggregated.get(key);
-          if (existing) {
-            aggregated.set(key, {
-              ...existing,
-              potential_value: existing.potential_value + (row.potential_value ?? 0),
-              bilateral_exports_uf: existing.bilateral_exports_uf + (row.bilateral_exports_uf ?? 0),
-              unrealized_potential_value:
-                existing.unrealized_potential_value + (row.unrealized_potential_value ?? 0),
-              potential_utilization_ratio: existing.potential_utilization_ratio + (row.potential_utilization_ratio ?? 0),
-            });
-          } else {
-            aggregated.set(key, { ...row });
-          }
+    fetch(`/api/data/global_market_sh6?${params.toString()}`)
+      .then(async (res) => {
+        const json = await res.json();
+        if (!res.ok || json.error) {
+          throw new Error(json.error ?? `Erro HTTP ${res.status}`);
         }
+        return json;
+      })
+      .then((json) => {
+        const rawRows = (json.rows as Record<string, unknown>[]) ?? [];
+        const mapped = rawRows.map((row) => ({
+          rank: parseRank(row[COLUMN_MAP.rank]),
+          country: String(row[COLUMN_MAP.country] ?? ""),
+          amount: parsePtNumber(row[COLUMN_MAP.amount]),
+          marketShare: parsePtNumber(row[COLUMN_MAP.marketShare]),
+          cagr5: parsePtNumber(row[COLUMN_MAP.cagr5]),
+          shareBrazil: parsePtNumber(row[COLUMN_MAP.shareBrazil]),
+          shareSC: parsePtNumber(row[COLUMN_MAP.shareSC]),
+        }));
 
-        setRows(Array.from(aggregated.values()));
+        setRows(mapped);
         setLoading(false);
       })
       .catch(() => {
@@ -107,13 +150,14 @@ export default function GlobalMarketTable({ sh6 }: Props) {
       });
   }, [sh6]);
 
-  const total = rows.reduce((acc, r) => acc + (r.potential_value ?? 0), 0);
+  const total = rows.reduce((acc, r) => acc + (r.amount ?? 0), 0);
 
   const sorted = useMemo(() => {
-    const base = [...rows].sort((a, b) => (b[sortKey] ?? 0) - (a[sortKey] ?? 0));
+    const direction = sortKey === "rank" ? 1 : -1;
+    const base = [...rows].sort((a, b) => (a[sortKey] - b[sortKey]) * direction);
     if (!search.trim()) return base;
     const q = search.trim().toLowerCase();
-    return base.filter((r) => getCountryName(r.importer).toLowerCase().includes(q));
+    return base.filter((r) => r.country.toLowerCase().includes(q));
   }, [rows, sortKey, search]);
 
   if (!sh6) return null;
@@ -134,12 +178,18 @@ export default function GlobalMarketTable({ sh6 }: Props) {
     );
   }
 
-  if (rows.length === 0) return null;
+  if (rows.length === 0) {
+    return (
+      <div className="w-full flex items-center justify-center py-16 text-zinc-500 text-sm">
+        Nenhum dado encontrado para o produto selecionado.
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
       <h3 className="text-sm font-semibold text-zinc-100 mb-4">
-        Mercados do produto:{" "}
+        Mercado mundial do produto:{" "}
         <span className="text-[#54f394]">{formatMoney(total)}</span>
       </h3>
 
@@ -208,15 +258,23 @@ export default function GlobalMarketTable({ sh6 }: Props) {
                     key={col.key}
                     className={`px-3 py-2 whitespace-nowrap ${
                       col.align === "center" ? "text-center" : col.align === "right" ? "text-right" : "text-left"
-                    } ${col.key === "potential_category" ? categoryColor(String(row[col.key])) : "text-zinc-300"}`}
+                    } text-zinc-300`}
                   >
-                    {col.key === "importer"
-                      ? getCountryName(row.importer)
-                      : col.key === "potential_value" || col.key === "bilateral_exports_uf" || col.key === "unrealized_potential_value"
-                        ? formatMoney(row[col.key])
-                        : col.key === "potential_utilization_ratio"
-                          ? formatPercent(row[col.key])
-                          : String(row[col.key])}
+                    {col.key === "country"
+                      ? row.country
+                      : col.key === "amount"
+                        ? formatMoney(row.amount)
+                        : col.key === "rank"
+                          ? row.rank
+                          : col.key === "marketShare"
+                            ? formatPercent(row.marketShare)
+                            : col.key === "cagr5"
+                              ? formatPercent(row.cagr5)
+                              : col.key === "shareBrazil"
+                                ? formatPercent(row.shareBrazil)
+                                : col.key === "shareSC"
+                                  ? formatPercent(row.shareSC)
+                                  : String(row[col.key])}
                   </td>
                 ))}
               </tr>
