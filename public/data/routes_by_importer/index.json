@@ -1,0 +1,1370 @@
+[
+  {
+    "importer": "ABW",
+    "file_name": "importer=ABW.parquet",
+    "rows": 227,
+    "size_bytes": 24308
+  },
+  {
+    "importer": "AFG",
+    "file_name": "importer=AFG.parquet",
+    "rows": 227,
+    "size_bytes": 23196
+  },
+  {
+    "importer": "AGO",
+    "file_name": "importer=AGO.parquet",
+    "rows": 227,
+    "size_bytes": 21688
+  },
+  {
+    "importer": "AIA",
+    "file_name": "importer=AIA.parquet",
+    "rows": 227,
+    "size_bytes": 23995
+  },
+  {
+    "importer": "ALB",
+    "file_name": "importer=ALB.parquet",
+    "rows": 227,
+    "size_bytes": 27451
+  },
+  {
+    "importer": "AND",
+    "file_name": "importer=AND.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "ARE",
+    "file_name": "importer=ARE.parquet",
+    "rows": 227,
+    "size_bytes": 24011
+  },
+  {
+    "importer": "ARG",
+    "file_name": "importer=ARG.parquet",
+    "rows": 227,
+    "size_bytes": 24967
+  },
+  {
+    "importer": "ARM",
+    "file_name": "importer=ARM.parquet",
+    "rows": 227,
+    "size_bytes": 3137
+  },
+  {
+    "importer": "ASM",
+    "file_name": "importer=ASM.parquet",
+    "rows": 227,
+    "size_bytes": 28562
+  },
+  {
+    "importer": "ATF",
+    "file_name": "importer=ATF.parquet",
+    "rows": 227,
+    "size_bytes": 21092
+  },
+  {
+    "importer": "ATG",
+    "file_name": "importer=ATG.parquet",
+    "rows": 227,
+    "size_bytes": 23599
+  },
+  {
+    "importer": "AUS",
+    "file_name": "importer=AUS.parquet",
+    "rows": 227,
+    "size_bytes": 26539
+  },
+  {
+    "importer": "AUT",
+    "file_name": "importer=AUT.parquet",
+    "rows": 227,
+    "size_bytes": 31505
+  },
+  {
+    "importer": "AZE",
+    "file_name": "importer=AZE.parquet",
+    "rows": 227,
+    "size_bytes": 3140
+  },
+  {
+    "importer": "BDI",
+    "file_name": "importer=BDI.parquet",
+    "rows": 227,
+    "size_bytes": 22732
+  },
+  {
+    "importer": "BEL",
+    "file_name": "importer=BEL.parquet",
+    "rows": 227,
+    "size_bytes": 27158
+  },
+  {
+    "importer": "BEN",
+    "file_name": "importer=BEN.parquet",
+    "rows": 227,
+    "size_bytes": 23283
+  },
+  {
+    "importer": "BES",
+    "file_name": "importer=BES.parquet",
+    "rows": 227,
+    "size_bytes": 23898
+  },
+  {
+    "importer": "BFA",
+    "file_name": "importer=BFA.parquet",
+    "rows": 227,
+    "size_bytes": 23277
+  },
+  {
+    "importer": "BGD",
+    "file_name": "importer=BGD.parquet",
+    "rows": 227,
+    "size_bytes": 25376
+  },
+  {
+    "importer": "BGR",
+    "file_name": "importer=BGR.parquet",
+    "rows": 227,
+    "size_bytes": 25498
+  },
+  {
+    "importer": "BHR",
+    "file_name": "importer=BHR.parquet",
+    "rows": 227,
+    "size_bytes": 24533
+  },
+  {
+    "importer": "BHS",
+    "file_name": "importer=BHS.parquet",
+    "rows": 227,
+    "size_bytes": 24822
+  },
+  {
+    "importer": "BIH",
+    "file_name": "importer=BIH.parquet",
+    "rows": 227,
+    "size_bytes": 30831
+  },
+  {
+    "importer": "BLM",
+    "file_name": "importer=BLM.parquet",
+    "rows": 227,
+    "size_bytes": 23991
+  },
+  {
+    "importer": "BLR",
+    "file_name": "importer=BLR.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "BLZ",
+    "file_name": "importer=BLZ.parquet",
+    "rows": 227,
+    "size_bytes": 27296
+  },
+  {
+    "importer": "BMU",
+    "file_name": "importer=BMU.parquet",
+    "rows": 227,
+    "size_bytes": 24078
+  },
+  {
+    "importer": "BOL",
+    "file_name": "importer=BOL.parquet",
+    "rows": 227,
+    "size_bytes": 25734
+  },
+  {
+    "importer": "BRA",
+    "file_name": "importer=BRA.parquet",
+    "rows": 227,
+    "size_bytes": 24126
+  },
+  {
+    "importer": "BRB",
+    "file_name": "importer=BRB.parquet",
+    "rows": 227,
+    "size_bytes": 23795
+  },
+  {
+    "importer": "BRN",
+    "file_name": "importer=BRN.parquet",
+    "rows": 227,
+    "size_bytes": 26654
+  },
+  {
+    "importer": "BTN",
+    "file_name": "importer=BTN.parquet",
+    "rows": 227,
+    "size_bytes": 25386
+  },
+  {
+    "importer": "BWA",
+    "file_name": "importer=BWA.parquet",
+    "rows": 227,
+    "size_bytes": 22668
+  },
+  {
+    "importer": "CAF",
+    "file_name": "importer=CAF.parquet",
+    "rows": 227,
+    "size_bytes": 21833
+  },
+  {
+    "importer": "CAN",
+    "file_name": "importer=CAN.parquet",
+    "rows": 227,
+    "size_bytes": 24633
+  },
+  {
+    "importer": "CCK",
+    "file_name": "importer=CCK.parquet",
+    "rows": 227,
+    "size_bytes": 25781
+  },
+  {
+    "importer": "CHE",
+    "file_name": "importer=CHE.parquet",
+    "rows": 227,
+    "size_bytes": 26874
+  },
+  {
+    "importer": "CHL",
+    "file_name": "importer=CHL.parquet",
+    "rows": 227,
+    "size_bytes": 25809
+  },
+  {
+    "importer": "CHN",
+    "file_name": "importer=CHN.parquet",
+    "rows": 227,
+    "size_bytes": 29712
+  },
+  {
+    "importer": "CIV",
+    "file_name": "importer=CIV.parquet",
+    "rows": 227,
+    "size_bytes": 19960
+  },
+  {
+    "importer": "CMR",
+    "file_name": "importer=CMR.parquet",
+    "rows": 227,
+    "size_bytes": 21830
+  },
+  {
+    "importer": "COD",
+    "file_name": "importer=COD.parquet",
+    "rows": 227,
+    "size_bytes": 22001
+  },
+  {
+    "importer": "COG",
+    "file_name": "importer=COG.parquet",
+    "rows": 227,
+    "size_bytes": 22001
+  },
+  {
+    "importer": "COK",
+    "file_name": "importer=COK.parquet",
+    "rows": 227,
+    "size_bytes": 28203
+  },
+  {
+    "importer": "COL",
+    "file_name": "importer=COL.parquet",
+    "rows": 227,
+    "size_bytes": 26868
+  },
+  {
+    "importer": "COM",
+    "file_name": "importer=COM.parquet",
+    "rows": 227,
+    "size_bytes": 21967
+  },
+  {
+    "importer": "CPV",
+    "file_name": "importer=CPV.parquet",
+    "rows": 227,
+    "size_bytes": 24812
+  },
+  {
+    "importer": "CRI",
+    "file_name": "importer=CRI.parquet",
+    "rows": 227,
+    "size_bytes": 27105
+  },
+  {
+    "importer": "CUB",
+    "file_name": "importer=CUB.parquet",
+    "rows": 227,
+    "size_bytes": 26476
+  },
+  {
+    "importer": "CUW",
+    "file_name": "importer=CUW.parquet",
+    "rows": 227,
+    "size_bytes": 23892
+  },
+  {
+    "importer": "CXR",
+    "file_name": "importer=CXR.parquet",
+    "rows": 227,
+    "size_bytes": 26458
+  },
+  {
+    "importer": "CYM",
+    "file_name": "importer=CYM.parquet",
+    "rows": 227,
+    "size_bytes": 26430
+  },
+  {
+    "importer": "CYP",
+    "file_name": "importer=CYP.parquet",
+    "rows": 227,
+    "size_bytes": 26018
+  },
+  {
+    "importer": "CZE",
+    "file_name": "importer=CZE.parquet",
+    "rows": 227,
+    "size_bytes": 31503
+  },
+  {
+    "importer": "DEU",
+    "file_name": "importer=DEU.parquet",
+    "rows": 227,
+    "size_bytes": 34508
+  },
+  {
+    "importer": "DJI",
+    "file_name": "importer=DJI.parquet",
+    "rows": 227,
+    "size_bytes": 23502
+  },
+  {
+    "importer": "DMA",
+    "file_name": "importer=DMA.parquet",
+    "rows": 227,
+    "size_bytes": 23724
+  },
+  {
+    "importer": "DNK",
+    "file_name": "importer=DNK.parquet",
+    "rows": 227,
+    "size_bytes": 2537
+  },
+  {
+    "importer": "DOM",
+    "file_name": "importer=DOM.parquet",
+    "rows": 227,
+    "size_bytes": 25878
+  },
+  {
+    "importer": "DZA",
+    "file_name": "importer=DZA.parquet",
+    "rows": 227,
+    "size_bytes": 23944
+  },
+  {
+    "importer": "ECU",
+    "file_name": "importer=ECU.parquet",
+    "rows": 227,
+    "size_bytes": 25940
+  },
+  {
+    "importer": "EGY",
+    "file_name": "importer=EGY.parquet",
+    "rows": 227,
+    "size_bytes": 23523
+  },
+  {
+    "importer": "ERI",
+    "file_name": "importer=ERI.parquet",
+    "rows": 227,
+    "size_bytes": 23893
+  },
+  {
+    "importer": "ESP",
+    "file_name": "importer=ESP.parquet",
+    "rows": 227,
+    "size_bytes": 24741
+  },
+  {
+    "importer": "EST",
+    "file_name": "importer=EST.parquet",
+    "rows": 227,
+    "size_bytes": 27505
+  },
+  {
+    "importer": "ETH",
+    "file_name": "importer=ETH.parquet",
+    "rows": 227,
+    "size_bytes": 23503
+  },
+  {
+    "importer": "FIN",
+    "file_name": "importer=FIN.parquet",
+    "rows": 227,
+    "size_bytes": 29075
+  },
+  {
+    "importer": "FJI",
+    "file_name": "importer=FJI.parquet",
+    "rows": 227,
+    "size_bytes": 26607
+  },
+  {
+    "importer": "FLK",
+    "file_name": "importer=FLK.parquet",
+    "rows": 227,
+    "size_bytes": 23137
+  },
+  {
+    "importer": "FRA",
+    "file_name": "importer=FRA.parquet",
+    "rows": 227,
+    "size_bytes": 25080
+  },
+  {
+    "importer": "FSM",
+    "file_name": "importer=FSM.parquet",
+    "rows": 227,
+    "size_bytes": 30215
+  },
+  {
+    "importer": "GAB",
+    "file_name": "importer=GAB.parquet",
+    "rows": 227,
+    "size_bytes": 22405
+  },
+  {
+    "importer": "GBR",
+    "file_name": "importer=GBR.parquet",
+    "rows": 227,
+    "size_bytes": 26236
+  },
+  {
+    "importer": "GEO",
+    "file_name": "importer=GEO.parquet",
+    "rows": 227,
+    "size_bytes": 31186
+  },
+  {
+    "importer": "GHA",
+    "file_name": "importer=GHA.parquet",
+    "rows": 227,
+    "size_bytes": 23277
+  },
+  {
+    "importer": "GIB",
+    "file_name": "importer=GIB.parquet",
+    "rows": 227,
+    "size_bytes": 2540
+  },
+  {
+    "importer": "GIN",
+    "file_name": "importer=GIN.parquet",
+    "rows": 227,
+    "size_bytes": 21868
+  },
+  {
+    "importer": "GMB",
+    "file_name": "importer=GMB.parquet",
+    "rows": 227,
+    "size_bytes": 21765
+  },
+  {
+    "importer": "GNB",
+    "file_name": "importer=GNB.parquet",
+    "rows": 227,
+    "size_bytes": 21765
+  },
+  {
+    "importer": "GNQ",
+    "file_name": "importer=GNQ.parquet",
+    "rows": 227,
+    "size_bytes": 22899
+  },
+  {
+    "importer": "GRC",
+    "file_name": "importer=GRC.parquet",
+    "rows": 227,
+    "size_bytes": 2540
+  },
+  {
+    "importer": "GRD",
+    "file_name": "importer=GRD.parquet",
+    "rows": 227,
+    "size_bytes": 23061
+  },
+  {
+    "importer": "GRL",
+    "file_name": "importer=GRL.parquet",
+    "rows": 227,
+    "size_bytes": 26557
+  },
+  {
+    "importer": "GTM",
+    "file_name": "importer=GTM.parquet",
+    "rows": 227,
+    "size_bytes": 27923
+  },
+  {
+    "importer": "GUM",
+    "file_name": "importer=GUM.parquet",
+    "rows": 227,
+    "size_bytes": 29401
+  },
+  {
+    "importer": "GUY",
+    "file_name": "importer=GUY.parquet",
+    "rows": 227,
+    "size_bytes": 24662
+  },
+  {
+    "importer": "HKG",
+    "file_name": "importer=HKG.parquet",
+    "rows": 227,
+    "size_bytes": 26838
+  },
+  {
+    "importer": "HND",
+    "file_name": "importer=HND.parquet",
+    "rows": 227,
+    "size_bytes": 26925
+  },
+  {
+    "importer": "HRV",
+    "file_name": "importer=HRV.parquet",
+    "rows": 227,
+    "size_bytes": 36309
+  },
+  {
+    "importer": "HTI",
+    "file_name": "importer=HTI.parquet",
+    "rows": 227,
+    "size_bytes": 26676
+  },
+  {
+    "importer": "HUN",
+    "file_name": "importer=HUN.parquet",
+    "rows": 227,
+    "size_bytes": 30823
+  },
+  {
+    "importer": "IDN",
+    "file_name": "importer=IDN.parquet",
+    "rows": 227,
+    "size_bytes": 26482
+  },
+  {
+    "importer": "IND",
+    "file_name": "importer=IND.parquet",
+    "rows": 227,
+    "size_bytes": 24871
+  },
+  {
+    "importer": "IOT",
+    "file_name": "importer=IOT.parquet",
+    "rows": 227,
+    "size_bytes": 24426
+  },
+  {
+    "importer": "IRL",
+    "file_name": "importer=IRL.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "IRN",
+    "file_name": "importer=IRN.parquet",
+    "rows": 227,
+    "size_bytes": 3045
+  },
+  {
+    "importer": "IRQ",
+    "file_name": "importer=IRQ.parquet",
+    "rows": 227,
+    "size_bytes": 24480
+  },
+  {
+    "importer": "ISL",
+    "file_name": "importer=ISL.parquet",
+    "rows": 227,
+    "size_bytes": 2538
+  },
+  {
+    "importer": "ISR",
+    "file_name": "importer=ISR.parquet",
+    "rows": 227,
+    "size_bytes": 29735
+  },
+  {
+    "importer": "ITA",
+    "file_name": "importer=ITA.parquet",
+    "rows": 227,
+    "size_bytes": 34485
+  },
+  {
+    "importer": "JAM",
+    "file_name": "importer=JAM.parquet",
+    "rows": 227,
+    "size_bytes": 26222
+  },
+  {
+    "importer": "JOR",
+    "file_name": "importer=JOR.parquet",
+    "rows": 227,
+    "size_bytes": 29736
+  },
+  {
+    "importer": "JPN",
+    "file_name": "importer=JPN.parquet",
+    "rows": 227,
+    "size_bytes": 26867
+  },
+  {
+    "importer": "KAZ",
+    "file_name": "importer=KAZ.parquet",
+    "rows": 227,
+    "size_bytes": 3191
+  },
+  {
+    "importer": "KEN",
+    "file_name": "importer=KEN.parquet",
+    "rows": 227,
+    "size_bytes": 23047
+  },
+  {
+    "importer": "KGZ",
+    "file_name": "importer=KGZ.parquet",
+    "rows": 227,
+    "size_bytes": 2981
+  },
+  {
+    "importer": "KHM",
+    "file_name": "importer=KHM.parquet",
+    "rows": 227,
+    "size_bytes": 27041
+  },
+  {
+    "importer": "KIR",
+    "file_name": "importer=KIR.parquet",
+    "rows": 227,
+    "size_bytes": 29927
+  },
+  {
+    "importer": "KNA",
+    "file_name": "importer=KNA.parquet",
+    "rows": 227,
+    "size_bytes": 23628
+  },
+  {
+    "importer": "KOR",
+    "file_name": "importer=KOR.parquet",
+    "rows": 227,
+    "size_bytes": 29602
+  },
+  {
+    "importer": "KWT",
+    "file_name": "importer=KWT.parquet",
+    "rows": 227,
+    "size_bytes": 24862
+  },
+  {
+    "importer": "LAO",
+    "file_name": "importer=LAO.parquet",
+    "rows": 227,
+    "size_bytes": 26416
+  },
+  {
+    "importer": "LBN",
+    "file_name": "importer=LBN.parquet",
+    "rows": 227,
+    "size_bytes": 23756
+  },
+  {
+    "importer": "LBR",
+    "file_name": "importer=LBR.parquet",
+    "rows": 227,
+    "size_bytes": 21984
+  },
+  {
+    "importer": "LBY",
+    "file_name": "importer=LBY.parquet",
+    "rows": 227,
+    "size_bytes": 23089
+  },
+  {
+    "importer": "LCA",
+    "file_name": "importer=LCA.parquet",
+    "rows": 227,
+    "size_bytes": 26897
+  },
+  {
+    "importer": "LKA",
+    "file_name": "importer=LKA.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "LSO",
+    "file_name": "importer=LSO.parquet",
+    "rows": 227,
+    "size_bytes": 22433
+  },
+  {
+    "importer": "LTU",
+    "file_name": "importer=LTU.parquet",
+    "rows": 227,
+    "size_bytes": 2538
+  },
+  {
+    "importer": "LUX",
+    "file_name": "importer=LUX.parquet",
+    "rows": 227,
+    "size_bytes": 27155
+  },
+  {
+    "importer": "LVA",
+    "file_name": "importer=LVA.parquet",
+    "rows": 227,
+    "size_bytes": 27236
+  },
+  {
+    "importer": "MAC",
+    "file_name": "importer=MAC.parquet",
+    "rows": 227,
+    "size_bytes": 26848
+  },
+  {
+    "importer": "MAR",
+    "file_name": "importer=MAR.parquet",
+    "rows": 227,
+    "size_bytes": 23118
+  },
+  {
+    "importer": "MDA",
+    "file_name": "importer=MDA.parquet",
+    "rows": 227,
+    "size_bytes": 31065
+  },
+  {
+    "importer": "MDG",
+    "file_name": "importer=MDG.parquet",
+    "rows": 227,
+    "size_bytes": 22345
+  },
+  {
+    "importer": "MDV",
+    "file_name": "importer=MDV.parquet",
+    "rows": 227,
+    "size_bytes": 2538
+  },
+  {
+    "importer": "MEX",
+    "file_name": "importer=MEX.parquet",
+    "rows": 227,
+    "size_bytes": 30355
+  },
+  {
+    "importer": "MHL",
+    "file_name": "importer=MHL.parquet",
+    "rows": 227,
+    "size_bytes": 30716
+  },
+  {
+    "importer": "MKD",
+    "file_name": "importer=MKD.parquet",
+    "rows": 227,
+    "size_bytes": 27049
+  },
+  {
+    "importer": "MLI",
+    "file_name": "importer=MLI.parquet",
+    "rows": 227,
+    "size_bytes": 21863
+  },
+  {
+    "importer": "MLT",
+    "file_name": "importer=MLT.parquet",
+    "rows": 227,
+    "size_bytes": 22820
+  },
+  {
+    "importer": "MMR",
+    "file_name": "importer=MMR.parquet",
+    "rows": 227,
+    "size_bytes": 24900
+  },
+  {
+    "importer": "MNE",
+    "file_name": "importer=MNE.parquet",
+    "rows": 227,
+    "size_bytes": 29692
+  },
+  {
+    "importer": "MNG",
+    "file_name": "importer=MNG.parquet",
+    "rows": 227,
+    "size_bytes": 29712
+  },
+  {
+    "importer": "MNP",
+    "file_name": "importer=MNP.parquet",
+    "rows": 227,
+    "size_bytes": 29396
+  },
+  {
+    "importer": "MOZ",
+    "file_name": "importer=MOZ.parquet",
+    "rows": 227,
+    "size_bytes": 22410
+  },
+  {
+    "importer": "MRT",
+    "file_name": "importer=MRT.parquet",
+    "rows": 227,
+    "size_bytes": 22765
+  },
+  {
+    "importer": "MSR",
+    "file_name": "importer=MSR.parquet",
+    "rows": 227,
+    "size_bytes": 23627
+  },
+  {
+    "importer": "MUS",
+    "file_name": "importer=MUS.parquet",
+    "rows": 227,
+    "size_bytes": 22654
+  },
+  {
+    "importer": "MWI",
+    "file_name": "importer=MWI.parquet",
+    "rows": 227,
+    "size_bytes": 22461
+  },
+  {
+    "importer": "MYS",
+    "file_name": "importer=MYS.parquet",
+    "rows": 227,
+    "size_bytes": 26651
+  },
+  {
+    "importer": "NAM",
+    "file_name": "importer=NAM.parquet",
+    "rows": 227,
+    "size_bytes": 22459
+  },
+  {
+    "importer": "NCL",
+    "file_name": "importer=NCL.parquet",
+    "rows": 227,
+    "size_bytes": 26559
+  },
+  {
+    "importer": "NER",
+    "file_name": "importer=NER.parquet",
+    "rows": 227,
+    "size_bytes": 23278
+  },
+  {
+    "importer": "NFK",
+    "file_name": "importer=NFK.parquet",
+    "rows": 227,
+    "size_bytes": 26049
+  },
+  {
+    "importer": "NGA",
+    "file_name": "importer=NGA.parquet",
+    "rows": 227,
+    "size_bytes": 21828
+  },
+  {
+    "importer": "NIC",
+    "file_name": "importer=NIC.parquet",
+    "rows": 227,
+    "size_bytes": 25496
+  },
+  {
+    "importer": "NIU",
+    "file_name": "importer=NIU.parquet",
+    "rows": 227,
+    "size_bytes": 28960
+  },
+  {
+    "importer": "NLD",
+    "file_name": "importer=NLD.parquet",
+    "rows": 227,
+    "size_bytes": 27453
+  },
+  {
+    "importer": "NOR",
+    "file_name": "importer=NOR.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "NPL",
+    "file_name": "importer=NPL.parquet",
+    "rows": 227,
+    "size_bytes": 24872
+  },
+  {
+    "importer": "NRU",
+    "file_name": "importer=NRU.parquet",
+    "rows": 227,
+    "size_bytes": 26330
+  },
+  {
+    "importer": "NZL",
+    "file_name": "importer=NZL.parquet",
+    "rows": 227,
+    "size_bytes": 25806
+  },
+  {
+    "importer": "OMN",
+    "file_name": "importer=OMN.parquet",
+    "rows": 227,
+    "size_bytes": 22536
+  },
+  {
+    "importer": "PAK",
+    "file_name": "importer=PAK.parquet",
+    "rows": 227,
+    "size_bytes": 23186
+  },
+  {
+    "importer": "PAN",
+    "file_name": "importer=PAN.parquet",
+    "rows": 227,
+    "size_bytes": 26702
+  },
+  {
+    "importer": "PCN",
+    "file_name": "importer=PCN.parquet",
+    "rows": 227,
+    "size_bytes": 27034
+  },
+  {
+    "importer": "PER",
+    "file_name": "importer=PER.parquet",
+    "rows": 227,
+    "size_bytes": 25840
+  },
+  {
+    "importer": "PHL",
+    "file_name": "importer=PHL.parquet",
+    "rows": 227,
+    "size_bytes": 29403
+  },
+  {
+    "importer": "PLW",
+    "file_name": "importer=PLW.parquet",
+    "rows": 227,
+    "size_bytes": 29442
+  },
+  {
+    "importer": "PNG",
+    "file_name": "importer=PNG.parquet",
+    "rows": 227,
+    "size_bytes": 26431
+  },
+  {
+    "importer": "POL",
+    "file_name": "importer=POL.parquet",
+    "rows": 227,
+    "size_bytes": 26865
+  },
+  {
+    "importer": "PRI",
+    "file_name": "importer=PRI.parquet",
+    "rows": 227,
+    "size_bytes": 24331
+  },
+  {
+    "importer": "PRK",
+    "file_name": "importer=PRK.parquet",
+    "rows": 227,
+    "size_bytes": 29413
+  },
+  {
+    "importer": "PRT",
+    "file_name": "importer=PRT.parquet",
+    "rows": 227,
+    "size_bytes": 22852
+  },
+  {
+    "importer": "PRY",
+    "file_name": "importer=PRY.parquet",
+    "rows": 227,
+    "size_bytes": 23222
+  },
+  {
+    "importer": "PSE",
+    "file_name": "importer=PSE.parquet",
+    "rows": 227,
+    "size_bytes": 29727
+  },
+  {
+    "importer": "PYF",
+    "file_name": "importer=PYF.parquet",
+    "rows": 227,
+    "size_bytes": 27679
+  },
+  {
+    "importer": "QAT",
+    "file_name": "importer=QAT.parquet",
+    "rows": 227,
+    "size_bytes": 23608
+  },
+  {
+    "importer": "ROU",
+    "file_name": "importer=ROU.parquet",
+    "rows": 227,
+    "size_bytes": 30314
+  },
+  {
+    "importer": "RUS",
+    "file_name": "importer=RUS.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "RWA",
+    "file_name": "importer=RWA.parquet",
+    "rows": 227,
+    "size_bytes": 22730
+  },
+  {
+    "importer": "S19",
+    "file_name": "importer=S19.parquet",
+    "rows": 227,
+    "size_bytes": 26316
+  },
+  {
+    "importer": "SAU",
+    "file_name": "importer=SAU.parquet",
+    "rows": 227,
+    "size_bytes": 23847
+  },
+  {
+    "importer": "SDN",
+    "file_name": "importer=SDN.parquet",
+    "rows": 227,
+    "size_bytes": 23894
+  },
+  {
+    "importer": "SEN",
+    "file_name": "importer=SEN.parquet",
+    "rows": 227,
+    "size_bytes": 22149
+  },
+  {
+    "importer": "SGP",
+    "file_name": "importer=SGP.parquet",
+    "rows": 227,
+    "size_bytes": 26673
+  },
+  {
+    "importer": "SHN",
+    "file_name": "importer=SHN.parquet",
+    "rows": 227,
+    "size_bytes": 23162
+  },
+  {
+    "importer": "SLB",
+    "file_name": "importer=SLB.parquet",
+    "rows": 227,
+    "size_bytes": 26448
+  },
+  {
+    "importer": "SLE",
+    "file_name": "importer=SLE.parquet",
+    "rows": 227,
+    "size_bytes": 21869
+  },
+  {
+    "importer": "SLV",
+    "file_name": "importer=SLV.parquet",
+    "rows": 227,
+    "size_bytes": 27698
+  },
+  {
+    "importer": "SMR",
+    "file_name": "importer=SMR.parquet",
+    "rows": 227,
+    "size_bytes": 2539
+  },
+  {
+    "importer": "SOM",
+    "file_name": "importer=SOM.parquet",
+    "rows": 227,
+    "size_bytes": 22715
+  },
+  {
+    "importer": "SPM",
+    "file_name": "importer=SPM.parquet",
+    "rows": 227,
+    "size_bytes": 23373
+  },
+  {
+    "importer": "SRB",
+    "file_name": "importer=SRB.parquet",
+    "rows": 227,
+    "size_bytes": 29698
+  },
+  {
+    "importer": "SSD",
+    "file_name": "importer=SSD.parquet",
+    "rows": 227,
+    "size_bytes": 23734
+  },
+  {
+    "importer": "STP",
+    "file_name": "importer=STP.parquet",
+    "rows": 227,
+    "size_bytes": 22144
+  },
+  {
+    "importer": "SUR",
+    "file_name": "importer=SUR.parquet",
+    "rows": 227,
+    "size_bytes": 24400
+  },
+  {
+    "importer": "SVK",
+    "file_name": "importer=SVK.parquet",
+    "rows": 227,
+    "size_bytes": 30813
+  },
+  {
+    "importer": "SVN",
+    "file_name": "importer=SVN.parquet",
+    "rows": 227,
+    "size_bytes": 30813
+  },
+  {
+    "importer": "SWE",
+    "file_name": "importer=SWE.parquet",
+    "rows": 227,
+    "size_bytes": 27547
+  },
+  {
+    "importer": "SWZ",
+    "file_name": "importer=SWZ.parquet",
+    "rows": 227,
+    "size_bytes": 22632
+  },
+  {
+    "importer": "SXM",
+    "file_name": "importer=SXM.parquet",
+    "rows": 227,
+    "size_bytes": 23992
+  },
+  {
+    "importer": "SYC",
+    "file_name": "importer=SYC.parquet",
+    "rows": 227,
+    "size_bytes": 23442
+  },
+  {
+    "importer": "SYR",
+    "file_name": "importer=SYR.parquet",
+    "rows": 227,
+    "size_bytes": 2538
+  },
+  {
+    "importer": "TCA",
+    "file_name": "importer=TCA.parquet",
+    "rows": 227,
+    "size_bytes": 26008
+  },
+  {
+    "importer": "TCD",
+    "file_name": "importer=TCD.parquet",
+    "rows": 227,
+    "size_bytes": 21830
+  },
+  {
+    "importer": "TGO",
+    "file_name": "importer=TGO.parquet",
+    "rows": 227,
+    "size_bytes": 23276
+  },
+  {
+    "importer": "THA",
+    "file_name": "importer=THA.parquet",
+    "rows": 227,
+    "size_bytes": 27130
+  },
+  {
+    "importer": "TJK",
+    "file_name": "importer=TJK.parquet",
+    "rows": 227,
+    "size_bytes": 3163
+  },
+  {
+    "importer": "TKL",
+    "file_name": "importer=TKL.parquet",
+    "rows": 227,
+    "size_bytes": 29463
+  },
+  {
+    "importer": "TKM",
+    "file_name": "importer=TKM.parquet",
+    "rows": 227,
+    "size_bytes": 3163
+  },
+  {
+    "importer": "TLS",
+    "file_name": "importer=TLS.parquet",
+    "rows": 227,
+    "size_bytes": 26445
+  },
+  {
+    "importer": "TON",
+    "file_name": "importer=TON.parquet",
+    "rows": 227,
+    "size_bytes": 28566
+  },
+  {
+    "importer": "TTO",
+    "file_name": "importer=TTO.parquet",
+    "rows": 227,
+    "size_bytes": 22637
+  },
+  {
+    "importer": "TUN",
+    "file_name": "importer=TUN.parquet",
+    "rows": 227,
+    "size_bytes": 23359
+  },
+  {
+    "importer": "TUR",
+    "file_name": "importer=TUR.parquet",
+    "rows": 227,
+    "size_bytes": 24986
+  },
+  {
+    "importer": "TUV",
+    "file_name": "importer=TUV.parquet",
+    "rows": 227,
+    "size_bytes": 26765
+  },
+  {
+    "importer": "TWN",
+    "file_name": "importer=TWN.parquet",
+    "rows": 227,
+    "size_bytes": 26319
+  },
+  {
+    "importer": "TZA",
+    "file_name": "importer=TZA.parquet",
+    "rows": 227,
+    "size_bytes": 22134
+  },
+  {
+    "importer": "UGA",
+    "file_name": "importer=UGA.parquet",
+    "rows": 227,
+    "size_bytes": 22733
+  },
+  {
+    "importer": "UKR",
+    "file_name": "importer=UKR.parquet",
+    "rows": 227,
+    "size_bytes": 31061
+  },
+  {
+    "importer": "URY",
+    "file_name": "importer=URY.parquet",
+    "rows": 227,
+    "size_bytes": 24048
+  },
+  {
+    "importer": "USA",
+    "file_name": "importer=USA.parquet",
+    "rows": 227,
+    "size_bytes": 40924
+  },
+  {
+    "importer": "UZB",
+    "file_name": "importer=UZB.parquet",
+    "rows": 227,
+    "size_bytes": 2980
+  },
+  {
+    "importer": "VCT",
+    "file_name": "importer=VCT.parquet",
+    "rows": 227,
+    "size_bytes": 23495
+  },
+  {
+    "importer": "VEN",
+    "file_name": "importer=VEN.parquet",
+    "rows": 227,
+    "size_bytes": 23472
+  },
+  {
+    "importer": "VGB",
+    "file_name": "importer=VGB.parquet",
+    "rows": 227,
+    "size_bytes": 26490
+  },
+  {
+    "importer": "VNM",
+    "file_name": "importer=VNM.parquet",
+    "rows": 227,
+    "size_bytes": 26555
+  },
+  {
+    "importer": "VUT",
+    "file_name": "importer=VUT.parquet",
+    "rows": 227,
+    "size_bytes": 26895
+  },
+  {
+    "importer": "WLF",
+    "file_name": "importer=WLF.parquet",
+    "rows": 227,
+    "size_bytes": 27610
+  },
+  {
+    "importer": "WSM",
+    "file_name": "importer=WSM.parquet",
+    "rows": 227,
+    "size_bytes": 28562
+  },
+  {
+    "importer": "YEM",
+    "file_name": "importer=YEM.parquet",
+    "rows": 227,
+    "size_bytes": 23019
+  },
+  {
+    "importer": "ZAF",
+    "file_name": "importer=ZAF.parquet",
+    "rows": 227,
+    "size_bytes": 22422
+  },
+  {
+    "importer": "ZMB",
+    "file_name": "importer=ZMB.parquet",
+    "rows": 227,
+    "size_bytes": 22418
+  },
+  {
+    "importer": "ZWE",
+    "file_name": "importer=ZWE.parquet",
+    "rows": 227,
+    "size_bytes": 22418
+  }
+]
