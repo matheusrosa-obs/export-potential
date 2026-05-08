@@ -22,6 +22,10 @@
   - `MarketFlightsGLMap` integrado ao endpoint novo
   - render de polylines e fallback implementados
   - suite de testes da feature aprovada
+- Sprint 5: concluido
+  - coordenada de `BRA` alterada para Porto de Itajai (`[-48.661944, -26.907778]`)
+  - dataset full regenerado para `228` importers
+  - auditoria e smoke test reexecutados com sucesso
 
 ### Decisions captured during execution
 
@@ -36,6 +40,13 @@
   - resultado: `partitions=228`, `totalRows=51756`, `totalBytes=5345536`, `coverage.maritime=42174`, `coverage.straightFallback=0`, `coverage.unavailable=9582`
 - `npm run test -- lib/maritime-routes.test.ts lib/maritime-route-service.test.ts app/api/market-flows-maritime/route.test.ts components/MarketFlightsGLMap.test.tsx`
   - resultado: `4` arquivos de teste pass, `7` testes pass
+- Sprint 5:
+  - `npm run routes:generate-maritime`
+    - resultado: `228` particoes e `index.json` com `228` entradas
+  - `npm run routes:audit-maritime`
+    - resultado: `partitions=228`, `totalRows=51756`, `totalBytes=5338609`, `coverage.maritime=42172`, `coverage.straightFallback=0`, `coverage.unavailable=9584`
+  - `npm run test -- lib/maritime-routes.test.ts lib/maritime-route-service.test.ts app/api/market-flows-maritime/route.test.ts components/MarketFlightsGLMap.test.tsx`
+    - resultado: `4` arquivos de teste pass, `7` testes pass
 
 ---
 

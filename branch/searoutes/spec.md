@@ -37,6 +37,7 @@ Fazer o mapa de fluxos internacionais usar rotas maritimas precomputadas por par
 7. A documentacao desta feature fica em `branch/searoutes/`.
 8. A particao de rotas deve ser cacheada por `importer` no servidor para evitar releitura desnecessaria quando o usuario trocar apenas o `sh6`.
 9. Nenhum commit ou criacao de branch deve acontecer sem solicitacao explicita do usuario.
+10. Na Sprint 5, o ponto do Brasil (`BRA`) passa a usar um porto especifico: Porto de Itajai (SC).
 
 ## Decisoes de Execucao (2026-05-08)
 
@@ -72,6 +73,29 @@ Fazer o mapa de fluxos internacionais usar rotas maritimas precomputadas por par
 - Resultado:
   - `4` arquivos de teste aprovados
   - `7` testes aprovados
+
+## Validacao Sprint 5 (2026-05-08)
+
+Escopo executado:
+
+- atualizacao de `BRA` em `lib/country-coords.json` para `[-48.661944, -26.907778]` (`[lon, lat]`)
+- regeneracao full do dataset com `npm run routes:generate-maritime`
+- reauditoria com `npm run routes:audit-maritime`
+- smoke test tecnico da feature com a suite de `4` arquivos
+
+Resultado da auditoria apos a mudanca do ponto de `BRA`:
+
+- `partitions`: `228`
+- `totalRows`: `51756`
+- `totalBytes`: `5338609` (`5.1 MB`)
+- `coverage.maritime`: `42172`
+- `coverage.straightFallback`: `0`
+- `coverage.unavailable`: `9584`
+
+Resultado do smoke test:
+
+- `4` arquivos de teste aprovados
+- `7` testes aprovados
 
 ## Esclarecimento Sobre Quantidade de Arquivos
 
@@ -137,6 +161,30 @@ Entrega:
 Objetivo:
 
 - fechar a feature visivel no produto com base no pipeline local ja validado
+
+### Sprint 5: Coordenada portuaria especifica para o Brasil (Porto de Itajai)
+
+Entrega:
+
+- atualizar o ponto base de `BRA` para o Porto de Itajai
+- documentar coordenadas adotadas no dataset
+- regenerar o dataset de rotas por `importer`
+- reexecutar auditoria e smoke test da feature
+
+Coordenadas de referencia:
+
+- graus/min/seg: `26° 54' 28" S`, `48° 39' 43" W`
+- decimal aproximado: `[-48.661944, -26.907778]` (`[lon, lat]`)
+
+Objetivo:
+
+- aumentar a plausibilidade visual das rotas envolvendo o Brasil ao ancorar origem/destino em um porto real
+- manter o contrato atual de dados e endpoint sem alterar o modelo por `sh6`
+
+Impacto esperado:
+
+- como `BRA` aparece como `importer` e `exporter`, a mudanca impacta particoes em toda a malha
+- portanto, a execucao recomendada e regeneracao completa com `npm run routes:generate-maritime`
 
 ## Motivacao Tecnica
 
