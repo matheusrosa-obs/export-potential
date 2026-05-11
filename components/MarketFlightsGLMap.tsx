@@ -8,16 +8,13 @@ import { getCountryName } from "@/lib/country-names-pt";
 import { formatTooltipTitle } from "@/lib/tooltip-text";
 
 type ApiRow = {
-  year: string;
-  exporter: string | null;
-  exporter_name: string | null;
-  value: number;
-};
-
-type FlowRow = {
   exporter: string;
   exporter_name: string;
   value: number;
+  route_mode: "maritime" | "straight_fallback" | "unavailable";
+  path_coords: [number, number][];
+  origin_coord: [number, number] | null;
+  importer_coord: [number, number] | null;
 };
 
 type LinePoint = [number, number];
@@ -26,8 +23,9 @@ type LineDatum = {
   fromName: string;
   fromLabel: string;
   toName: string;
-  coords: [LinePoint, LinePoint];
+  coords: LinePoint[];
   value: number;
+  routeMode: ApiRow["route_mode"];
 };
 
 type ScatterDatum = {
@@ -64,9 +62,13 @@ function formatValue(value: number): string {
   return `US$ ${value.toFixed(0)}`;
 }
 
-function normalizeText(value: string | null | undefined, fallback: string): string {
-  const normalized = String(value ?? "").trim();
-  return normalized.length > 0 ? normalized : fallback;
+function isCoord(value: unknown): value is [number, number] {
+  return (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    Number.isFinite(Number(value[0])) &&
+    Number.isFinite(Number(value[1]))
+  );
 }
 
 function bubbleSize(value: number, maxValue: number): number {
@@ -75,7 +77,7 @@ function bubbleSize(value: number, maxValue: number): number {
 }
 
 export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
-  const [rows, setRows] = useState<FlowRow[]>([]);
+  const [rows, setRows] = useState<ApiRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState<boolean>(() => !!echarts.getMap("world"));
@@ -110,13 +112,12 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
     setError(null);
 
     const params = new URLSearchParams({
-      columns: "year,exporter,exporter_name,value",
-      limit: "5000",
-      "filter[importer]": importer,
-      "filter[sh6]": sh6,
+      importer,
+      sh6,
+      limit: "120",
     });
 
-    fetch(`/api/data/df_competitors?${params.toString()}`)
+    fetch(`/api/market-flows-maritime?${params.toString()}`)
       .then(async (res) => {
         const json = await res.json();
         if (!res.ok || json.error) {
@@ -125,28 +126,7 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
         return json;
       })
       .then((json) => {
-        const fetched = (json.rows as ApiRow[]) ?? [];
-        const latestYear = fetched.reduce((acc, row) => Math.max(acc, Number(row.year) || 0), 0);
-        const latestRows = fetched.filter((row) => (Number(row.year) || 0) === latestYear);
-
-        const totals = new Map<string, FlowRow>();
-        for (const row of latestRows) {
-          const exporter = normalizeText(row.exporter, "");
-          if (!exporter || exporter === importer) continue;
-          const current = totals.get(exporter);
-          totals.set(exporter, {
-            exporter,
-            exporter_name: normalizeText(row.exporter_name, exporter),
-            value: (current?.value ?? 0) + (Number(row.value) || 0),
-          });
-        }
-
-        const normalized = Array.from(totals.values())
-          .filter((r) => r.value > 0)
-          .sort((a, b) => b.value - a.value)
-          .slice(0, 120);
-
-        setRows(normalized);
+        setRows((json.rows as ApiRow[]) ?? []);
         setLoading(false);
       })
       .catch((err: unknown) => {
@@ -158,7 +138,11 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
 
   const prepared = useMemo(() => {
     const coords = countryCoords as unknown as Record<string, [number, number]>;
-    const importerCoord = importer ? coords[importer] : undefined;
+    const importerCoordFromRows =
+      rows.find((row) => isCoord(row.importer_coord))?.importer_coord ?? null;
+    const importerCoord = importer
+      ? importerCoordFromRows ?? coords[importer] ?? null
+      : null;
 
     if (!importer || !importerCoord) {
       return {
@@ -171,24 +155,28 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
       };
     }
 
-    const validRows = rows.filter((row) => coords[row.exporter]);
-    const maxFlow = Math.max(...validRows.map((row) => row.value), 1);
-    const totalFlow = validRows.reduce((acc, row) => acc + row.value, 0);
+    const rowsWithOrigin = rows.filter((row) => isCoord(row.origin_coord));
+    const maxFlow = Math.max(...rowsWithOrigin.map((row) => row.value), 1);
+    const totalFlow = rows.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
 
-    const lineData = validRows.map((row) => ({
-      fromName: row.exporter,
-      fromLabel: row.exporter_name,
-      toName: importer,
-      coords: [
-        [coords[row.exporter][0], coords[row.exporter][1]],
-        [importerCoord[0], importerCoord[1]],
-      ] as [LinePoint, LinePoint],
-      value: row.value,
-    }));
+    const lineData = rows
+      .map((row) => ({
+        ...row,
+        path: (row.path_coords ?? []).filter((coord) => isCoord(coord)),
+      }))
+      .filter((row) => row.route_mode !== "unavailable" && row.path.length >= 2)
+      .map((row) => ({
+        fromName: row.exporter,
+        fromLabel: row.exporter_name,
+        toName: importer,
+        coords: row.path,
+        value: row.value,
+        routeMode: row.route_mode,
+      }));
 
-    const exporterPoints = validRows.map((row) => ({
+    const exporterPoints = rowsWithOrigin.map((row) => ({
       name: row.exporter,
-      value: [coords[row.exporter][0], coords[row.exporter][1], row.value] as [number, number, number],
+      value: [row.origin_coord[0], row.origin_coord[1], row.value] as [number, number, number],
       flowValue: row.value,
     }));
 
@@ -220,7 +208,9 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
             const fromIso = String(params.data?.fromName ?? "");
             const toIso = String(params.data?.toName ?? "");
             const value = Number(params.data?.value ?? 0);
-            return `${formatTooltipTitle(`${getCountryName(fromIso)} -> ${getCountryName(toIso)}`)}<br/>Fluxo comercial: ${formatValue(value)}`;
+            const routeMode =
+              params.data?.routeMode === "maritime" ? "Maritima" : "Linha reta";
+            return `${formatTooltipTitle(`${getCountryName(fromIso)} -> ${getCountryName(toIso)}`)}<br/>Fluxo comercial: ${formatValue(value)}<br/>Rota: ${routeMode}`;
           }
 
           if (params.seriesName === "Importador") {
@@ -254,13 +244,13 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
           name: "Fluxo comercial",
           type: "lines",
           coordinateSystem: "geo",
+          polyline: true,
           blendMode: "lighter",
           data: prepared.lineData,
           lineStyle: {
             color: FLOW_COLOR,
             width: 2,
             opacity: 0.01,
-            curveness: 0.05,
           },
           effect: {
             show: true,
@@ -342,7 +332,11 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
     );
   }
 
-  if (!loading && (!prepared.hasImporterCoord || prepared.lineData.length === 0)) {
+  if (
+    !loading &&
+    (!prepared.hasImporterCoord ||
+      (prepared.lineData.length === 0 && prepared.exporterPoints.length === 0))
+  ) {
     return (
       <div className={`w-full ${MAP_HEIGHT_CLASS} rounded-xl border border-zinc-800 px-4 py-6 text-sm text-zinc-500 flex items-center justify-center`}>
         Nenhum fluxo encontrado para os filtros selecionados.

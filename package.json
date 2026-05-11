@@ -6,6 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "routes:generate-maritime": "node scripts/generate-maritime-routes-by-importer.mjs",
+    "routes:audit-maritime": "node scripts/audit-maritime-route-coverage.mjs",
     "blob:upload-competitors": "node scripts/upload-competitors-to-blob.mjs",
     "blob:upload-ufs": "node scripts/upload-uf-partitions-to-blob.mjs",
     "blob:upload-global": "node scripts/upload-global-datasets-to-blob.mjs"
@@ -23,18 +27,23 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-katex": "^3.1.0",
+    "searoute-js": "^0.1.0",
     "topojson-client": "^3.1.0",
     "vercel": "^51.2.1",
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.1.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-katex": "^3.0.4",
     "@vercel/blob": "^2.3.3",
+    "jsdom": "^25.0.1",
     "tailwindcss": "^4.2.2",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "^2.1.8"
   }
 }
