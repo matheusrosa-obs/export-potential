@@ -460,7 +460,7 @@ function HomeContent() {
             Sobre
           </h2>
           <p className="font-secondary text-zinc-300 mt-3">
-            Informações metodológicas, referências e usabilidade do sistema.
+            Informações metodológicas, referências e usabiliddade do sistema.
           </p>
 
           <div className="w-full mt-5">
