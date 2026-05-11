@@ -12,7 +12,8 @@
     "routes:audit-maritime": "node scripts/audit-maritime-route-coverage.mjs",
     "blob:upload-competitors": "node scripts/upload-competitors-to-blob.mjs",
     "blob:upload-ufs": "node scripts/upload-uf-partitions-to-blob.mjs",
-    "blob:upload-global": "node scripts/upload-global-datasets-to-blob.mjs"
+    "blob:upload-global": "node scripts/upload-global-datasets-to-blob.mjs",
+    "blob:upload-maritime-routes": "node scripts/upload-maritime-routes-to-blob.mjs"
   },
   "dependencies": {
     "@duckdb/node-api": "^1.5.1-r.1",

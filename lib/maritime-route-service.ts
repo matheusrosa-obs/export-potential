@@ -15,6 +15,7 @@ const ROUTES_DIRECTORY = path.join(
   "routes_by_importer"
 );
 const ROUTES_INDEX_FILE = path.join(ROUTES_DIRECTORY, "index.json");
+const ROUTES_BLOB_INDEX_FILE = path.join(ROUTES_DIRECTORY, "index.blob.json");
 const INDEX_TTL_MS = 30_000;
 
 const ROUTE_COLUMNS = [
@@ -46,7 +47,10 @@ export type MaritimeRoutesIndexEntry = {
   file_name: string;
   rows?: number;
   size_bytes?: number;
+  blob_url?: string;
 };
+
+type RoutesSourceMode = "local" | "blob";
 
 declare global {
   var __maritimeRoutesIndexCache: MaritimeRoutesIndexCache | undefined;
@@ -75,6 +79,54 @@ function normalizeImporter(importer: string): string {
   return String(importer ?? "").trim().toUpperCase();
 }
 
+function isRemotePath(filePathOrUrl: string): boolean {
+  return /^https?:\/\//i.test(filePathOrUrl);
+}
+
+function isRunningOnVercel(): boolean {
+  const vercelFlag = process.env.VERCEL?.trim().toLowerCase();
+  return vercelFlag === "1" || vercelFlag === "true";
+}
+
+function resolveRoutesSourceMode(): RoutesSourceMode {
+  const explicit = process.env.MARITIME_ROUTES_SOURCE?.trim().toLowerCase();
+  if (explicit === "local" || explicit === "blob") {
+    return explicit;
+  }
+
+  return isRunningOnVercel() ? "blob" : "local";
+}
+
+async function resolveRoutesIndexFile(sourceMode: RoutesSourceMode): Promise<string> {
+  const explicit = process.env.MARITIME_ROUTES_INDEX_FILE?.trim();
+  if (explicit === "index.json") {
+    await fs.access(ROUTES_INDEX_FILE);
+    return ROUTES_INDEX_FILE;
+  }
+
+  if (explicit === "index.blob.json") {
+    await fs.access(ROUTES_BLOB_INDEX_FILE);
+    return ROUTES_BLOB_INDEX_FILE;
+  }
+
+  if (sourceMode === "local") {
+    await fs.access(ROUTES_INDEX_FILE);
+    return ROUTES_INDEX_FILE;
+  }
+
+  const blobIndexExists = await fs
+    .access(ROUTES_BLOB_INDEX_FILE)
+    .then(() => true)
+    .catch(() => false);
+
+  if (blobIndexExists) {
+    return ROUTES_BLOB_INDEX_FILE;
+  }
+
+  await fs.access(ROUTES_INDEX_FILE);
+  return ROUTES_INDEX_FILE;
+}
+
 function toAsyncBuffer(arrayBuffer: ArrayBuffer) {
   return {
     byteLength: arrayBuffer.byteLength,
@@ -83,15 +135,29 @@ function toAsyncBuffer(arrayBuffer: ArrayBuffer) {
   };
 }
 
-async function readParquetFileRows(
-  filePath: string,
-  columns: readonly string[]
-): Promise<Record<string, unknown>[]> {
-  const buffer = await fs.readFile(filePath);
-  const arrayBuffer = buffer.buffer.slice(
+async function readArrayBuffer(filePathOrUrl: string): Promise<ArrayBuffer> {
+  if (isRemotePath(filePathOrUrl)) {
+    const response = await fetch(filePathOrUrl);
+    if (!response.ok) {
+      throw new Error(
+        `Falha ao baixar parquet remoto (${response.status}): ${filePathOrUrl}`
+      );
+    }
+    return response.arrayBuffer();
+  }
+
+  const buffer = await fs.readFile(filePathOrUrl);
+  return buffer.buffer.slice(
     buffer.byteOffset,
     buffer.byteOffset + buffer.byteLength
   ) as ArrayBuffer;
+}
+
+async function readParquetFileRows(
+  filePathOrUrl: string,
+  columns: readonly string[]
+): Promise<Record<string, unknown>[]> {
+  const arrayBuffer = await readArrayBuffer(filePathOrUrl);
 
   const projection = Array.from(columns);
   const asyncBuffer = toAsyncBuffer(arrayBuffer);
@@ -125,8 +191,11 @@ async function loadMaritimeRoutesIndex(
     return globalThis.__maritimeRoutesIndexPromise;
   }
 
+  const sourceMode = resolveRoutesSourceMode();
+  const indexFilePath = await resolveRoutesIndexFile(sourceMode);
+
   const promise = fs
-    .readFile(ROUTES_INDEX_FILE, "utf-8")
+    .readFile(indexFilePath, "utf-8")
     .then((raw) => {
       const parsed = JSON.parse(raw) as MaritimeRoutesIndexEntry[];
       const entries = Array.isArray(parsed)
@@ -184,6 +253,7 @@ async function getMaritimeRoutePartitionDataset(
   const normalizedImporter = normalizeImporter(importer);
   if (!normalizedImporter) return null;
 
+  const sourceMode = resolveRoutesSourceMode();
   const indexCache = await loadMaritimeRoutesIndex();
   const entry = resolveMaritimeRoutesIndexEntry(
     indexCache.entries,
@@ -191,6 +261,17 @@ async function getMaritimeRoutePartitionDataset(
   );
 
   if (!entry) return null;
+
+  if (sourceMode === "blob") {
+    if (!entry.blob_url) return null;
+    return {
+      importer: normalizedImporter,
+      fileName: entry.file_name,
+      filePath: entry.blob_url,
+      sizeBytes: entry.size_bytes ?? 0,
+      updatedAt: new Date(indexCache.loadedAt).toISOString(),
+    };
+  }
 
   const filePath = path.join(ROUTES_DIRECTORY, entry.file_name);
   const stat = await fs.stat(filePath).catch(() => null);
