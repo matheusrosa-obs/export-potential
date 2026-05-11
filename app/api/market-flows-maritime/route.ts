@@ -88,7 +88,7 @@ export function buildFallbackPath(
 }
 
 function toCoordsIndex(): Record<string, [number, number]> {
-  return countryCoords as Record<string, [number, number]>;
+  return countryCoords as unknown as Record<string, [number, number]>;
 }
 
 export async function GET(request: Request) {
