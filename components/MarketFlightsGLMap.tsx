@@ -34,6 +34,8 @@ type ScatterDatum = {
   flowValue: number;
 };
 
+type RowWithOriginCoord = ApiRow & { origin_coord: [number, number] };
+
 type Props = {
   importer: string | null;
   sh6: string | null;
@@ -69,6 +71,10 @@ function isCoord(value: unknown): value is [number, number] {
     Number.isFinite(Number(value[0])) &&
     Number.isFinite(Number(value[1]))
   );
+}
+
+function hasOriginCoord(row: ApiRow): row is RowWithOriginCoord {
+  return isCoord(row.origin_coord);
 }
 
 function bubbleSize(value: number, maxValue: number): number {
@@ -155,7 +161,7 @@ export default function MarketFlightsGLMap({ importer, sh6 }: Props) {
       };
     }
 
-    const rowsWithOrigin = rows.filter((row) => isCoord(row.origin_coord));
+    const rowsWithOrigin = rows.filter(hasOriginCoord);
     const maxFlow = Math.max(...rowsWithOrigin.map((row) => row.value), 1);
     const totalFlow = rows.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
 
